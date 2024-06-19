@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_register"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    tools:context=".fragment.RegisterFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_marginTop="210dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:paddingStart="16dp"
+            android:paddingBottom="8dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/registerEmail"
+            android:hint="@string/email"
+            android:padding="16dp"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/edittext_border"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:layout_marginTop="18dp"
+            android:paddingStart="16dp"
+            android:paddingBottom="8dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/registerPassword"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:background="@drawable/edittext_border"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/jabatan"
+            android:layout_marginTop="18dp"
+            android:paddingStart="16dp"
+            android:paddingBottom="8dp"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:id="@+id/jabatanSpinnerRegis"
+            android:padding="16dp"
+            android:background="@drawable/edittext_border"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:id="@+id/register"
+            android:layout_marginTop="25dp"
+            android:textSize="18sp"
+            android:text="@string/register"
+            android:textColor="@color/white"
+            android:background="@drawable/selector_button_login"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
