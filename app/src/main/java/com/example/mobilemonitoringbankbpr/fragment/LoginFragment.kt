@@ -29,6 +29,8 @@ class LoginFragment : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var localStorage: LocalStorage
+    private var loadingDialog: AlertDialog? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +49,10 @@ class LoginFragment : Fragment() {
         loginViewModel.loginResult.observe(viewLifecycleOwner, { result ->
             result.onSuccess { token ->
                 localStorage.token = token
+                hideLoadingDialog()
                 navigateToMain()
             }.onFailure { exception ->
+                hideLoadingDialog()
                 alertFail(exception.message ?: "Login failed")
                 Log.e("LOGIN_FRAGMENT", "Login failed: ${exception.message}")
             }
@@ -59,6 +63,7 @@ class LoginFragment : Fragment() {
             val password = binding.loginPassword.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 Log.d("LOGIN_FRAGMENT", "Starting login for email: $email")
+                showLoadingDialog()
                 loginViewModel.login(email, password)
             } else {
                 alertFail("Email and Password are required.")
@@ -94,6 +99,20 @@ class LoginFragment : Fragment() {
     private fun openBrowser(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(intent)
+    }
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = AlertDialog.Builder(requireContext())
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .create()
+        }
+        loadingDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
     }
 
     override fun onDestroyView() {

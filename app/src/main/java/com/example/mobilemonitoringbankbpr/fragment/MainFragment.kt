@@ -1,5 +1,6 @@
 package com.example.mobilemonitoringbankbpr.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
+    private var loadingDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,29 +36,40 @@ class MainFragment : Fragment() {
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        // Mengambil data jabatan terlebih dahulu
-        mainViewModel.getJabatan(requireContext())
-
-        // Mengamati perubahan pada jabatanLoaded
-        mainViewModel.jabatanLoaded.observe(viewLifecycleOwner, { loaded ->
-            if (loaded) {
-                // Setelah data jabatan diambil, kita bisa mengambil data user
-                mainViewModel.getUser(requireContext())
-            }
-        })
-
-        mainViewModel.user.observe(viewLifecycleOwner, { user ->
-            binding.tvName.text = user.name
-            binding.tvEmail.text = user.email
-            binding.tvJabatan.text = user.jabatan
-        })
+        // Menyambungkan observasi data dari ViewModel
+        observeViewModel()
 
         binding.btnLogout.setOnClickListener {
             logout()
         }
     }
 
+    private fun observeViewModel() {
+        mainViewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+            } else {
+                dismissLoadingDialog()
+            }
+        })
+        mainViewModel.user.observe(viewLifecycleOwner, { user ->
+            binding.tvName.text = user.name
+            binding.tvEmail.text = user.email
+            binding.tvJabatan.text = user.jabatan
+
+            // Menghilangkan ProgressBar setelah data user selesai dimuat
+
+        })
+
+
+
+        // Memuat data ketika Fragment dibuat
+        mainViewModel.getJabatan(requireContext())
+        mainViewModel.getUser(requireContext())
+    }
+
     private fun logout() {
+        mainViewModel.isLoading.value = true
         val url = getString(R.string.api_server) + "/logoutmobile"
         Thread {
             val http = Http(requireContext(), url)
@@ -73,8 +86,22 @@ class MainFragment : Fragment() {
                 } else {
                     Toast.makeText(requireContext(), "Error $code", Toast.LENGTH_SHORT).show()
                 }
+                mainViewModel.isLoading.value = false
             }
         }.start()
+    }
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = AlertDialog.Builder(requireContext())
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .create()
+        }
+        loadingDialog?.show()
+    }
+
+    private fun dismissLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 
     override fun onDestroyView() {
@@ -82,6 +109,7 @@ class MainFragment : Fragment() {
         _binding = null
     }
 }
+
 
 
 

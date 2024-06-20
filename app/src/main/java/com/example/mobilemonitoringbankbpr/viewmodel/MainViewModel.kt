@@ -20,12 +20,15 @@ class MainViewModel : ViewModel() {
     val user = MutableLiveData<User>()
     val jabatanMap = mutableMapOf<Int, String>()
     val jabatanLoaded = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
+
 
     init {
         jabatanLoaded.value = false
     }
 
     fun getUser(context: Context) {
+        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val url = context.getString(R.string.api_server) + "/usermobile"
             val http = Http(context, url)
@@ -45,6 +48,7 @@ class MainViewModel : ViewModel() {
                     e.printStackTrace()
                 }
             }
+            isLoading.postValue(false)
         }
     }
 

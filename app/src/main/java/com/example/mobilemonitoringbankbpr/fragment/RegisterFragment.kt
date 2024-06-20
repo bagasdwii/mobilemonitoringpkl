@@ -23,7 +23,7 @@ class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by viewModels()
-
+    private var loadingDialog: AlertDialog? = null
     private var name: String? = null
     private var email: String? = null
     private var password: String? = null
@@ -58,8 +58,9 @@ class RegisterFragment : Fragment() {
                     // Tidak melakukan apapun
                 }
             }
+            hideLoadingDialog()
         })
-
+        showLoadingDialog()
         val url = getString(R.string.api_server) + "/jabatan"
         Log.d("RegisterFragment", "Fetching jabatan data from: $url")
         registerViewModel.fetchJabatanData(url)
@@ -80,9 +81,14 @@ class RegisterFragment : Fragment() {
             val registerRequest = Register(name!!, email!!, password!!, jabatanId!!)
             val url = getString(R.string.api_server) + "/registermobile"
             Log.d("RegisterFragment", "Registering user with URL: $url and data: $registerRequest")
+            showLoadingDialog()
             registerViewModel.registerUser(url, registerRequest,
-                onSuccess = { requireActivity().runOnUiThread { alertSuccess("Registrasi Berhasil.") } },
-                onError = { msg -> requireActivity().runOnUiThread { alertFail(msg) } }
+                onSuccess = { requireActivity().runOnUiThread {
+                    hideLoadingDialog()
+                    alertSuccess("Registrasi Berhasil.") } },
+                onError = { msg -> requireActivity().runOnUiThread {
+                    hideLoadingDialog()
+                    alertFail(msg) } }
             )
         }
     }
@@ -113,6 +119,20 @@ class RegisterFragment : Fragment() {
             .setPopUpTo(R.id.registerFragment, true)
             .build()
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment, null, navOptions)
+    }
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = AlertDialog.Builder(requireContext())
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .create()
+        }
+        loadingDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
     }
 
     override fun onDestroyView() {
