@@ -9,5 +9,11 @@
     <string name="welcome">Selamat Datang</string>
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
+    <string name="api_server">http://192.168.220.195:8000/api</string>
+    <string name="Buatakun">Buat Akun</string>
+    <string name="nama">Nama</string>
+    <string name="konfirpass">Konfirmasi Password</string>
+    <string name="forget">Lupa Password?</string>
+    <string name="api_forget">http://192.168.220.195:8000/forgot-password</string>
 
 </resources>
