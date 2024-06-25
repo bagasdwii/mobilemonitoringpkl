@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.AccountFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_account"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Profile Image" />
+
+        <TextView
+            android:id="@+id/tvNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvEmailLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvJabatanLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jabatan:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvJabatan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvCabangLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cabang:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvCabang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerCabang"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="4dp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tvWilayahLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wilayah:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvWilayah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerWilayah"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="4dp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvDireksiLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Direksi:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvDireksi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerDireksi"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="4dp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:visibility="gone" />
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"/>
+
+
+    </LinearLayout>
+</ScrollView>

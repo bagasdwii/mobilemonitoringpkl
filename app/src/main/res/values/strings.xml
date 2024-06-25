@@ -14,6 +14,9 @@
     <string name="nama">Nama</string>
     <string name="konfirpass">Konfirmasi Password</string>
     <string name="forget">Lupa Password?</string>
-    <string name="api_forget">http://192.168.220.195:8000/forgot-password</string>
+    <string name="api_forget">http://192.168.200.186:8000/forgot-password</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="judul_account">Account Setting</string>
 
 </resources>

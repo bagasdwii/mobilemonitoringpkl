@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.mobilemonitoringbankbpr.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         // Inisialisasi NavController setelah layout dan NavHostFragment diinisialisasi
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment
-        navController = navHostFragment.findNavController()
+        navController = navHostFragment.navController
 
         localStorage = LocalStorage(this)
 
@@ -35,8 +35,11 @@ class MainActivity : AppCompatActivity() {
             // Token tidak ada, arahkan ke LoginFragment melalui NavController
             navController.navigate(R.id.loginFragment)
         } else {
-            // Token ada, arahkan ke MainFragment melalui NavController
-            navController.navigate(R.id.action_loginFragment_to_mainFragment)
+            // Token ada, arahkan ke MainFragment melalui NavController dengan setPopUpTo
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.loginFragment, true)
+                .build()
+            navController.navigate(R.id.mainFragment, null, navOptions)
         }
     }
 

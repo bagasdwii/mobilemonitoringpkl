@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="android:statusBarColor">@color/black</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="Theme.MobileMonitoringBankBPR" parent="Base.Theme.MobileMonitoringBankBPR" />
@@ -12,5 +13,9 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/logo</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.MobileMonitoringBankBPR</item>
 
+    </style>
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/black</item>
     </style>
 </resources>

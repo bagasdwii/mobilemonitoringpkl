@@ -2,6 +2,7 @@ package com.example.mobilemonitoringbankbpr
 
 import android.content.Context
 import android.util.Log
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -11,7 +12,7 @@ import java.net.URL
 
 class Http(private val context: Context, private var url: String) {
     private var method: String = "GET"
-    private var data: String? = null
+    private var data: JSONObject = JSONObject()
     private var response: String? = null
     private var statusCode: Int? = null
     private var token: Boolean = false
@@ -22,11 +23,15 @@ class Http(private val context: Context, private var url: String) {
     }
 
     fun setData(data: String) {
-        this.data = data
+        this.data = JSONObject(data)
     }
 
     fun setToken(token: Boolean) {
         this.token = token
+    }
+
+    fun addParameter(key: String, value: String) {
+        data.put(key, value)
     }
 
     fun getResponse(): String? {
@@ -51,11 +56,8 @@ class Http(private val context: Context, private var url: String) {
 
             if (method != "GET") {
                 connection.doOutput = true
-            }
-
-            data?.let {
                 val os: OutputStream = connection.outputStream
-                os.write(it.toByteArray())
+                os.write(data.toString().toByteArray())
                 os.flush()
                 os.close()
             }
@@ -84,4 +86,3 @@ class Http(private val context: Context, private var url: String) {
         }
     }
 }
-

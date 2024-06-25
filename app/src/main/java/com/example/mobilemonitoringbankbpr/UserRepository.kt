@@ -33,7 +33,13 @@ class UserRepository(private val context: Context) {
             if (code == 200) {
                 try {
                     val jsonResponse = JSONObject(response)
+                    val userId = jsonResponse.getInt("user_id")
                     val token = jsonResponse.getString("token")
+
+                    // Simpan userId dan token ke LocalStorage
+                    val localStorage = LocalStorage(context)
+                    localStorage.userId = userId
+                    localStorage.token = token
                     callback(Result.success(token))
                 } catch (e: JSONException) {
                     e.printStackTrace()
