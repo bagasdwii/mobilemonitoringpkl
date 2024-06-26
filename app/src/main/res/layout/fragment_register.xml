@@ -75,12 +75,18 @@
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
             android:paddingBottom="8dp"/>
-        <Spinner
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/jabatanSpinnerRegis"
-            android:padding="16dp"
-            android:background="@drawable/edittext_border"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/jabatanSpinnerRegis"
+                android:padding="14dp" />
+
+        </RelativeLayout>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

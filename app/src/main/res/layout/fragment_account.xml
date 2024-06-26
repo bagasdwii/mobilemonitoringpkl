@@ -96,15 +96,21 @@
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerCabang"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="4dp"
-            android:padding="10dp"
-            android:background="@drawable/edittext_border"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerCabang"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tvWilayahLabel"
@@ -125,15 +131,21 @@
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerWilayah"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="4dp"
-            android:padding="10dp"
-            android:background="@drawable/edittext_border"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerWilayah"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/tvDireksiLabel"
             android:layout_width="wrap_content"
@@ -153,15 +165,127 @@
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/spinnerDireksi"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerDireksi"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tvKepalaCabangLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kepala Cabang:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvKepalaCabang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerKepalaCabang"
+
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvSupervisorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Supervisor:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
             android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvSupervisor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerSupervisor"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tvAdminKasLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Admin Kas:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvAdminKas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border">
+
+            <Spinner
+                android:id="@+id/spinnerAdminKas"
+
+
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"

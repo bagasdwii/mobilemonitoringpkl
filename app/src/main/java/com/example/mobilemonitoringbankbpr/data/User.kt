@@ -6,6 +6,7 @@ data class User(
     val email: String,
     val jabatan: String,
     val cabang: String? = null,
+    val wilayah:String?=null,
     val id_direksi: String? = null,
     val id_kepala_cabang: String? = null,
     val id_supervisor: String? = null,
