@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MobileMonitoringBankBPR</string>
+    <string name="app_name">Monitoring SP</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email">Email</string>
@@ -9,7 +9,7 @@
     <string name="welcome">Selamat Datang</string>
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
-    <string name="api_server">http://192.168.1.12:8000/api</string>
+    <string name="api_server">http://192.168.1.5:8000/api</string>
     <string name="Buatakun">Buat Akun</string>
     <string name="nama">Nama</string>
     <string name="konfirpass">Konfirmasi Password</string>

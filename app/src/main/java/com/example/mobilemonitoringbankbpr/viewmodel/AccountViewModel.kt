@@ -8,9 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.LocalStorage
 import com.example.mobilemonitoringbankbpr.R
+import com.example.mobilemonitoringbankbpr.data.AccountOfficer
+import com.example.mobilemonitoringbankbpr.data.AdminKas
 import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.KepalaCabang
+import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.Wilayah
 import kotlinx.coroutines.launch
@@ -26,6 +29,9 @@ class AccountViewModel : ViewModel() {
     val wilayahList = MutableLiveData<List<Wilayah>>()
     val direksiList = MutableLiveData<List<Direksi>>()
     val kepalacabangList = MutableLiveData<List<KepalaCabang>>()
+    val supervisorList = MutableLiveData<List<Supervisor>>()
+    val adminkasList = MutableLiveData<List<AdminKas>>()
+    val accountofficerList = MutableLiveData<List<AccountOfficer>>()
     val jabatanLoaded = MutableLiveData<Boolean>()
     val isLoading = MutableLiveData<Boolean>()
     val updateStatus = MutableLiveData<String>()
@@ -33,40 +39,8 @@ class AccountViewModel : ViewModel() {
     init {
         jabatanLoaded.value = false
     }
+
     fun getUser(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            isLoading.postValue(true)
-            val url = context.getString(R.string.api_server) + "/user"
-            val http = Http(context, url)
-            http.setToken(true)
-
-            http.send()
-            Log.d("AccountViewModel", "Fetching user data started")
-
-            val code = http.getStatusCode()
-            Log.d("AccountViewModel", "HTTP status code for getUser: $code")
-
-            if (code == 200) {
-
-                try {
-                    val response = JSONObject(http.getResponse())
-                    Log.d("AccountViewModel", "User data response: $response")
-
-                    val id = response.getInt("id")
-                    val name = response.getString("name")
-                    val email = response.getString("email")
-                    val jabatan = response.getInt("jabatan")
-                    val jabatanName = jabatanMap[jabatan] ?: "Unknown"
-                    val user = User(id, name, email, jabatanName)
-                    this@AccountViewModel.user.postValue(user)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-            isLoading.postValue(false)
-        }
-    }
-    fun getUserKepalaCabang(context: Context) {
         isLoading.value = true
         Log.d("AccountViewModel", "Fetching user data started")
         viewModelScope.launch(Dispatchers.IO) {
@@ -90,47 +64,11 @@ class AccountViewModel : ViewModel() {
                     val wilayah = if (response.isNull("wilayah")) null else response.getString("wilayah")
                     val id_direksi = if (response.isNull("id_direksi")) null else response.getString("id_direksi")
                     val id_kepala_cabang = if (response.isNull("id_kepala_cabang")) null else response.getString("id_kepala_cabang")
+                    val id_supervisor = if (response.isNull("id_supervisor")) null else response.getString("id_supervisor")
+                    val id_admin_kas = if (response.isNull("id_admin_kas")) null else response.getString("id_admin_kas")
+                    val id_account_officer = if (response.isNull("id_account_officer")) null else response.getString("id_account_officer")
 
-                    val userData = User(id_user, name, email, jabatanName, cabang, wilayah,id_direksi,id_kepala_cabang,)
-
-                    user.postValue(userData)
-                    Log.d("AccountViewModel", "User data updated")
-
-                } catch (e: JSONException) {
-                    Log.e("AccountViewModel", "JSON parsing error: ${e.message}")
-                    e.printStackTrace()
-                }
-            }
-            isLoading.postValue(false)
-            Log.d("AccountViewModel", "Fetching user data ended")
-        }
-    }
-
-    fun getUserSupervisor(context: Context) {
-        isLoading.value = true
-        Log.d("AccountViewModel", "Fetching user super data started")
-        viewModelScope.launch(Dispatchers.IO) {
-            val url = context.getString(R.string.api_server) + "/usermobile"
-            val http = Http(context, url)
-            http.setToken(true)
-            http.send()
-
-            val code = http.getStatusCode()
-            Log.d("AccountViewModel", "HTTP status code for getUser: $code")
-            if (code == 200) {
-                try {
-                    val response = JSONObject(http.getResponse())
-                    Log.d("AccountViewModel", "User data response super: $response")
-                    val id_user = response.getInt("id")
-                    val name = response.getString("name")
-                    val email = response.getString("email")
-                    val jabatan = response.getInt("jabatan")
-                    val jabatanName = jabatanMap[jabatan] ?: "Unknown"
-                    val cabang = if (response.isNull("cabang")) null else response.getString("cabang")
-                    val wilayah = if (response.isNull("wilayah")) null else response.getString("wilayah")
-                    val id_kepala_cabang = if (response.isNull("id_kepala_cabang")) null else response.getString("id_kepala_cabang")
-
-                    val userData = User(id_user, name, email, jabatanName, cabang, wilayah, id_kepala_cabang)
+                    val userData = User(id_user, name, email, jabatanName, cabang, wilayah,id_direksi,id_kepala_cabang,id_supervisor,id_admin_kas,id_account_officer)
 
                     user.postValue(userData)
                     Log.d("AccountViewModel", "User data updated")
@@ -144,6 +82,7 @@ class AccountViewModel : ViewModel() {
             Log.d("AccountViewModel", "Fetching user data ended")
         }
     }
+
 
     fun getJabatan(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -266,6 +205,78 @@ class AccountViewModel : ViewModel() {
             }
         }
     }
+    fun getSupervisor(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val url = context.getString(R.string.api_server) + "/supervisor"
+            val http = Http(context, url)
+            http.send()
+
+            val code = http.getStatusCode()
+            if (code == 200) {
+                try {
+                    val response = JSONArray(http.getResponse())
+                    val supervisorList = mutableListOf<Supervisor>()
+                    for (i in 0 until response.length()) {
+                        val supervisorObj = response.getJSONObject(i)
+                        val id = supervisorObj.getInt("id_supervisor")
+                        val name = supervisorObj.getString("nama_supervisor")
+                        supervisorList.add(Supervisor(id, name))
+                    }
+                    this@AccountViewModel.supervisorList.postValue(supervisorList)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+    fun getAdminKas(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val url = context.getString(R.string.api_server) + "/adminkas"
+            val http = Http(context, url)
+            http.send()
+
+            val code = http.getStatusCode()
+            if (code == 200) {
+                try {
+                    val response = JSONArray(http.getResponse())
+                    val adminkasList = mutableListOf<AdminKas>()
+                    for (i in 0 until response.length()) {
+                        val adminkasObj = response.getJSONObject(i)
+                        val id = adminkasObj.getInt("id_admin_kas")
+                        val name = adminkasObj.getString("nama_admin_kas")
+                        adminkasList.add(AdminKas(id, name))
+                    }
+                    this@AccountViewModel.adminkasList.postValue(adminkasList)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+    fun getAccountOfficer(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val url = context.getString(R.string.api_server) + "/accountofficer"
+            val http = Http(context, url)
+            http.send()
+
+            val code = http.getStatusCode()
+            if (code == 200) {
+                try {
+                    val response = JSONArray(http.getResponse())
+                    val accountofficerList = mutableListOf<AccountOfficer>()
+                    for (i in 0 until response.length()) {
+                        val accountofficerObj = response.getJSONObject(i)
+                        val id = accountofficerObj.getInt("id_account_officer")
+                        val name = accountofficerObj.getString("nama_account_officer")
+                        accountofficerList.add(AccountOfficer(id, name))
+                    }
+                    this@AccountViewModel.accountofficerList.postValue(accountofficerList)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
     fun updatePegawaiKepalaCabang(context: Context, idCabang: Int, idDireksi:Int) {
         isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -317,6 +328,82 @@ class AccountViewModel : ViewModel() {
                 put("id_cabang", idCabang)
                 put("id_wilayah", idWilayah)
                 put("id_kepala_cabang", idKepalaCabang)
+                put("id_user", userId)
+            }
+
+            // Tambahkan log untuk melihat data yang dikirim
+            Log.d("UPDATE_DATA", "Data yang dikirim: $data")
+
+            http.setMethod("POST")
+            http.setData(data.toString())
+            http.setToken(true) // Jika menggunakan token
+            http.send()
+
+            val code = http.getStatusCode()
+            if (code == 200) {
+                // Update berhasil
+                Log.d("Update", "Update berhasil $code")
+                updateStatus.postValue("success")
+            } else {
+                // Gagal update
+                Log.e("Update", "Update gagal, status code: $code, response: ${http.getResponse()}")
+                updateStatus.postValue("fail")
+            }
+
+            isLoading.postValue(false)
+        }
+    }
+    fun updatePegawaiAdminKas(context: Context, idCabang: Int, idWilayah:Int, idSupervisor:Int) {
+        isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            val url = context.getString(R.string.api_server) + "/updatePegawaiAdminKas"
+            val http = Http(context, url)
+            val localStorage = LocalStorage(context)
+            val userId = localStorage.userId // Ambil id_user dari local storage
+            Log.d("LocalStorage", "UserId yang diambil: $userId")
+            // Buat data JSON untuk dikirim
+            val data = JSONObject().apply {
+                put("id_cabang", idCabang)
+                put("id_wilayah", idWilayah)
+                put("id_supervisor", idSupervisor)
+                put("id_user", userId)
+            }
+
+            // Tambahkan log untuk melihat data yang dikirim
+            Log.d("UPDATE_DATA", "Data yang dikirim: $data")
+
+            http.setMethod("POST")
+            http.setData(data.toString())
+            http.setToken(true) // Jika menggunakan token
+            http.send()
+
+            val code = http.getStatusCode()
+            if (code == 200) {
+                // Update berhasil
+                Log.d("Update", "Update berhasil $code")
+                updateStatus.postValue("success")
+            } else {
+                // Gagal update
+                Log.e("Update", "Update gagal, status code: $code, response: ${http.getResponse()}")
+                updateStatus.postValue("fail")
+            }
+
+            isLoading.postValue(false)
+        }
+    }
+    fun updatePegawaiAccountOfficer(context: Context, idCabang: Int, idWilayah:Int, idAdminKas:Int) {
+        isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            val url = context.getString(R.string.api_server) + "/updatePegawaiAccountOfficer"
+            val http = Http(context, url)
+            val localStorage = LocalStorage(context)
+            val userId = localStorage.userId // Ambil id_user dari local storage
+            Log.d("LocalStorage", "UserId yang diambil: $userId")
+            // Buat data JSON untuk dikirim
+            val data = JSONObject().apply {
+                put("id_cabang", idCabang)
+                put("id_wilayah", idWilayah)
+                put("id_admin_kas", idAdminKas)
                 put("id_user", userId)
             }
 
