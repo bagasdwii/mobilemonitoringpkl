@@ -9,7 +9,7 @@
     <string name="welcome">Selamat Datang</string>
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
-    <string name="api_server">http://192.168.1.5:8000/api</string>
+    <string name="api_server">http://192.168.220.195:8000/api</string>
     <string name="Buatakun">Buat Akun</string>
     <string name="nama">Nama</string>
     <string name="konfirpass">Konfirmasi Password</string>
@@ -18,5 +18,6 @@
     <string name="close_nav">Close Navigation Drawer</string>
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="judul_account">Account Setting</string>
+    <string name="judul_monitoring">Monitoring Nasabah</string>
 
 </resources>

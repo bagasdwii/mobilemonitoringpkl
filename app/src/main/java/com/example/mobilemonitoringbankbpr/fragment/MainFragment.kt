@@ -86,12 +86,12 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     .replace(R.id.fragment_container, AccountFragment()).commit()
                 binding.toolbar.title = getString(R.string.judul_account)
             }
-            // Uncomment and implement other navigation items as needed
-            // R.id.nav_settings -> {
-            //     parentFragmentManager.beginTransaction()
-            //         .replace(R.id.fragment_container, SettingsFragment()).commit()
-            //     binding.toolbar.title = getString(R.string.judul_settings)
-            // }
+//             Uncomment and implement other navigation items as needed
+             R.id.nav_monitoring -> {
+                 parentFragmentManager.beginTransaction()
+                     .replace(R.id.fragment_container, MonitoringFragment()).commit()
+                 binding.toolbar.title = getString(R.string.judul_monitoring)
+             }
             R.id.nav_logout -> {
                 logout()
                 return true
