@@ -9,13 +9,20 @@
         android:icon="@drawable/icon_account"
         android:title="Account Setting">
 
-    </item>
-    <item
+        </item>
+        <item
         android:id="@+id/nav_monitoring"
         android:icon="@drawable/ic_monitoring"
         android:title="Monitoring">
 
-    </item>
+        </item>
+        <item
+            android:id="@+id/nav_surat"
+            android:icon="@drawable/ic_search"
+            android:title="Surat Peringatan">
+
+        </item>
+
     </group>
     <item
             android:title="">

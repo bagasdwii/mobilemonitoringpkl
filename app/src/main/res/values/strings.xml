@@ -10,14 +10,24 @@
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
     <string name="api_server">http://192.168.220.195:8000/api</string>
+    <string name="server">http://192.168.200.137:8000</string>
     <string name="Buatakun">Buat Akun</string>
     <string name="nama">Nama</string>
     <string name="konfirpass">Konfirmasi Password</string>
     <string name="forget">Lupa Password?</string>
-    <string name="api_forget">http://192.168.200.186:8000/forgot-password</string>
+    <string name="api_forget">http://192.168.200.137:8000/forgot-password</string>
     <string name="close_nav">Close Navigation Drawer</string>
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="judul_account">Account Setting</string>
     <string name="judul_monitoring">Monitoring Nasabah</string>
+    <string name="judul_surat">Surat Nasabah</string>
+
+    <string-array name="tingkat_sp_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+
 
 </resources>

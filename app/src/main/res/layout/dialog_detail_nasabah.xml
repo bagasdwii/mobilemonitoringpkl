@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/noNasabah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Nama"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:id="@+id/tvnoNasabah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="noNasabah"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/nasabahName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nama Nasabah"
+                android:textStyle="bold"
+                android:textSize="18sp"
+               />
+            <TextView
+                android:id="@+id/tvnasabahName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nama"
+                android:paddingBottom="8dp"/>
+
+
+            <TextView
+                android:id="@+id/pokok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+
+                android:text="Pokok:"/>
+            <TextView
+                android:id="@+id/tvpokok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="pokok"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/bunga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Bunga:"/>
+            <TextView
+                android:id="@+id/tvbunga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="bunga"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/denda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+
+                android:text="Denda:"/>
+            <TextView
+                android:id="@+id/tvdenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="denda"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Total:"/>
+            <TextView
+                android:id="@+id/tvtotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="total"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/keterangan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Keterangan:"/>
+            <TextView
+                android:id="@+id/tvketerangan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="keterangan"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/ttd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="TTD:"/>
+            <TextView
+                android:id="@+id/tvttd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ttd"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/kembali"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Kembali:"/>
+            <TextView
+                android:id="@+id/tvkembali"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="kembali"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/cabang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Cabang:"/>
+            <TextView
+                android:id="@+id/tvcabang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="cabang"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/wilayah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Wilayah:"/>
+            <TextView
+                android:id="@+id/tvwilayah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="wilayah"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/accountOfficer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Account Officer:"/>
+            <TextView
+                android:id="@+id/tvaccountOfficer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="accountOfficer"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/adminKas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Admin Kas:"/>
+            <TextView
+                android:id="@+id/tvadminKas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="adminKas"
+                android:paddingBottom="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Tutup" />
+</LinearLayout>

@@ -92,6 +92,11 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                      .replace(R.id.fragment_container, MonitoringFragment()).commit()
                  binding.toolbar.title = getString(R.string.judul_monitoring)
              }
+            R.id.nav_surat -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, SuratFragment()).commit()
+                binding.toolbar.title = getString(R.string.judul_surat)
+            }
             R.id.nav_logout -> {
                 logout()
                 return true
