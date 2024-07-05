@@ -9,7 +9,8 @@
     <string name="welcome">Selamat Datang</string>
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
-    <string name="api_server">http://192.168.220.195:8000/api</string>
+    <string name="api_server">http://192.168.200.137:8000/api</string>
+    <string name="api_serverr">http://192.168.1.5:8000/api/</string>
     <string name="server">http://192.168.200.137:8000</string>
     <string name="Buatakun">Buat Akun</string>
     <string name="nama">Nama</string>
@@ -21,6 +22,7 @@
     <string name="judul_account">Account Setting</string>
     <string name="judul_monitoring">Monitoring Nasabah</string>
     <string name="judul_surat">Surat Nasabah</string>
+    <string name="nip">NIP</string>
 
     <string-array name="tingkat_sp_array">
         <item>1</item>

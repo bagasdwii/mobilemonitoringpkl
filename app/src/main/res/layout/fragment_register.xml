@@ -6,22 +6,16 @@
     android:background="@drawable/register"
     android:orientation="vertical"
     android:padding="16dp"
-
     tools:context=".fragment.RegisterFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="10dp"
         android:orientation="vertical"
         android:layout_marginTop="60dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/Buatakun"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:padding="16dp"
-            android:textColor="@color/black"/>
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,8 +30,9 @@
             android:padding="16dp"
             android:paddingBottom="8dp"
             android:inputType="text"
-            android:background="@drawable/edittext_border"
-           />
+            android:textSize="15dp"
+            android:background="@drawable/edittext_border"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +47,10 @@
             android:hint="@string/email"
             android:padding="16dp"
             android:inputType="textEmailAddress"
+            android:textSize="15dp"
+
             android:background="@drawable/edittext_border"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,8 +64,30 @@
             android:id="@+id/registerPassword"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:textSize="15dp"
+
             android:padding="16dp"
             android:background="@drawable/edittext_border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nip"
+            android:layout_marginTop="18dp"
+            android:paddingStart="16dp"
+
+            android:paddingBottom="8dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/registerNip"
+            android:hint="@string/nip"
+            android:padding="16dp"
+            android:inputType="number"
+            android:textSize="15dp"
+
+            android:background="@drawable/edittext_border"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/jabatanSpinnerRegis"
                 android:padding="14dp" />
-
         </RelativeLayout>
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,10 +117,5 @@
             android:text="@string/register"
             android:textColor="@color/white"
             android:background="@drawable/selector_button_login"/>
-
     </LinearLayout>
-
-
-
-
 </LinearLayout>

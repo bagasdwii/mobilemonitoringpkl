@@ -55,6 +55,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             params.put("email", registerRequest.email)
             params.put("password", registerRequest.password)
             params.put("jabatan_id", registerRequest.jabatanId)
+            params.put("nip", registerRequest.nip)
         } catch (e: JSONException) {
             e.printStackTrace()
         }

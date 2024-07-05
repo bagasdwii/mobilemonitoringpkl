@@ -18,6 +18,7 @@ import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.Wilayah
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -42,46 +43,48 @@ class AccountViewModel : ViewModel() {
 
     fun getUser(context: Context) {
         isLoading.value = true
-        Log.d("AccountViewModel", "Fetching user data started")
         viewModelScope.launch(Dispatchers.IO) {
-            val url = context.getString(R.string.api_server) + "/usermobile"
-            val http = Http(context, url)
-            http.setToken(true)
-            http.send()
-
-            val code = http.getStatusCode()
-            Log.d("AccountViewModel", "HTTP status code for getUser: $code")
-            if (code == 200) {
-                try {
-                    val response = JSONObject(http.getResponse())
-                    Log.d("AccountViewModel", "User data response: $response")
-                    val id_user = response.getInt("id")
-                    val name = response.getString("name")
-                    val email = response.getString("email")
-                    val jabatan = response.getInt("jabatan")
-                    val jabatanName = jabatanMap[jabatan] ?: "Unknown"
-                    val cabang = if (response.isNull("cabang")) null else response.getString("cabang")
-                    val wilayah = if (response.isNull("wilayah")) null else response.getString("wilayah")
-                    val id_direksi = if (response.isNull("id_direksi")) null else response.getString("id_direksi")
-                    val id_kepala_cabang = if (response.isNull("id_kepala_cabang")) null else response.getString("id_kepala_cabang")
-                    val id_supervisor = if (response.isNull("id_supervisor")) null else response.getString("id_supervisor")
-                    val id_admin_kas = if (response.isNull("id_admin_kas")) null else response.getString("id_admin_kas")
-                    val id_account_officer = if (response.isNull("id_account_officer")) null else response.getString("id_account_officer")
-
-                    val userData = User(id_user, name, email, jabatanName, cabang, wilayah,id_direksi,id_kepala_cabang,id_supervisor,id_admin_kas,id_account_officer)
-
-                    user.postValue(userData)
-                    Log.d("AccountViewModel", "User data updated")
-
-                } catch (e: JSONException) {
-                    Log.e("AccountViewModel", "JSON parsing error: ${e.message}")
-                    e.printStackTrace()
-                }
+            // Menunggu hingga jabatanLoaded bernilai true
+            while (jabatanLoaded.value == false) {
+                delay(100)
             }
-            isLoading.postValue(false)
-            Log.d("AccountViewModel", "Fetching user data ended")
+            if (jabatanLoaded.value == true) {
+                val url = context.getString(R.string.api_server) + "/usermobile"
+                val http = Http(context, url)
+                http.setToken(true)
+                http.send()
+
+                val code = http.getStatusCode()
+                if (code == 200) {
+                    try {
+                        val response = JSONObject(http.getResponse())
+                        val id_user = response.getInt("id")
+                        val name = response.getString("name")
+                        val email = response.getString("email")
+                        val jabatan = response.getInt("jabatan")
+                        val jabatanName = jabatanMap[jabatan] ?: "Unknown"
+                        val cabang = if (response.isNull("cabang")) null else response.getString("cabang")
+                        val wilayah = if (response.isNull("wilayah")) null else response.getString("wilayah")
+                        val id_direksi = if (response.isNull("id_direksi")) null else response.getString("id_direksi")
+                        val id_kepala_cabang = if (response.isNull("id_kepala_cabang")) null else response.getString("id_kepala_cabang")
+                        val id_supervisor = if (response.isNull("id_supervisor")) null else response.getString("id_supervisor")
+                        val id_admin_kas = if (response.isNull("id_admin_kas")) null else response.getString("id_admin_kas")
+                        val id_account_officer = if (response.isNull("id_account_officer")) null else response.getString("id_account_officer")
+
+                        val userData = User(id_user, name, email, jabatanName, cabang, wilayah, id_direksi, id_kepala_cabang, id_supervisor, id_admin_kas, id_account_officer)
+                        user.postValue(userData)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+                isLoading.postValue(false)
+            } else {
+                isLoading.postValue(false)
+                Log.e("AccountViewModel", "Failed to load jabatan data")
+            }
         }
     }
+
 
 
     fun getJabatan(context: Context) {

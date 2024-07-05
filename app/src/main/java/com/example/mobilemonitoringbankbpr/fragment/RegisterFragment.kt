@@ -27,6 +27,7 @@ class RegisterFragment : Fragment() {
     private var name: String? = null
     private var email: String? = null
     private var password: String? = null
+    private var nip: String? = null
     private var jabatanId: Int? = null
 
     override fun onCreateView(
@@ -74,11 +75,12 @@ class RegisterFragment : Fragment() {
         name = binding.registerName.text.toString()
         email = binding.registerEmail.text.toString()
         password = binding.registerPassword.text.toString()
+        nip = binding.registerNip.text.toString()
 
-        if (name.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty() || jabatanId == null) {
-            alertFail("Nama, Email, Password dan Jabatan wajib diisi.")
+        if (name.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty() || nip.isNullOrEmpty() || jabatanId == null) {
+            alertFail("Nama, Email, Password, NIP dan Jabatan wajib diisi.")
         } else {
-            val registerRequest = Register(name!!, email!!, password!!, jabatanId!!)
+            val registerRequest = Register(name!!, email!!, password!!, nip!!.toInt()!!, jabatanId!!)
             val url = getString(R.string.api_server) + "/registermobile"
             Log.d("RegisterFragment", "Registering user with URL: $url and data: $registerRequest")
             showLoadingDialog()
@@ -120,6 +122,7 @@ class RegisterFragment : Fragment() {
             .build()
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment, null, navOptions)
     }
+
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
             loadingDialog = AlertDialog.Builder(requireContext())
@@ -132,7 +135,6 @@ class RegisterFragment : Fragment() {
 
     private fun hideLoadingDialog() {
         loadingDialog?.dismiss()
-        loadingDialog = null
     }
 
     override fun onDestroyView() {

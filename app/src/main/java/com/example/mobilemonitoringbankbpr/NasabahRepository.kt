@@ -2,6 +2,7 @@ package com.example.mobilemonitoringbankbpr
 
 import android.content.Context
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
@@ -28,7 +29,10 @@ class NasabahRepository(private val context: Context) {
         Log.d("NasabahRepository", "fetchNasabahList: Start")
         val url = context.getString(R.string.api_server) + "/nasabah"
         val http = Http(context, url)
+
         http.setMethod("GET")
+        http.setToken(true)
+
         http.send()
 
         val response = http.getResponse()
@@ -74,7 +78,7 @@ class NasabahRepository(private val context: Context) {
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        val apiService = RetrofitClient.getService()
+        val apiService = RetrofitClient.getService(context)
 
         val no = suratPeringatan.no.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tingkat = suratPeringatan.tingkat.toString().toRequestBody("text/plain".toMediaTypeOrNull())
