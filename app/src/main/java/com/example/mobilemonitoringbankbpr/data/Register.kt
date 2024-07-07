@@ -5,6 +5,6 @@ data class Register(
     val email: String,
     val password: String,
     val nip: Int,
-    val jabatanId: Int
+    val jabatan_id: Int
 )
 

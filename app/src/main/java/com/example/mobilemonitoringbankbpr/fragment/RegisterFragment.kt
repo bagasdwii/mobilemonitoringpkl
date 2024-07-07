@@ -42,7 +42,8 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         registerViewModel.jabatanList.observe(viewLifecycleOwner, Observer { jabatanList ->
-            val jabatanNames = jabatanList.map { it.name }
+            Log.d("RegisterFragment", "Received Jabatan list: $jabatanList")
+            val jabatanNames = jabatanList.map { it.nama_jabatan ?: "Unknown" }
             Log.d("RegisterFragment", "Jabatan names: $jabatanNames")
 
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, jabatanNames)
@@ -51,7 +52,7 @@ class RegisterFragment : Fragment() {
 
             binding.jabatanSpinnerRegis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    jabatanId = jabatanList[position].id
+                    jabatanId = jabatanList[position].id_jabatan
                     Log.d("RegisterFragment", "Selected Jabatan ID: $jabatanId")
                 }
 
@@ -62,9 +63,7 @@ class RegisterFragment : Fragment() {
             hideLoadingDialog()
         })
         showLoadingDialog()
-        val url = getString(R.string.api_server) + "/jabatan"
-        Log.d("RegisterFragment", "Fetching jabatan data from: $url")
-        registerViewModel.fetchJabatanData(url)
+        registerViewModel.fetchJabatanData()
 
         binding.register.setOnClickListener {
             checkRegister()
@@ -80,17 +79,17 @@ class RegisterFragment : Fragment() {
         if (name.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty() || nip.isNullOrEmpty() || jabatanId == null) {
             alertFail("Nama, Email, Password, NIP dan Jabatan wajib diisi.")
         } else {
-            val registerRequest = Register(name!!, email!!, password!!, nip!!.toInt()!!, jabatanId!!)
-            val url = getString(R.string.api_server) + "/registermobile"
-            Log.d("RegisterFragment", "Registering user with URL: $url and data: $registerRequest")
+            val registerRequest = Register(name!!, email!!, password!!, nip!!.toInt(), jabatanId!!)
             showLoadingDialog()
-            registerViewModel.registerUser(url, registerRequest,
+            registerViewModel.registerUser(registerRequest,
                 onSuccess = { requireActivity().runOnUiThread {
                     hideLoadingDialog()
-                    alertSuccess("Registrasi Berhasil.") } },
+                    alertSuccess("Registrasi Berhasil.")
+                }},
                 onError = { msg -> requireActivity().runOnUiThread {
                     hideLoadingDialog()
-                    alertFail(msg) } }
+                    alertFail(msg)
+                }}
             )
         }
     }
@@ -142,3 +141,5 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
 }
+
+
