@@ -1,6 +1,7 @@
-package com.example.mobilemonitoringbankbpr
+package com.example.mobilemonitoringbankbpr.server
 
 import android.content.Context
+import com.example.mobilemonitoringbankbpr.LocalStorage
 import okhttp3.Interceptor
 import okhttp3.Response
 

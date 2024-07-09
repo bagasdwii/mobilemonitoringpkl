@@ -6,20 +6,17 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.mobilemonitoringbankbpr.NasabahRepository
-import com.example.mobilemonitoringbankbpr.data.Nasabah
+import com.example.mobilemonitoringbankbpr.repository.SuratRepository
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
 
-class NasabahViewModel(application: Application) : AndroidViewModel(application) {
+class SuratViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = NasabahRepository(application)
+    private val repository = SuratRepository(application)
 
     private val _nasabahList = MutableLiveData<List<NasabahSp>>()
     val nasabahList: LiveData<List<NasabahSp>> get() = _nasabahList

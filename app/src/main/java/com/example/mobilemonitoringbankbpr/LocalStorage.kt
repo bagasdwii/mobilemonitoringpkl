@@ -7,7 +7,6 @@ import android.util.Log
 class LocalStorage(private val context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("STORAGE_LOGIN_API", Context.MODE_PRIVATE)
-    private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     var userId: Int
         get() = sharedPreferences.getInt("user_id", -1)
@@ -20,8 +19,7 @@ class LocalStorage(private val context: Context) {
         get() = sharedPreferences.getString("TOKEN", "")
         set(value) {
             Log.d("LocalStorage", "Saving token: $value") // Log saat menyimpan token
-            editor.putString("TOKEN", value)
-            editor.commit()
+            sharedPreferences.edit().putString("TOKEN", value).apply()
         }
 }
 

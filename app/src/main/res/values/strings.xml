@@ -23,6 +23,7 @@
     <string name="judul_monitoring">Monitoring Nasabah</string>
     <string name="judul_surat">Surat Nasabah</string>
     <string name="nip">NIP</string>
+    <string name="nothing">Tidak Diketahui</string>
 
     <string-array name="tingkat_sp_array">
         <item>1</item>

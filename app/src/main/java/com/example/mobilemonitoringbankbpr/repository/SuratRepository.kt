@@ -1,29 +1,26 @@
-package com.example.mobilemonitoringbankbpr
+package com.example.mobilemonitoringbankbpr.repository
 
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.mobilemonitoringbankbpr.Http
-import com.example.mobilemonitoringbankbpr.data.Nasabah
+import com.example.mobilemonitoringbankbpr.R
+import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import retrofit2.Callback
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import retrofit2.Call
 import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
 
 
 
-class NasabahRepository(private val context: Context) {
+class SuratRepository(private val context: Context) {
 
     fun fetchNasabahList(): List<NasabahSp> {
         Log.d("NasabahRepository", "fetchNasabahList: Start")

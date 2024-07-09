@@ -4,8 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
-import android.net.Uri
-import androidx.lifecycle.viewModelScope
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,16 +12,13 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.databinding.ItemNasabahBinding
@@ -35,15 +30,13 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
 
-class NasabahAdapter(
+class MonitoringAdapter(
     private val viewModel: MonitoringViewModel,
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val coroutineScope: CoroutineScope
-) : ListAdapter<Nasabah, NasabahAdapter.NasabahViewHolder>(NasabahDiffCallback()) {
+) : ListAdapter<Nasabah, MonitoringAdapter.NasabahViewHolder>(NasabahDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NasabahViewHolder {
         val binding = ItemNasabahBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -2,6 +2,7 @@ package com.example.mobilemonitoringbankbpr.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -42,12 +43,13 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("MainFragment", "View created")
         drawerLayout = binding.drawerLayout
 
         val toolbar = binding.toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
-        // Change the navigation icon color to black
+        // Ubah warna ikon navigasi menjadi hitam
         val navigationIcon = toolbar.navigationIcon
         navigationIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.black))
 
@@ -85,17 +87,19 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, AccountFragment()).commit()
                 binding.toolbar.title = getString(R.string.judul_account)
+                Log.d("MainFragment", "Navigasi ke Akun")
             }
-//             Uncomment and implement other navigation items as needed
-             R.id.nav_monitoring -> {
-                 parentFragmentManager.beginTransaction()
-                     .replace(R.id.fragment_container, MonitoringFragment()).commit()
-                 binding.toolbar.title = getString(R.string.judul_monitoring)
-             }
+            R.id.nav_monitoring -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, MonitoringFragment()).commit()
+                binding.toolbar.title = getString(R.string.judul_monitoring)
+                Log.d("MainFragment", "Navigasi ke Monitoring")
+            }
             R.id.nav_surat -> {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, SuratFragment()).commit()
                 binding.toolbar.title = getString(R.string.judul_surat)
+                Log.d("MainFragment", "Navigasi ke Surat")
             }
             R.id.nav_logout -> {
                 logout()
@@ -106,30 +110,41 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         return true
     }
 
+//    private fun logout() {
+//        accountViewModel.isLoading.value = true
+//        val url = getString(R.string.api_server) + "/logoutmobile"
+//        Log.d("MainFragment", "Mulai proses logout")
+//        Thread {
+//            val http = Http(requireContext(), url)
+//            http.setMethod("POST")
+//            http.setToken(true)
+//            http.send()
+//
+//            requireActivity().runOnUiThread {
+//                val code = http.getStatusCode()
+//                if (code == 200) {
+//                    Log.d("MainFragment", "Logout berhasil")
+//                    val localStorage = LocalStorage(requireContext())
+//                    localStorage.token = null
+//                    localStorage.userId = -1
+//                    findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+//                } else {
+//                    Log.e("MainFragment", "Logout gagal dengan kode: $code")
+//                    Toast.makeText(requireContext(), "Error $code", Toast.LENGTH_SHORT).show()
+//                }
+//                accountViewModel.isLoading.value = false
+//            }
+//        }.start()
+//    }
     private fun logout() {
-        accountViewModel.isLoading.value = true
-        val url = getString(R.string.api_server) + "/logoutmobile"
-        Thread {
-            val http = Http(requireContext(), url)
-            http.setMethod("POST")
-            http.setToken(true)
-            http.send()
-
-            requireActivity().runOnUiThread {
-                val code = http.getStatusCode()
-                if (code == 200) {
-                    val localStorage = LocalStorage(requireContext())
-                    localStorage.token = null
-                    localStorage.userId = -1
-                    findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
-                } else {
-                    Toast.makeText(requireContext(), "Error $code", Toast.LENGTH_SHORT).show()
-                }
-                accountViewModel.isLoading.value = false
+        accountViewModel.logout { success ->
+            if (success) {
+                findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+            } else {
+                Toast.makeText(requireContext(), "Logout gagal", Toast.LENGTH_SHORT).show()
             }
-        }.start()
+        }
     }
-
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
             loadingDialog = AlertDialog.Builder(requireContext())
@@ -149,3 +164,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         _binding = null
     }
 }
+
+
+
+
+
+
+

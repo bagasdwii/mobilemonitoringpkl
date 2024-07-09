@@ -1,55 +1,33 @@
 package com.example.mobilemonitoringbankbpr.fragment
 
 import android.app.Activity
-import com.jaredrummler.materialspinner.MaterialSpinner
-import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.FileUtils
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobilemonitoringbankbpr.FileUtilsNasabah
-import com.example.mobilemonitoringbankbpr.FileUtilsNasabah.getFileFromUri
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.FragmentSuratBinding
-import com.example.mobilemonitoringbankbpr.viewmodel.NasabahViewModel
-import java.io.ByteArrayOutputStream
+import com.example.mobilemonitoringbankbpr.viewmodel.SuratViewModel
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.text.SimpleDateFormat
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.Calendar
 import java.util.Locale
 
@@ -58,7 +36,7 @@ class SuratFragment : Fragment() {
     private var _binding: FragmentSuratBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nasabahViewModel: NasabahViewModel
+    private lateinit var nasabahViewModel: SuratViewModel
     private var loadingDialog: AlertDialog? = null
 
     private val calendar = Calendar.getInstance()
@@ -76,7 +54,7 @@ class SuratFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        nasabahViewModel = ViewModelProvider(this).get(NasabahViewModel::class.java)
+        nasabahViewModel = ViewModelProvider(this).get(SuratViewModel::class.java)
 
         setupNasabahDropdown()
         setupDatePicker()

@@ -2,8 +2,7 @@ package com.example.mobilemonitoringbankbpr.repository
 
 import android.app.Application
 import android.util.Log
-import com.example.mobilemonitoringbankbpr.ApiService
-import com.example.mobilemonitoringbankbpr.RetrofitClient
+import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.Jabatan
 import com.example.mobilemonitoringbankbpr.data.Register
 import com.example.mobilemonitoringbankbpr.data.ResponseRegister

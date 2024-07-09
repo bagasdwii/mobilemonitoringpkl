@@ -1,4 +1,4 @@
-package com.example.mobilemonitoringbankbpr
+package com.example.mobilemonitoringbankbpr.server
 
 import android.content.Context
 import android.util.Log
@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.1.5:8000/"
+    private const val BASE_URL = "http://192.168.200.94:8000/"
     private val gson: Gson = GsonBuilder()
         .setLenient()
         .create()

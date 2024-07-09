@@ -93,24 +93,10 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:padding="10dp"
+            android:text="@string/nothing"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
-
-            <Spinner
-                android:id="@+id/spinnerCabang"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvWilayahLabel"
@@ -127,24 +113,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:text="@string/nothing"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
-
-            <Spinner
-                android:id="@+id/spinnerWilayah"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvDireksiLabel"
@@ -161,25 +134,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:text="@string/nothing"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
-
-            <Spinner
-                android:id="@+id/spinnerDireksi"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-
 
         <TextView
             android:id="@+id/tvKepalaCabangLabel"
@@ -196,25 +155,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:text="@string/nothing"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
-
-            <Spinner
-                android:id="@+id/spinnerKepalaCabang"
-
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvSupervisorLabel"
@@ -231,24 +176,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:text="@string/nothing"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
-
-            <Spinner
-                android:id="@+id/spinnerSupervisor"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
 
 
         <TextView
@@ -266,33 +198,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:text="@string/nothing"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
             android:visibility="gone"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
 
-            <Spinner
-                android:id="@+id/spinnerAdminKas"
-
-
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:padding="10dp"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:layout_marginTop="24dp"
-            android:visibility="gone"/>
 
 
     </LinearLayout>
