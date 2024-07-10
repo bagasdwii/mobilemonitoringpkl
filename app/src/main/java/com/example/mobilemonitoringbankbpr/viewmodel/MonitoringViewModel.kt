@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.net.URLEncoder
 
@@ -27,12 +28,14 @@ class MonitoringViewModel : ViewModel() {
     private val _suratPeringatan = MutableLiveData<SuratPeringatan>()
     val suratPeringatan: LiveData<SuratPeringatan> get() = _suratPeringatan
 
+    private var currentPage = 1
+
     fun getNasahabs(searchQuery: String, context: Context) {
         _isLoading.value = true
-        Log.d("MonitoringViewModel", "Fetching nasabahs started with search query: $searchQuery")
+        Log.d("MonitoringViewModel", "Fetching nasabahs started with search query: $searchQuery on page: $currentPage")
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val url = context.getString(R.string.api_server) + "/nasabahs?search=" + URLEncoder.encode(searchQuery, "UTF-8")
+                val url = context.getString(R.string.api_server) + "/nasabahs?search=" + URLEncoder.encode(searchQuery, "UTF-8") + "&page=$currentPage"
                 val http = Http(context, url)
                 http.setMethod("GET")
                 http.setToken(true)
@@ -41,15 +44,29 @@ class MonitoringViewModel : ViewModel() {
                 val code = http.getStatusCode()
                 Log.d("MonitoringViewModel", "HTTP status code: $code")
                 if (code == 200) {
-                    val response = JSONArray(http.getResponse()!!)
+                    val response = JSONObject(http.getResponse()!!)
                     val nasabahsList = mutableListOf<Nasabah>()
 
-                    for (i in 0 until response.length()) {
-                        val nasabahJson = response.getJSONObject(i)
+                    val nasabahsArray = response.getJSONArray("data")
+                    for (i in 0 until nasabahsArray.length()) {
+                        val nasabahJson = nasabahsArray.getJSONObject(i)
+                        val suratPeringatanJson = nasabahJson.optJSONObject("surat_peringatan")
+
                         val nasabah = Nasabah(
                             no = nasabahJson.getLong("no"),
                             nama = nasabahJson.getString("nama"),
-                            cabang = nasabahJson.getString("nama_cabang")
+                            cabang = nasabahJson.getString("nama_cabang"),
+                            suratPeringatan = suratPeringatanJson?.let {
+                                SuratPeringatan(
+                                    no = it.getLong("no"),
+                                    tingkat = it.getInt("tingkat"),
+                                    tanggal = it.getString("tanggal"),
+                                    keterangan = it.getString("keterangan"),
+                                    bukti_gambar = it.getString("bukti_gambar"),
+                                    scan_pdf = it.getString("scan_pdf"),
+                                    id_account_officer = it.getLong("id_account_officer")
+                                )
+                            }
                         )
                         nasabahsList.add(nasabah)
                     }
@@ -67,89 +84,14 @@ class MonitoringViewModel : ViewModel() {
         }
     }
 
-    fun checkSuratPeringatan(nasabahNo: Long, tingkat: Int, context: Context, callback: (Boolean) -> Unit) {
-        Log.d("MonitoringViewModel", "Checking Surat Peringatan for Nasabah No: $nasabahNo, Tingkat: $tingkat")
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val url = context.getString(R.string.api_server) + "/suratperingatan?nasabah_no=$nasabahNo"
-                val http = Http(context, url)
-                http.setMethod("GET")
-                http.setToken(true)
-                http.send()
-
-                val code = http.getStatusCode()
-                val response = http.getResponse()
-
-                if (code == 200 && response!!.isNotEmpty()) {
-                    val jsonResponse = JSONObject(response)
-                    val fetchedTingkat = jsonResponse.getInt("tingkat")
-
-                    // Compare the fetched tingkat with the parameter tingkat
-                    if (tingkat != fetchedTingkat) {
-                        Log.d("MonitoringViewModel", "Tingkat parameter ($tingkat) does not match fetched tingkat ($fetchedTingkat). Skipping.")
-                        withContext(Dispatchers.Main) {
-                            callback(false)
-                        }
-                        return@launch
-                    }
-
-                    val hasSuratPeringatan = true // Assuming you have logic here to determine if surat peringatan exists
-
-                    // Log the HTTP response
-                    Log.d("MonitoringViewModel", "HTTP status code: $code, response: $response, hasSuratPeringatan: $hasSuratPeringatan")
-
-                    withContext(Dispatchers.Main) {
-                        callback(hasSuratPeringatan)
-                    }
-                } else {
-                    Log.e("MonitoringViewModel", "Error fetching Surat Peringatan, status code: $code")
-                    withContext(Dispatchers.Main) {
-                        callback(false)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("MonitoringViewModel", "Exception while checking Surat Peringatan", e)
-                withContext(Dispatchers.Main) {
-                    callback(false)
-                }
-            }
-        }
+    fun setPage(page: Int) {
+        currentPage = page
     }
 
-
-
-    fun getSuratPeringatan(nasabahNo: Long, tingkat: Int, context: Context) {
-        Log.d("MonitoringViewModel", "Fetching Surat Peringatan for Nasabah No: $nasabahNo, Tingkat: $tingkat")
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val url = context.getString(R.string.api_server) + "/suratperingatan?nasabah_no=$nasabahNo&tingkat=$tingkat"
-                val http = Http(context, url)
-                http.setMethod("GET")
-                http.setToken(true)
-                http.send()
-
-                val code = http.getStatusCode()
-                Log.d("MonitoringViewModel", "HTTP status code: $code")
-                if (code == 200) {
-                    val response = JSONObject(http.getResponse()!!)
-                    val suratPeringatan = SuratPeringatan(
-                        no = response.getLong("no"),
-                        tingkat = response.getInt("tingkat"),
-                        tanggal = response.getString("tanggal"),
-                        keterangan = response.getString("keterangan"),
-                        buktiGambar = context.getString(R.string.api_server) + response.optString("bukti_gambar"),
-                        scanPdf = context.getString(R.string.api_server) + response.optString("scan_pdf"),
-                        idAccountOfficer = response.getLong("id_account_officer")
-                    )
-                    _suratPeringatan.postValue(suratPeringatan)
-                    Log.d("MonitoringViewModel", "Surat Peringatan fetched successfully: $suratPeringatan")
-                } else {
-                    Log.e("MonitoringViewModel", "Error fetching Surat Peringatan, status code: $code")
-                }
-            } catch (e: Exception) {
-                Log.e("MonitoringViewModel", "Exception while fetching Surat Peringatan", e)
-            }
-        }
+    fun getCurrentPage(): Int {
+        return currentPage
     }
-
 }
+
+
+

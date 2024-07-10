@@ -50,10 +50,18 @@ interface ApiService {
     fun logoutUser(): Call<Void>
 
     @GET("nasabahs")
-    suspend fun getNasabahs(@Query("search") searchQuery: String): Response<List<Nasabah>>
+    suspend fun getNasabahs(@Query("search") search: String): Response<List<Nasabah>>
 
     @GET("suratperingatan")
-    suspend fun getSuratPeringatan(@Query("nasabah_no") nasabahNo: Long, @Query("tingkat") tingkat: Int): Response<SuratPeringatan>
+    suspend fun getSuratPeringatan(
+        @Query("nasabah_no") nasabahNo: Long,
+        @Query("tingkat") tingkat: Int
+    ): Response<SuratPeringatan>
+
+    @GET("suratperingatan")
+    suspend fun checkSuratPeringatan(@Query("nasabah_no") nasabahNo: Long): Response<SuratPeringatan>
+
+
 
 
 }

@@ -57,57 +57,54 @@ class MonitoringAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(nasabah: Nasabah) {
+            binding.btnSP1.visibility = View.GONE
+            binding.btnSP2.visibility = View.GONE
+            binding.btnSP3.visibility = View.GONE
+
+            binding.btnSP01.visibility = View.GONE
+            binding.btnSP02.visibility = View.GONE
+            binding.btnSP03.visibility = View.GONE
             binding.NamaNasabah.text = nasabah.nama
             binding.CabangNasabah.text = nasabah.cabang
 
-            viewModel.checkSuratPeringatan(nasabah.no, 3, context) { hasSuratPeringatan3 ->
-                if (hasSuratPeringatan3) {
-                    binding.btnSP1.visibility = View.VISIBLE
-                    binding.btnSP2.visibility = View.VISIBLE
-                    binding.btnSP3.visibility = View.VISIBLE
-                }
-                Log.d("NasabahAdapter", "Nasabah No: ${nasabah.no}, Tingkat 3, hasSuratPeringatan: $hasSuratPeringatan3")
-
-                if (!hasSuratPeringatan3) {
-                    viewModel.checkSuratPeringatan(nasabah.no, 2, context) { hasSuratPeringatan2 ->
-                        if (hasSuratPeringatan2) {
-                            binding.btnSP1.visibility = View.VISIBLE
-                            binding.btnSP2.visibility = View.VISIBLE
-                            binding.btnSP03.visibility = View.VISIBLE
-                        }
-                        Log.d("NasabahAdapter", "Nasabah No: ${nasabah.no}, Tingkat 2, hasSuratPeringatan: $hasSuratPeringatan2")
-
-                        if (!hasSuratPeringatan2 && !hasSuratPeringatan3) {
-                            viewModel.checkSuratPeringatan(nasabah.no, 1, context) { hasSuratPeringatan1 ->
-                                if (hasSuratPeringatan1) {
-                                    binding.btnSP1.visibility = View.VISIBLE
-                                    binding.btnSP02.visibility = View.VISIBLE
-                                    binding.btnSP03.visibility = View.VISIBLE
-                                }else {
-                                    binding.btnSP01.visibility = View.VISIBLE
-                                    binding.btnSP02.visibility = View.VISIBLE
-                                    binding.btnSP03.visibility = View.VISIBLE
-                                }
-                                Log.d("NasabahAdapter", "Nasabah No: ${nasabah.no}, Tingkat 1, hasSuratPeringatan: $hasSuratPeringatan1")
-                            }
-                        }
+            val suratPeringatan = nasabah.suratPeringatan
+            if (suratPeringatan != null) {
+                when (suratPeringatan.tingkat) {
+                    3 -> {
+                        binding.btnSP1.visibility = View.VISIBLE
+                        binding.btnSP2.visibility = View.VISIBLE
+                        binding.btnSP3.visibility = View.VISIBLE
+                    }
+                    2 -> {
+                        binding.btnSP1.visibility = View.VISIBLE
+                        binding.btnSP2.visibility = View.VISIBLE
+                        binding.btnSP03.visibility = View.VISIBLE
+                    }
+                    1 -> {
+                        binding.btnSP1.visibility = View.VISIBLE
+                        binding.btnSP02.visibility = View.VISIBLE
+                        binding.btnSP03.visibility = View.VISIBLE
                     }
                 }
+            } else {
+                binding.btnSP01.visibility = View.VISIBLE
+                binding.btnSP02.visibility = View.VISIBLE
+                binding.btnSP03.visibility = View.VISIBLE
             }
 
             binding.btnSP1.setOnClickListener {
                 Log.d("NasabahAdapter", "btnSP1 clicked for Nasabah No: ${nasabah.no}")
-                viewModel.getSuratPeringatan(nasabah.no, 1, context)
+                viewModel.getNasahabs(nasabah.no.toString(),  context)
                 showSuratPeringatanDialog()
             }
             binding.btnSP2.setOnClickListener {
                 Log.d("NasabahAdapter", "btnSP2 clicked for Nasabah No: ${nasabah.no}")
-                viewModel.getSuratPeringatan(nasabah.no, 2, context)
+                viewModel.getNasahabs(nasabah.no.toString(),  context)
                 showSuratPeringatanDialog()
             }
             binding.btnSP3.setOnClickListener {
                 Log.d("NasabahAdapter", "btnSP3 clicked for Nasabah No: ${nasabah.no}")
-                viewModel.getSuratPeringatan(nasabah.no, 3, context)
+                viewModel.getNasahabs(nasabah.no.toString(),   context)
                 showSuratPeringatanDialog()
             }
         }
@@ -129,11 +126,11 @@ class MonitoringAdapter(
                 val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
                 val pdfContainer = dialogView.findViewById<FrameLayout>(R.id.pdfContainer)
 
-                suratPeringatan?.buktiGambar?.let { buktiGambar ->
-                    loadGambar(buktiGambar, ivBuktiGambar)
+                suratPeringatan?.bukti_gambar?.let { bukti_gambar ->
+                    loadGambar(bukti_gambar, ivBuktiGambar)
                 }
 
-                suratPeringatan?.scanPdf?.let { pdfUrl ->
+                suratPeringatan?.scan_pdf?.let { pdfUrl ->
                     loadPdf(pdfUrl, pdfContainer)
                 }
             })

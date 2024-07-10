@@ -236,9 +236,9 @@ class SuratFragment : Fragment() {
             tingkat = tingkatSP,
             tanggal = tanggal,
             keterangan = keterangan,
-            buktiGambar = selectedImageUri.toString(),
-            scanPdf = selectedPdfUri.toString(),
-            idAccountOfficer = nasabah.idAccountOfficer
+            bukti_gambar = selectedImageUri.toString(),
+            scan_pdf = selectedPdfUri.toString(),
+            id_account_officer = nasabah.idAccountOfficer
         )
         val imageFile = selectedImageUri?.let { getFileFromUri(it) }
         val pdfFile = selectedPdfUri?.let { getFileFromUri(it) }

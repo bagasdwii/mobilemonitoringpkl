@@ -2,6 +2,7 @@ package com.example.mobilemonitoringbankbpr.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.adapter.MonitoringAdapter
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
@@ -55,13 +57,28 @@ class MonitoringFragment : Fragment() {
 
         binding.searchButton.setOnClickListener {
             val query = binding.searchEditText.text.toString()
+            monitoringViewModel.setPage(1) // Reset to the first page
             monitoringViewModel.getNasahabs(query, requireContext())
+
+            updateButtonVisibility()
         }
 
-        // Observe suratPeringatan to show dialog when data is available
-        monitoringViewModel.suratPeringatan.observe(viewLifecycleOwner, { suratPeringatan ->
-            showSuratPeringatanDialog(suratPeringatan)
-        })
+        binding.previousButton.setOnClickListener {
+            val currentPage = monitoringViewModel.getCurrentPage()
+            if (currentPage > 1) {
+                monitoringViewModel.setPage(currentPage - 1)
+                monitoringViewModel.getNasahabs(binding.searchEditText.text.toString(), requireContext())
+                Log.d("MonitoringFragment", "Previous button clicked, page: ${monitoringViewModel.getCurrentPage()}")
+            }
+            updateButtonVisibility()
+        }
+
+        binding.nextButton.setOnClickListener {
+            monitoringViewModel.setPage(monitoringViewModel.getCurrentPage() + 1)
+            monitoringViewModel.getNasahabs(binding.searchEditText.text.toString(), requireContext())
+            Log.d("MonitoringFragment", "Next button clicked, page: ${monitoringViewModel.getCurrentPage()}")
+            updateButtonVisibility()
+        }
 
         // Fetch initial data
         monitoringViewModel.getNasahabs("", requireContext())
@@ -79,6 +96,11 @@ class MonitoringFragment : Fragment() {
 
     private fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
+    }
+
+    private fun updateButtonVisibility() {
+        val currentPage = monitoringViewModel.getCurrentPage()
+        binding.previousButton.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
     }
 
     private fun showSuratPeringatanDialog(suratPeringatan: SuratPeringatan) {
@@ -101,5 +123,9 @@ class MonitoringFragment : Fragment() {
         dismissLoadingDialog() // Ensure dialog is dismissed when fragment is destroyed
     }
 }
+
+
+
+
 
 

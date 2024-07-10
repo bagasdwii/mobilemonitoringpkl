@@ -81,7 +81,7 @@ class SuratRepository(private val context: Context) {
         val tingkat = suratPeringatan.tingkat.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tanggal = suratPeringatan.tanggal.toRequestBody("text/plain".toMediaTypeOrNull())
         val keterangan = suratPeringatan.keterangan.toRequestBody("text/plain".toMediaTypeOrNull())
-        val idAccountOfficer = suratPeringatan.idAccountOfficer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val idAccountOfficer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val buktiGambar = imageFile?.let {
             MultipartBody.Part.createFormData("bukti_gambar", it.name, it.asRequestBody("image/*".toMediaTypeOrNull()))
@@ -103,7 +103,7 @@ class SuratRepository(private val context: Context) {
         // Logging the endpoint and data
         val endpointUrl = call.request().url
         Log.d("NasabahRepository", "submitSuratPeringatan: URL: $endpointUrl")
-        Log.d("NasabahRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.idAccountOfficer}")
+        Log.d("NasabahRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
 
         buktiGambar?.let {
             Log.d("NasabahRepository", "submitSuratPeringatan: buktiGambar=${it.body.contentType()}, ${it.body.contentLength()} bytes")
