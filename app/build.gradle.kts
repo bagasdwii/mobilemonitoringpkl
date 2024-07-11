@@ -62,7 +62,9 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
 
     // Glide for image loading
+//    implementation ("com.github.barteksc:android-pdf-viewer:2.8.2")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation ("androidx.paging:paging-runtime:3.1.0")
 }

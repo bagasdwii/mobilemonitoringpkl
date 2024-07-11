@@ -72,6 +72,7 @@ class MonitoringViewModel : ViewModel() {
                     }
                     _nasabahs.postValue(nasabahsList)
                     Log.d("MonitoringViewModel", "Nasabahs fetched successfully: ${nasabahsList.size} items")
+                    Log.d("MonitoringViewModel", "Nasabahs fetched successfully: $nasabahsList")
                 } else {
                     Log.e("MonitoringViewModel", "Error fetching nasabahs, status code: $code")
                 }
