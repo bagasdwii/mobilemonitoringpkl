@@ -149,7 +149,7 @@ class MonitoringAdapter(
 
             suratPeringatan.bukti_gambar?.let { bukti_gambar ->
                 Log.d("NasabahAdapter", "Loading gambar: $bukti_gambar")
-                loadGambar(bukti_gambar, ivBuktiGambar)
+                loadGambar(bukti_gambar.replace("private/surat_peringatan/", ""), ivBuktiGambar)
 
             }
 
