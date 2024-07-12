@@ -12,14 +12,25 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _loginResult = MutableLiveData<Result<String>>()
     val loginResult: LiveData<Result<String>> get() = _loginResult
-
+    fun checkConnectionAndLogin(email: String, password: String) {
+        userRepository.checkConnection { result ->
+            result.onSuccess {
+                // Jika koneksi berhasil, lanjutkan login
+                login(email, password)
+            }.onFailure { exception ->
+                // Jika koneksi gagal, laporkan kesalahan
+                _loginResult.postValue(Result.failure(Exception("${exception.message}")))
+            }
+        }
+    }
     fun login(email: String, password: String) {
         userRepository.login(email, password) { result ->
             _loginResult.postValue(result)
-            result.onFailure { exception ->
-                Log.e("LOGIN_VIEW_MODEL", "Login failed: ${exception.message}")
-            }
+
         }
+    }
+    fun checkConnection(callback: (Result<Boolean>) -> Unit) {
+        userRepository.checkConnection(callback)
     }
 }
 

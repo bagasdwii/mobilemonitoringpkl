@@ -49,13 +49,17 @@
             android:layout_height="wrap_content"
             android:text="pdf" />
 
-        <FrameLayout
-            android:id="@+id/pdfContainer"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvPdfFileName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp">
-            <!-- Container for PDF content -->
-        </FrameLayout>
+            android:text="PDF File Name"
+            android:textColor="@android:color/black" />
 
+        <Button
+            android:id="@+id/btnDownloadPdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download PDF" />
     </LinearLayout>
 </ScrollView>

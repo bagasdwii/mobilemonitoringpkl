@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 Log.d("LOGIN_FRAGMENT", "Starting login for email: $email")
                 showLoadingDialog()
-                loginViewModel.login(email, password)
+                loginViewModel.checkConnectionAndLogin(email, password)
             } else {
                 alertFail("Email and Password are required.")
                 Log.w("LOGIN_FRAGMENT", "Email and Password are required.")
@@ -72,7 +72,15 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnRegis.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            showLoadingDialog()
+            loginViewModel.checkConnection { result ->
+                hideLoadingDialog()
+                result.onSuccess {
+                    findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+                }.onFailure { exception ->
+                    alertFail("Gagal Terkoneksi Dengan Server")
+                }
+            }
         }
 
         binding.btnForget.setOnClickListener {

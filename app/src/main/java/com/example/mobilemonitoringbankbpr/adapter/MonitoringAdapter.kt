@@ -1,19 +1,26 @@
 package com.example.mobilemonitoringbankbpr.adapter
 
+import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
+import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -112,16 +119,18 @@ class MonitoringAdapter(
             binding.btnSP3.setOnClickListener {
                 showSuratPeringatanDialog(nasabah.suratPeringatan, 3)
             }
+
+
         }
 
         private fun showSuratPeringatanDialog(suratPeringatanList: List<SuratPeringatan>, tingkat: Int) {
             val suratPeringatan = suratPeringatanList.find { it.tingkat == tingkat }
             if (suratPeringatan == null) {
-                Log.e("NasabahAdapter", "Surat Peringatan of tingkat $tingkat is null")
+                Log.e("NasabahAdapter", "Surat Peringatan tingkat $tingkat tidak ditemukan")
                 return
             }
 
-            Log.d("NasabahAdapter", "Showing Surat Peringatan dialog for Surat Peringatan No: ${suratPeringatan.no}")
+            Log.d("NasabahAdapter", "Menampilkan dialog untuk Surat Peringatan No: ${suratPeringatan.no}")
 
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
             val alertDialog = AlertDialog.Builder(context)
@@ -134,14 +143,19 @@ class MonitoringAdapter(
             dialogView.findViewById<TextView>(R.id.tvKeterangan).text = "Keterangan: ${suratPeringatan.keterangan}"
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
-            val pdfContainer = dialogView.findViewById<FrameLayout>(R.id.pdfContainer)
+            val tvPdfFileName = dialogView.findViewById<TextView>(R.id.tvPdfFileName)
+            val btnDownloadPdf = dialogView.findViewById<Button>(R.id.btnDownloadPdf)
 
             suratPeringatan.bukti_gambar?.let { bukti_gambar ->
                 loadGambar(bukti_gambar.replace("private/surat_peringatan/", ""), ivBuktiGambar)
             }
 
             suratPeringatan.scan_pdf?.let { pdfUrl ->
-                loadPdf(pdfUrl, pdfContainer)
+                val pdfFileName = pdfUrl.substringAfterLast("/")
+                tvPdfFileName.text = pdfFileName
+                btnDownloadPdf.setOnClickListener {
+                    downloadPdf(pdfUrl.replace("private/surat_peringatan/", ""))
+                }
             }
 
             alertDialog.show()
@@ -149,7 +163,7 @@ class MonitoringAdapter(
 
         private fun loadGambar(filename: String, imageView: ImageView) {
             val imageUrl = context.getString(R.string.api_server) + "/surat-peringatan/gambar/$filename"
-            Log.d("NasabahAdapter", "Loading image from URL: $imageUrl")
+            Log.d("NasabahAdapter", "Memuat gambar dari URL: $imageUrl")
             Glide.with(imageView.context)
                 .load(imageUrl)
                 .listener(object : RequestListener<Drawable> {
@@ -159,7 +173,7 @@ class MonitoringAdapter(
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        Log.e("NasabahAdapter", "Failed to load image", e)
+                        Log.e("NasabahAdapter", "Gagal memuat gambar", e)
                         return false
                     }
 
@@ -176,29 +190,52 @@ class MonitoringAdapter(
                 .into(imageView)
         }
 
-        private fun loadPdf(filename: String, pdfContainer: FrameLayout) {
+        private fun downloadPdf(filename: String) {
             val pdfUrl = context.getString(R.string.api_server) + "/surat-peringatan/pdf/$filename"
-            val pdfFile = File(context.cacheDir, "temp.pdf")
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val uri = Uri.parse(pdfUrl)
 
-            coroutineScope.launch(Dispatchers.IO) {
-                try {
-                    Log.d("NasabahAdapter", "Downloading PDF from URL: $pdfUrl")
-                    val response = downloadPdf(pdfUrl)
-                    response?.let {
-                        pdfFile.writeBytes(it)
-                        Log.d("NasabahAdapter", "PDF downloaded: $filename")
+            val request = DownloadManager.Request(uri)
+            request.setTitle("Mengunduh $filename")
+            request.setDescription("Sedang mengunduh file PDF...")
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
-                        withContext(Dispatchers.Main) {
-                            displayPdf(pdfFile, pdfContainer)
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("NasabahAdapter", "Error downloading PDF: $pdfUrl", e)
-                }
-            }
+            downloadManager.enqueue(request)
         }
 
-        private fun downloadPdf(urlString: String): ByteArray? {
+//        private fun openPdf(file: File) {
+//            val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            intent.setDataAndType(uri, "application/pdf")
+//            intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//            try {
+//                context.startActivity(intent)
+//            } catch (e: ActivityNotFoundException) {
+//                Toast.makeText(context, "Tidak ada aplikasi untuk membuka PDF", Toast.LENGTH_LONG).show()
+//            }
+//        }
+
+//        coroutineScope.launch(Dispatchers.IO) {
+//                try {
+//                    Log.d("NasabahAdapter", "Mengunduh PDF dari URL: $pdfUrl")
+//                    val response = downloadPdfContent(pdfUrl)
+//                    response?.let {
+//                        pdfFile.writeBytes(it)
+//                        Log.d("NasabahAdapter", "PDF diunduh: $filename")
+//
+//                        withContext(Dispatchers.Main) {
+//                            Toast.makeText(context, "PDF berhasil diunduh: $filename", Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                } catch (e: Exception) {
+//                    Log.e("NasabahAdapter", "Kesalahan saat mengunduh PDF: $pdfUrl", e)
+//                }
+//            }
+//        }
+
+        private fun downloadPdfContent(urlString: String): ByteArray? {
             return try {
                 val url = URL(urlString)
                 val connection = url.openConnection() as HttpURLConnection
@@ -216,7 +253,7 @@ class MonitoringAdapter(
                 buffer.flush()
                 buffer.toByteArray()
             } catch (e: Exception) {
-                Log.e("NasabahAdapter", "Error in downloadPdf: ${e.message}")
+                Log.e("NasabahAdapter", "Kesalahan dalam downloadPdfContent: ${e.message}")
                 null
             }
         }

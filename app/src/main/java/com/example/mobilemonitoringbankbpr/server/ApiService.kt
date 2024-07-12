@@ -1,4 +1,5 @@
 package com.example.mobilemonitoringbankbpr.server
+import com.example.mobilemonitoringbankbpr.data.ConnectionResponse
 import com.example.mobilemonitoringbankbpr.data.Jabatan
 import com.example.mobilemonitoringbankbpr.data.Login
 import com.example.mobilemonitoringbankbpr.data.Nasabah
@@ -20,6 +21,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+
+    @GET("api/checkconnection")
+    fun checkConnection(): Call<ConnectionResponse>
     @Multipart
     @POST("api/surat_peringatan")
     fun submitSuratPeringatan(
