@@ -14,12 +14,27 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
 
     val user = MutableLiveData<User>()
     val isLoading = MutableLiveData<Boolean>()
+    val isConnected = MutableLiveData<Boolean>()
 
     init {
-        getUser()
+        checkConnection()
     }
-    private fun getUser() {
+
+    private fun checkConnection() {
         isLoading.value = true
+        repository.checkConnection(getApplication()) { connected ->
+            isConnected.value = connected
+            if (connected) {
+                getUser()
+            } else {
+                isLoading.value = false
+                logoutLocally()
+                Log.e("AccountViewModel", "No internet connection")
+            }
+        }
+    }
+
+    private fun getUser() {
         Log.d("AccountViewModel", "Fetching user data...")
         repository.getUser().observeForever { userData ->
             if (userData != null) {
@@ -31,6 +46,7 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
             isLoading.value = false
         }
     }
+
     fun logout(onResult: (Boolean) -> Unit) {
         isLoading.value = true
         repository.logout(getApplication()) { success ->
@@ -39,7 +55,12 @@ class AccountViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun logoutLocally() {
+        repository.logoutLocally(getApplication())
+    }
 }
+
+
 
 
 

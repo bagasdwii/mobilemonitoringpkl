@@ -37,6 +37,13 @@ class AccountFragment : Fragment() {
 
         // Observe ViewModel data
         observeViewModel()
+
+        // Check connection and logout locally if necessary
+        accountViewModel.isConnected.observe(viewLifecycleOwner, { isConnected ->
+            if (!isConnected) {
+                showAlertConnectionLost()
+            }
+        })
     }
 
     private fun observeViewModel() {
@@ -47,7 +54,6 @@ class AccountFragment : Fragment() {
                 dismissLoadingDialog()
             }
         })
-
         accountViewModel.user.observe(viewLifecycleOwner, { user ->
             binding.tvName.text = user.name
             binding.tvEmail.text = user.email
@@ -119,7 +125,7 @@ class AccountFragment : Fragment() {
                     binding.tvAdminKas.visibility = View.VISIBLE
                 }
                 user.jabatan == "Account Officer" && user.cabang != null -> {
-                    Log.d("AccountFragment", "User supervisor: ${user.id_kepala_cabang}")
+                    Log.d("AccountFragment", "User supervisor: ${user.id_admin_kas}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
                     binding.tvAdminKasLabel.visibility = View.VISIBLE
@@ -171,11 +177,24 @@ class AccountFragment : Fragment() {
             .show()
     }
 
+    private fun showAlertConnectionLost() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Koneksi Terputus")
+            .setIcon(R.drawable.ic_warning)
+            .setMessage("Koneksi internet terputus. Aplikasi akan keluar.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                requireActivity().finish()
+            }
+            .show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
 
 
 
