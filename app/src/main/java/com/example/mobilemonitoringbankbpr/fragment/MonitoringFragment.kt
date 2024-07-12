@@ -58,7 +58,7 @@ class MonitoringFragment : Fragment() {
         binding.searchButton.setOnClickListener {
             val query = binding.searchEditText.text.toString()
             monitoringViewModel.setPage(1) // Reset to the first page
-            monitoringViewModel.getNasahabs(query, requireContext())
+            monitoringViewModel.getNasabahs(query, requireContext())
 
             updateButtonVisibility()
         }
@@ -67,7 +67,7 @@ class MonitoringFragment : Fragment() {
             val currentPage = monitoringViewModel.getCurrentPage()
             if (currentPage > 1) {
                 monitoringViewModel.setPage(currentPage - 1)
-                monitoringViewModel.getNasahabs(binding.searchEditText.text.toString(), requireContext())
+                monitoringViewModel.getNasabahs(binding.searchEditText.text.toString(), requireContext())
                 Log.d("MonitoringFragment", "Previous button clicked, page: ${monitoringViewModel.getCurrentPage()}")
             }
             updateButtonVisibility()
@@ -75,13 +75,13 @@ class MonitoringFragment : Fragment() {
 
         binding.nextButton.setOnClickListener {
             monitoringViewModel.setPage(monitoringViewModel.getCurrentPage() + 1)
-            monitoringViewModel.getNasahabs(binding.searchEditText.text.toString(), requireContext())
+            monitoringViewModel.getNasabahs(binding.searchEditText.text.toString(), requireContext())
             Log.d("MonitoringFragment", "Next button clicked, page: ${monitoringViewModel.getCurrentPage()}")
             updateButtonVisibility()
         }
 
         // Fetch initial data
-        monitoringViewModel.getNasahabs("", requireContext())
+        monitoringViewModel.getNasabahs("", requireContext())
     }
 
     private fun showLoadingDialog() {

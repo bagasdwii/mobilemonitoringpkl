@@ -30,23 +30,30 @@ class NasabahPagingSource(
 
                 for (i in 0 until nasabahsArray.length()) {
                     val nasabahJson = nasabahsArray.getJSONObject(i)
-                    val suratPeringatanJson = nasabahJson.optJSONObject("surat_peringatan")
+                    val suratPeringatanArray = nasabahJson.optJSONArray("surat_peringatan")
+                    val suratPeringatanList = mutableListOf<SuratPeringatan>()
+
+                    suratPeringatanArray?.let {
+                        for (j in 0 until it.length()) {
+                            val spJson = it.getJSONObject(j)
+                            val suratPeringatan = SuratPeringatan(
+                                no = spJson.getLong("no"),
+                                tingkat = spJson.getInt("tingkat"),
+                                tanggal = spJson.getString("tanggal"),
+                                keterangan = spJson.getString("keterangan"),
+                                bukti_gambar = spJson.optString("bukti_gambar"),
+                                scan_pdf = spJson.optString("scan_pdf"),
+                                id_account_officer = spJson.getLong("id_account_officer")
+                            )
+                            suratPeringatanList.add(suratPeringatan)
+                        }
+                    }
 
                     val nasabah = Nasabah(
                         no = nasabahJson.getLong("no"),
                         nama = nasabahJson.getString("nama"),
                         cabang = nasabahJson.getString("nama_cabang"),
-                        suratPeringatan = suratPeringatanJson?.let {
-                            SuratPeringatan(
-                                no = it.getLong("no"),
-                                tingkat = it.getInt("tingkat"),
-                                tanggal = it.getString("tanggal"),
-                                keterangan = it.getString("keterangan"),
-                                bukti_gambar = it.getString("bukti_gambar"),
-                                scan_pdf = it.getString("scan_pdf"),
-                                id_account_officer = it.getLong("id_account_officer")
-                            )
-                        }
+                        suratPeringatan = suratPeringatanList
                     )
                     nasabahsList.add(nasabah)
                 }
@@ -71,3 +78,4 @@ class NasabahPagingSource(
         }
     }
 }
+

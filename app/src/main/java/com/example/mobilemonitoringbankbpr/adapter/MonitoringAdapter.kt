@@ -75,93 +75,80 @@ class MonitoringAdapter(
             binding.btnSP01.visibility = View.GONE
             binding.btnSP02.visibility = View.GONE
             binding.btnSP03.visibility = View.GONE
+
             binding.NamaNasabah.text = nasabah.nama
             binding.CabangNasabah.text = nasabah.cabang
 
-            val suratPeringatan = nasabah.suratPeringatan
-            if (suratPeringatan != null) {
-                when (suratPeringatan.tingkat) {
-                    3 -> {
-                        binding.btnSP1.visibility = View.VISIBLE
-                        binding.btnSP2.visibility = View.VISIBLE
-                        binding.btnSP3.visibility = View.VISIBLE
-                    }
-
-                    2 -> {
-                        binding.btnSP1.visibility = View.VISIBLE
-                        binding.btnSP2.visibility = View.VISIBLE
-                        binding.btnSP03.visibility = View.VISIBLE
-                    }
-
-                    1 -> {
-                        binding.btnSP1.visibility = View.VISIBLE
-                        binding.btnSP02.visibility = View.VISIBLE
-                        binding.btnSP03.visibility = View.VISIBLE
-                    }
+            val highestTingkat = nasabah.suratPeringatan.maxByOrNull { it.tingkat }?.tingkat ?: 0
+            when (highestTingkat) {
+                3 -> {
+                    binding.btnSP1.visibility = View.VISIBLE
+                    binding.btnSP2.visibility = View.VISIBLE
+                    binding.btnSP3.visibility = View.VISIBLE
                 }
-            } else {
-                binding.btnSP01.visibility = View.VISIBLE
-                binding.btnSP02.visibility = View.VISIBLE
-                binding.btnSP03.visibility = View.VISIBLE
+                2 -> {
+                    binding.btnSP1.visibility = View.VISIBLE
+                    binding.btnSP2.visibility = View.VISIBLE
+                    binding.btnSP03.visibility = View.VISIBLE
+                }
+                1 -> {
+                    binding.btnSP1.visibility = View.VISIBLE
+                    binding.btnSP02.visibility = View.VISIBLE
+                    binding.btnSP03.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.btnSP01.visibility = View.VISIBLE
+                    binding.btnSP02.visibility = View.VISIBLE
+                    binding.btnSP03.visibility = View.VISIBLE
+                }
             }
 
             binding.btnSP1.setOnClickListener {
-                Log.d("NasabahAdapter", "btnSP1 clicked for Nasabah No: ${nasabah.no}")
-                showSuratPeringatanDialog(suratPeringatan)
+                showSuratPeringatanDialog(nasabah.suratPeringatan, 1)
             }
             binding.btnSP2.setOnClickListener {
-                Log.d("NasabahAdapter", "btnSP2 clicked for Nasabah No: ${nasabah.no}")
-                showSuratPeringatanDialog(suratPeringatan)
+                showSuratPeringatanDialog(nasabah.suratPeringatan, 2)
             }
             binding.btnSP3.setOnClickListener {
-                Log.d("NasabahAdapter", "btnSP3 clicked for Nasabah No: ${nasabah.no}")
-                showSuratPeringatanDialog(suratPeringatan)
+                showSuratPeringatanDialog(nasabah.suratPeringatan, 3)
             }
         }
 
-        private fun showSuratPeringatanDialog(suratPeringatan: SuratPeringatan?) {
+        private fun showSuratPeringatanDialog(suratPeringatanList: List<SuratPeringatan>, tingkat: Int) {
+            val suratPeringatan = suratPeringatanList.find { it.tingkat == tingkat }
             if (suratPeringatan == null) {
-                Log.e("NasabahAdapter", "Surat Peringatan is null")
+                Log.e("NasabahAdapter", "Surat Peringatan of tingkat $tingkat is null")
                 return
             }
 
-            Log.d(
-                "NasabahAdapter",
-                "Showing Surat Peringatan dialog for Surat Peringatan No: ${suratPeringatan.no}"
-            )
+            Log.d("NasabahAdapter", "Showing Surat Peringatan dialog for Surat Peringatan No: ${suratPeringatan.no}")
 
-            val dialogView =
-                LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
             val alertDialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
 
-            dialogView.findViewById<TextView>(R.id.tvTingkat).text =
-                "Tingkat: ${suratPeringatan.tingkat}"
-            dialogView.findViewById<TextView>(R.id.tvTanggal).text =
-                "Tanggal: ${suratPeringatan.tanggal}"
-            dialogView.findViewById<TextView>(R.id.tvKeterangan).text =
-                "Keterangan: ${suratPeringatan.keterangan}"
+            dialogView.findViewById<TextView>(R.id.tvTingkat).text = "Tingkat: ${suratPeringatan.tingkat}"
+            dialogView.findViewById<TextView>(R.id.tvTanggal).text = "Tanggal: ${suratPeringatan.tanggal}"
+            dialogView.findViewById<TextView>(R.id.tvKeterangan).text = "Keterangan: ${suratPeringatan.keterangan}"
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
             val pdfContainer = dialogView.findViewById<FrameLayout>(R.id.pdfContainer)
 
             suratPeringatan.bukti_gambar?.let { bukti_gambar ->
-                Log.d("NasabahAdapter", "Loading gambar: $bukti_gambar")
                 loadGambar(bukti_gambar.replace("private/surat_peringatan/", ""), ivBuktiGambar)
-
             }
 
             suratPeringatan.scan_pdf?.let { pdfUrl ->
-                Log.d("NasabahAdapter", "Loading PDF: $pdfUrl")
                 loadPdf(pdfUrl, pdfContainer)
             }
 
             alertDialog.show()
         }
+
         private fun loadGambar(filename: String, imageView: ImageView) {
-            val imageUrl = "http://192.168.1.9:8000/api/surat-peringatan/gambar/$filename"
+            val imageUrl = context.getString(R.string.api_server) + "/surat-peringatan/gambar/$filename"
             Log.d("NasabahAdapter", "Loading image from URL: $imageUrl")
             Glide.with(imageView.context)
                 .load(imageUrl)
@@ -188,7 +175,6 @@ class MonitoringAdapter(
                 })
                 .into(imageView)
         }
-
 
         private fun loadPdf(filename: String, pdfContainer: FrameLayout) {
             val pdfUrl = context.getString(R.string.api_server) + "/surat-peringatan/pdf/$filename"
@@ -235,12 +221,9 @@ class MonitoringAdapter(
             }
         }
 
-
-
         private fun displayPdf(file: File, pdfContainer: FrameLayout) {
             try {
-                val fileDescriptor =
-                    ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+                val fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
                 val renderer = PdfRenderer(fileDescriptor)
 
                 // Display the first page of the PDF

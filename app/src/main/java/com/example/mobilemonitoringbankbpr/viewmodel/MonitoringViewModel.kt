@@ -25,12 +25,12 @@ class MonitoringViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val _suratPeringatan = MutableLiveData<SuratPeringatan>()
-    val suratPeringatan: LiveData<SuratPeringatan> get() = _suratPeringatan
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
 
     private var currentPage = 1
 
-    fun getNasahabs(searchQuery: String, context: Context) {
+    fun getNasabahs(searchQuery: String, context: Context) {
         _isLoading.value = true
         Log.d("MonitoringViewModel", "Fetching nasabahs started with search query: $searchQuery on page: $currentPage")
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,33 +50,41 @@ class MonitoringViewModel : ViewModel() {
                     val nasabahsArray = response.getJSONArray("data")
                     for (i in 0 until nasabahsArray.length()) {
                         val nasabahJson = nasabahsArray.getJSONObject(i)
-                        val suratPeringatanJson = nasabahJson.optJSONObject("surat_peringatan")
+                        val suratPeringatanArray = nasabahJson.optJSONArray("surat_peringatan")
+
+                        val suratPeringatanList = mutableListOf<SuratPeringatan>()
+                        suratPeringatanArray?.let {
+                            for (j in 0 until it.length()) {
+                                val suratPeringatanJson = it.getJSONObject(j)
+                                val suratPeringatan = SuratPeringatan(
+                                    no = suratPeringatanJson.getLong("no"),
+                                    tingkat = suratPeringatanJson.getInt("tingkat"),
+                                    tanggal = suratPeringatanJson.getString("tanggal"),
+                                    keterangan = suratPeringatanJson.getString("keterangan"),
+                                    bukti_gambar = suratPeringatanJson.getString("bukti_gambar"),
+                                    scan_pdf = suratPeringatanJson.getString("scan_pdf"),
+                                    id_account_officer = suratPeringatanJson.getLong("id_account_officer")
+                                )
+                                suratPeringatanList.add(suratPeringatan)
+                            }
+                        }
 
                         val nasabah = Nasabah(
                             no = nasabahJson.getLong("no"),
                             nama = nasabahJson.getString("nama"),
                             cabang = nasabahJson.getString("nama_cabang"),
-                            suratPeringatan = suratPeringatanJson?.let {
-                                SuratPeringatan(
-                                    no = it.getLong("no"),
-                                    tingkat = it.getInt("tingkat"),
-                                    tanggal = it.getString("tanggal"),
-                                    keterangan = it.getString("keterangan"),
-                                    bukti_gambar = it.getString("bukti_gambar"),
-                                    scan_pdf = it.getString("scan_pdf"),
-                                    id_account_officer = it.getLong("id_account_officer")
-                                )
-                            }
+                            suratPeringatan = suratPeringatanList
                         )
                         nasabahsList.add(nasabah)
                     }
                     _nasabahs.postValue(nasabahsList)
                     Log.d("MonitoringViewModel", "Nasabahs fetched successfully: ${nasabahsList.size} items")
-                    Log.d("MonitoringViewModel", "Nasabahs fetched successfully: $nasabahsList")
                 } else {
+                    _errorMessage.postValue("Error fetching nasabahs, status code: $code")
                     Log.e("MonitoringViewModel", "Error fetching nasabahs, status code: $code")
                 }
             } catch (e: Exception) {
+                _errorMessage.postValue("Exception while fetching nasabahs: ${e.message}")
                 Log.e("MonitoringViewModel", "Exception while fetching nasabahs", e)
             } finally {
                 _isLoading.postValue(false)
@@ -93,6 +101,7 @@ class MonitoringViewModel : ViewModel() {
         return currentPage
     }
 }
+
 
 
 
