@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RepositoryRegister(private val application: Application) {
+class RegisterRepository(private val application: Application) {
 
     private val apiServiceWithoutAuth = RetrofitClient.getServiceWithoutAuth()
 
