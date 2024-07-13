@@ -84,7 +84,8 @@ class SuratRepository(private val context: Context) {
         val idAccountOfficer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val buktiGambar = imageFile?.let {
-            MultipartBody.Part.createFormData("bukti_gambar", it.name, it.asRequestBody("image/*".toMediaTypeOrNull()))
+            val requestFile = it.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("bukti_gambar", it.name, requestFile)
         }
         val scanPdf = pdfFile?.let {
             MultipartBody.Part.createFormData("scan_pdf", it.name, it.asRequestBody("application/pdf".toMediaTypeOrNull()))

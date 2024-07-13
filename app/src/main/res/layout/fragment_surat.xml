@@ -30,7 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Pilih Tanggal"
-        android:focusable="false" />
+        android:focusable="false"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/etKeterangan"

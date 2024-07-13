@@ -1,10 +1,15 @@
 package com.example.mobilemonitoringbankbpr.fragment
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.ProgressDialog.show
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,18 +23,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
+import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.FileUtilsNasabah
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.FragmentSuratBinding
 import com.example.mobilemonitoringbankbpr.viewmodel.SuratViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
+import org.json.JSONException
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 
 class SuratFragment : Fragment() {
@@ -83,7 +100,6 @@ class SuratFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
                 Log.d("SuratFragment", "Surat peringatan berhasil dikirim")
-                // Reset form
                 resetForm()
             } else {
                 Toast.makeText(
@@ -104,6 +120,7 @@ class SuratFragment : Fragment() {
             }
             Log.d("SuratFragment", "isLoading: $isLoading")
         })
+        updateDateInView()
     }
 
     private fun setupNasabahDropdown() {
@@ -115,7 +132,6 @@ class SuratFragment : Fragment() {
             }
         })
     }
-
 
     private fun showDialog(arrayList: ArrayList<String>) {
         val dialogBinding = DialogSeacrhSpinnerBinding.inflate(layoutInflater)
@@ -172,15 +188,6 @@ class SuratFragment : Fragment() {
         binding.etTanggal.setText(sdf.format(calendar.time))
         Log.d("SuratFragment", "Date updated in view: ${sdf.format(calendar.time)}")
     }
-
-    private fun setupImagePicker() {
-        binding.btnPilihGambar.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-            Log.d("SuratFragment", "Image picker intent launched")
-        }
-    }
-
     private fun setupPdfPicker() {
         binding.btnPilihPdf.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -189,17 +196,43 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "PDF picker intent launched")
         }
     }
+    private fun setupImagePicker() {
+        binding.btnPilihGambar.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CAMERA_PERMISSION
+                )
+            } else {
+                openCamera()
+            }
+            Log.d("SuratFragment", "Image picker intent launched")
+        }
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, CAMERA_REQUEST)
+    }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                PICK_IMAGE_REQUEST -> {
-                    selectedImageUri = data?.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, selectedImageUri)
-                    binding.ivPreviewGambar.setImageBitmap(bitmap)
-                    binding.ivPreviewGambar.visibility = View.VISIBLE
-                    Log.d("SuratFragment", "Image selected: $selectedImageUri")
+                CAMERA_REQUEST -> {
+                    val bitmap = data?.extras?.get("data") as? Bitmap
+                    bitmap?.let {
+                        val file = saveBitmapToFile(it)
+                        selectedImageUri = Uri.fromFile(file)
+                        binding.ivPreviewGambar.setImageBitmap(bitmap)
+                        binding.ivPreviewGambar.visibility = View.VISIBLE
+                        Log.d("SuratFragment", "Image captured: $selectedImageUri")
+                    }
                 }
                 PICK_PDF_REQUEST -> {
                     selectedPdfUri = data?.data
@@ -211,13 +244,30 @@ class SuratFragment : Fragment() {
         }
     }
 
+    private fun saveBitmapToFile(bitmap: Bitmap): File? {
+        val fileName = "captured_image_${System.currentTimeMillis()}.jpg"
+        val file = File(requireContext().cacheDir, fileName)
+        return try {
+            val out = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.flush()
+            out.close()
+            file
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
+
     private fun submitSuratPeringatan() {
         val namaNasabah = binding.autoCompleteNasabah.text.toString()
         val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
         val tanggal = binding.etTanggal.text.toString()
         val keterangan = binding.etKeterangan.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP==null || tanggal.isEmpty() || keterangan.isEmpty()) {
+        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || keterangan.isEmpty()) {
             Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
             Log.w("SuratFragment", "Form submission failed: empty fields")
             return
@@ -240,11 +290,17 @@ class SuratFragment : Fragment() {
             scan_pdf = selectedPdfUri.toString(),
             id_account_officer = nasabah.idAccountOfficer
         )
+
         val imageFile = selectedImageUri?.let { getFileFromUri(it) }
         val pdfFile = selectedPdfUri?.let { getFileFromUri(it) }
-        nasabahViewModel.submitSuratPeringatan(suratPeringatan,  imageFile, pdfFile)
+        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile, pdfFile)
         Log.d("SuratFragment", "Surat peringatan submitted: $suratPeringatan")
+        Log.d("SuratFragment", "Gambar URI: $selectedImageUri")
+        Log.d("SuratFragment", "Gambar File Path: ${imageFile?.absolutePath}")
+        Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
+
     }
+
     private fun getFileFromUri(uri: Uri?): File? {
         uri ?: return null
         return context?.let { FileUtilsNasabah.getFileFromUri(it, uri) }
@@ -262,21 +318,16 @@ class SuratFragment : Fragment() {
         Log.d("SuratFragment", "Form reset completed")
     }
 
-    companion object {
-        private const val PICK_IMAGE_REQUEST = 1
-        private const val PICK_PDF_REQUEST = 2
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        hideLoadingDialog() // Ensure the loading dialog is dismissed when the fragment is destroyed
+        hideLoadingDialog()
     }
 
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
             loadingDialog = AlertDialog.Builder(requireContext())
-                .setView(R.layout.dialog_loading) // You need to create dialog_loading.xml layout
+                .setView(R.layout.dialog_loading)
                 .setCancelable(false)
                 .create()
         }
@@ -285,6 +336,12 @@ class SuratFragment : Fragment() {
 
     private fun hideLoadingDialog() {
         loadingDialog?.dismiss()
+    }
+
+    companion object {
+        private const val CAMERA_REQUEST = 1001
+        private const val PICK_PDF_REQUEST = 1002
+        private const val REQUEST_CAMERA_PERMISSION = 1003
     }
 }
 
