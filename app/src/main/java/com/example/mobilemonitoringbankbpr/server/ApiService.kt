@@ -32,8 +32,8 @@ interface ApiService {
         @Part("tanggal") tanggal: RequestBody,
         @Part("keterangan") keterangan: RequestBody,
         @Part("idAccountOfficer") idAccountOfficer: RequestBody,
-        @Part buktiGambar: MultipartBody.Part?,
-        @Part scanPdf: MultipartBody.Part?
+        @Part bukti_gambar: MultipartBody.Part?,
+        @Part scan_pdf: MultipartBody.Part?
     ): Call<Void>
     @GET("api/jabatan")
     fun getJabatanData(): Call<List<Jabatan>>

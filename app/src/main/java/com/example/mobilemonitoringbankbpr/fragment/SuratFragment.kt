@@ -76,6 +76,7 @@ class SuratFragment : Fragment() {
         setupNasabahDropdown()
         setupDatePicker()
         setupImagePicker()
+        setupImagePickerGallery()
         setupPdfPicker()
 
         binding.btnSubmit.setOnClickListener {
@@ -188,6 +189,7 @@ class SuratFragment : Fragment() {
         binding.etTanggal.setText(sdf.format(calendar.time))
         Log.d("SuratFragment", "Date updated in view: ${sdf.format(calendar.time)}")
     }
+
     private fun setupPdfPicker() {
         binding.btnPilihPdf.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -212,14 +214,17 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "Image picker intent launched")
         }
     }
-
+    private fun setupImagePickerGallery() {
+        binding.btnPilihGambarGallery.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            Log.d("SuratFragment", "Image picker intent launched")
+        }
+    }
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST)
     }
-
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -233,6 +238,16 @@ class SuratFragment : Fragment() {
                         binding.ivPreviewGambar.visibility = View.VISIBLE
                         Log.d("SuratFragment", "Image captured: $selectedImageUri")
                     }
+                }
+                PICK_IMAGE_REQUEST -> {
+                    selectedImageUri = data?.data
+                    val bitmap = MediaStore.Images.Media.getBitmap(
+                        requireActivity().contentResolver,
+                        selectedImageUri
+                    )
+                    binding.ivPreviewGambar.setImageBitmap(bitmap)
+                    binding.ivPreviewGambar.visibility = View.VISIBLE
+                    Log.d("SuratFragment", "Image selected: $selectedImageUri")
                 }
                 PICK_PDF_REQUEST -> {
                     selectedPdfUri = data?.data
@@ -250,7 +265,6 @@ class SuratFragment : Fragment() {
         return try {
             val out = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-            out.flush()
             out.close()
             file
         } catch (e: IOException) {
@@ -309,7 +323,7 @@ class SuratFragment : Fragment() {
     private fun resetForm() {
         binding.autoCompleteNasabah.setText("")
         binding.spinnerTingkatSP.setSelection(0)
-        binding.etTanggal.setText("")
+        updateDateInView()
         binding.etKeterangan.setText("")
         binding.ivPreviewGambar.visibility = View.GONE
         binding.tvPdfName.visibility = View.GONE
@@ -342,6 +356,7 @@ class SuratFragment : Fragment() {
         private const val CAMERA_REQUEST = 1001
         private const val PICK_PDF_REQUEST = 1002
         private const val REQUEST_CAMERA_PERMISSION = 1003
+        private const val PICK_IMAGE_REQUEST = 1004
     }
 }
 

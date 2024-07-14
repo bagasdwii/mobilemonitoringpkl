@@ -60,12 +60,12 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
                 onSuccess = {
                     _isSubmitting.postValue(false)
                     _isSubmissionSuccessful.postValue(true)
-                    Log.d("NasabahViewModel", "submitSuratPeringatan: Success")
+                    Log.d("SuratViewModel", "submitSuratPeringatan: Success")
                 },
                 onFailure = { error ->
                     _isSubmitting.postValue(false)
                     _isSubmissionSuccessful.postValue(false)
-                    Log.e("NasabahViewModel", "submitSuratPeringatan: Error", error)
+                    Log.e("SuratViewModel", "submitSuratPeringatan: Error", error)
                 }
             )
         }

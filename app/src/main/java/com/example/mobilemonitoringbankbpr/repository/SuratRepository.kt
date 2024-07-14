@@ -59,10 +59,10 @@ class SuratRepository(private val context: Context) {
                 }
                 Log.d("NasabahRepository", "fetchNasabahList: Success")
             } catch (e: JSONException) {
-                Log.e("NasabahRepository", "fetchNasabahList: Error parsing JSON", e)
+                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
             }
         } ?: run {
-            Log.e("NasabahRepository", "fetchNasabahList: No response from server")
+            Log.e("SuratRepository", "fetchNasabahList: No response from server")
         }
 
         return nasabahList
@@ -83,12 +83,23 @@ class SuratRepository(private val context: Context) {
         val keterangan = suratPeringatan.keterangan.toRequestBody("text/plain".toMediaTypeOrNull())
         val idAccountOfficer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val buktiGambar = imageFile?.let {
-            val requestFile = it.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("bukti_gambar", it.name, requestFile)
+        val bukti_gambar = imageFile?.let {
+            MultipartBody.Part.createFormData("bukti_gambar", it.name, it.asRequestBody("image/*".toMediaTypeOrNull()))
         }
-        val scanPdf = pdfFile?.let {
+        val scan_pdf = pdfFile?.let {
             MultipartBody.Part.createFormData("scan_pdf", it.name, it.asRequestBody("application/pdf".toMediaTypeOrNull()))
+        }
+
+        // Logging before making the request
+        Log.d("SuratRepository", "Preparing to send SuratPeringatan data")
+        Log.d("SuratRepository", "Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
+
+        bukti_gambar?.let {
+            Log.d("SuratRepository", "buktiGambar: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
+        }
+
+        scan_pdf?.let {
+            Log.d("SuratRepository", "scanPdf: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
         }
 
         val call = apiService.submitSuratPeringatan(
@@ -97,40 +108,33 @@ class SuratRepository(private val context: Context) {
             tanggal,
             keterangan,
             idAccountOfficer,
-            buktiGambar,
-            scanPdf
+            bukti_gambar,
+            scan_pdf
         )
 
         // Logging the endpoint and data
         val endpointUrl = call.request().url
-        Log.d("NasabahRepository", "submitSuratPeringatan: URL: $endpointUrl")
-        Log.d("NasabahRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
-
-        buktiGambar?.let {
-            Log.d("NasabahRepository", "submitSuratPeringatan: buktiGambar=${it.body.contentType()}, ${it.body.contentLength()} bytes")
-        }
-
-        scanPdf?.let {
-            Log.d("NasabahRepository", "submitSuratPeringatan: scanPdf=${it.body.contentType()}, ${it.body.contentLength()} bytes")
-        }
+        Log.d("SuratRepository", "submitSuratPeringatan: URL: $endpointUrl")
+        Log.d("SuratRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
-                    Log.d("NasabahRepository", "submitSuratPeringatan: Success")
+                    Log.d("SuratRepository", "submitSuratPeringatan: Success")
                 } else {
                     onFailure(Exception("Failed with status code ${response.code()}"))
-                    Log.e("NasabahRepository", "submitSuratPeringatan: Failed with status code ${response.code()}")
+                    Log.e("SuratRepository", "submitSuratPeringatan: Failed with status code ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 onFailure(t)
-                Log.e("NasabahRepository", "submitSuratPeringatan: Failed", t)
+                Log.e("SuratRepository", "submitSuratPeringatan: Failed", t)
             }
         })
     }
+
 
 }
 

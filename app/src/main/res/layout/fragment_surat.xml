@@ -45,6 +45,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pilih Gambar" />
+    <Button
+        android:id="@+id/btnPilihGambarGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pilih Gambar Gallery" />
 
     <ImageView
         android:id="@+id/ivPreviewGambar"
