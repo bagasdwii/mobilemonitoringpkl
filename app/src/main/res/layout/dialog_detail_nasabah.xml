@@ -18,7 +18,7 @@
                 android:id="@+id/noNasabah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No Nama"
+                android:text="No"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 />
@@ -174,6 +174,20 @@
                 android:paddingBottom="8dp"/>
 
             <TextView
+                android:id="@+id/adminKas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Admin Kas:"/>
+            <TextView
+                android:id="@+id/tvadminKas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="adminKas"
+                android:paddingBottom="8dp"/>
+
+            <TextView
                 android:id="@+id/accountOfficer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -187,19 +201,6 @@
                 android:text="accountOfficer"
                 android:paddingBottom="8dp"/>
 
-            <TextView
-                android:id="@+id/adminKas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:text="Admin Kas:"/>
-            <TextView
-                android:id="@+id/tvadminKas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="adminKas"
-                android:paddingBottom="8dp"/>
 
         </LinearLayout>
     </ScrollView>

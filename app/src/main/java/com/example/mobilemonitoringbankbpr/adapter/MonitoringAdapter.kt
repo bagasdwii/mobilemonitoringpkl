@@ -1,5 +1,7 @@
 package com.example.mobilemonitoringbankbpr.adapter
 
+import java.text.NumberFormat
+import java.util.Locale
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -65,7 +67,7 @@ class MonitoringAdapter(
         val nasabah = getItem(position)
         holder.bind(nasabah)
     }
-
+    private val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
     inner class NasabahViewHolder(
         private val binding: ItemNasabahBinding,
         private val viewModel: MonitoringViewModel,
@@ -85,6 +87,10 @@ class MonitoringAdapter(
 
             binding.NamaNasabah.text = nasabah.nama
             binding.CabangNasabah.text = nasabah.cabang
+            binding.detailNasabah.setOnClickListener{
+                showDetailNasabahDialog(nasabah)
+            }
+
 
             val highestTingkat = nasabah.suratPeringatan.maxByOrNull { it.tingkat }?.tingkat ?: 0
             when (highestTingkat) {
@@ -122,7 +128,33 @@ class MonitoringAdapter(
 
 
         }
+        private fun showDetailNasabahDialog(nasabah: Nasabah) {
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_nasabah, null)
+            val alertDialog = AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
 
+            dialogView.findViewById<TextView>(R.id.tvnoNasabah).text = nasabah.no.toString()
+            dialogView.findViewById<TextView>(R.id.tvnasabahName).text = nasabah.nama
+            dialogView.findViewById<TextView>(R.id.tvpokok).text = numberFormat.format(nasabah.pokok.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvbunga).text = numberFormat.format(nasabah.bunga.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvdenda).text = numberFormat.format(nasabah.denda.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvtotal).text = numberFormat.format(nasabah.total.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvketerangan).text = nasabah.keterangan
+            dialogView.findViewById<TextView>(R.id.tvttd).text = nasabah.ttd
+            dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
+            dialogView.findViewById<TextView>(R.id.tvcabang).text = nasabah.cabang
+            dialogView.findViewById<TextView>(R.id.tvwilayah).text = nasabah.wilayah
+            dialogView.findViewById<TextView>(R.id.tvadminKas).text = nasabah.adminkas
+            dialogView.findViewById<TextView>(R.id.tvaccountOfficer).text = nasabah.accountOfficer
+
+            dialogView.findViewById<Button>(R.id.closeButton).setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
+        }
         private fun showSuratPeringatanDialog(suratPeringatanList: List<SuratPeringatan>, tingkat: Int) {
             val suratPeringatan = suratPeringatanList.find { it.tingkat == tingkat }
             if (suratPeringatan == null) {
@@ -203,37 +235,6 @@ class MonitoringAdapter(
 
             downloadManager.enqueue(request)
         }
-
-//        private fun openPdf(file: File) {
-//            val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.setDataAndType(uri, "application/pdf")
-//            intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//            try {
-//                context.startActivity(intent)
-//            } catch (e: ActivityNotFoundException) {
-//                Toast.makeText(context, "Tidak ada aplikasi untuk membuka PDF", Toast.LENGTH_LONG).show()
-//            }
-//        }
-
-//        coroutineScope.launch(Dispatchers.IO) {
-//                try {
-//                    Log.d("NasabahAdapter", "Mengunduh PDF dari URL: $pdfUrl")
-//                    val response = downloadPdfContent(pdfUrl)
-//                    response?.let {
-//                        pdfFile.writeBytes(it)
-//                        Log.d("NasabahAdapter", "PDF diunduh: $filename")
-//
-//                        withContext(Dispatchers.Main) {
-//                            Toast.makeText(context, "PDF berhasil diunduh: $filename", Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                } catch (e: Exception) {
-//                    Log.e("NasabahAdapter", "Kesalahan saat mengunduh PDF: $pdfUrl", e)
-//                }
-//            }
-//        }
 
         private fun downloadPdfContent(urlString: String): ByteArray? {
             return try {

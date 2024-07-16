@@ -52,7 +52,17 @@ class NasabahPagingSource(
                     val nasabah = Nasabah(
                         no = nasabahJson.getLong("no"),
                         nama = nasabahJson.getString("nama"),
+                        pokok = nasabahJson.getString("pokok"),
+                        bunga = nasabahJson.getString("bunga"),
+                        denda = nasabahJson.getString("denda"),
+                        total = nasabahJson.getInt("total"),
+                        keterangan = nasabahJson.getString("keterangan"),
+                        ttd = nasabahJson.getString("ttd"),
+                        kembali = nasabahJson.getString("kembali"),
                         cabang = nasabahJson.getString("nama_cabang"),
+                        wilayah = nasabahJson.getString("nama_wilayah"),
+                        adminkas = nasabahJson.getString("adminKas"),
+                        accountOfficer = nasabahJson.getString("accountOfficer"),
                         suratPeringatan = suratPeringatanList
                     )
                     nasabahsList.add(nasabah)
