@@ -13,6 +13,7 @@ import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.repository.MonitoringRepository
+import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +23,7 @@ import org.json.JSONObject
 import java.net.URLEncoder
 
 class MonitoringViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = MonitoringRepository(application)
+    private val repository: MonitoringRepository
 
     private val _nasabahs = MutableLiveData<List<Nasabah>>()
     val nasabahs: LiveData<List<Nasabah>> get() = _nasabahs
@@ -35,33 +36,40 @@ class MonitoringViewModel(application: Application) : AndroidViewModel(applicati
 
     private var currentPage = 1
 
+    init {
+        val apiService = RetrofitClient.getServiceWithAuth(application)
+        repository = MonitoringRepository(apiService)
+        Log.d("MonitoringViewModel", "ViewModel initialized with apiService")
+    }
+
     fun getNasabahs(searchQuery: String) {
         _isLoading.value = true
-        Log.d("MonitoringViewModel", "Fetching nasabahs started with search query: $searchQuery on page: $currentPage")
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
+            Log.d("MonitoringViewModel", "Getting nasabahs for query: $searchQuery, page: $currentPage")
             val result = repository.getNasabahs(searchQuery, currentPage)
-            withContext(Dispatchers.Main) {
-                result.onSuccess {
-                    _nasabahs.value = it
-                    Log.d("MonitoringViewModel", "Nasabahs fetched successfully: ${it.size} items")
-                }.onFailure {
-                    _errorMessage.value = it.message
-                    Log.e("MonitoringViewModel", "Error fetching nasabahs", it)
-                }
-                _isLoading.value = false
-                Log.d("MonitoringViewModel", "Fetching nasabahs completed")
+            result.onSuccess {
+                Log.d("MonitoringViewModel", "Nasabahs retrieved successfully: $it")
+                _nasabahs.postValue(it)
+            }.onFailure {
+                Log.e("MonitoringViewModel", "Failed to retrieve nasabahs: ${it.message}")
+                _errorMessage.postValue(it.message)
             }
+            _isLoading.postValue(false)
         }
     }
 
     fun setPage(page: Int) {
         currentPage = page
+        Log.d("MonitoringViewModel", "Page set to: $currentPage")
     }
 
     fun getCurrentPage(): Int {
+        Log.d("MonitoringViewModel", "Current page: $currentPage")
         return currentPage
     }
+
 }
+
 
 
 

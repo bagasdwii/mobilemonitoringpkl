@@ -11,6 +11,7 @@ import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -54,24 +55,17 @@ interface ApiService {
     @POST("api/logoutmobile")
     fun logoutUser(): Call<Void>
 
-    @GET("nasabahs")
-    suspend fun getNasabahs(@Query("search") search: String): Response<List<Nasabah>>
 
-    @GET("suratperingatan")
-    suspend fun getSuratPeringatan(
-        @Query("nasabah_no") nasabahNo: Long,
-        @Query("tingkat") tingkat: Int
-    ): Response<SuratPeringatan>
-
-    @GET("suratperingatan")
-    suspend fun checkSuratPeringatan(@Query("nasabah_no") nasabahNo: Long): Response<SuratPeringatan>
-
-    @GET("nasabahs")
+    @GET("api/nasabahs")
     suspend fun getNasabahs(
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
+    @GET("surat-peringatan/gambar/{filename}")
+    suspend fun getImage(@Path("filename") filename: String): Response<ResponseBody>
 
+    @GET("surat-peringatan/pdf/{filename}")
+    suspend fun getPdf(@Path("filename") filename: String): Response<ResponseBody>
 
 }
 

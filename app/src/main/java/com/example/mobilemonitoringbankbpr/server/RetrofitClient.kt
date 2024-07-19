@@ -76,5 +76,8 @@ object RetrofitClient {
 
         return retrofit.create(ApiService::class.java)
     }
+    fun getBaseUrl(): String {
+        return BASE_URL
+    }
 }
 

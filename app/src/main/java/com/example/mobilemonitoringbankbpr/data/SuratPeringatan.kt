@@ -5,7 +5,7 @@ data class SuratPeringatan(
     val tingkat: Int,
     val tanggal: String,
     val keterangan: String,
-    val bukti_gambar: String? = null,  // Nilai default null
-    val scan_pdf: String? = null,       // Nilai default null
+    val bukti_gambar: String? = null,
+    val scan_pdf: String? = null,
     val id_account_officer: Long
 )

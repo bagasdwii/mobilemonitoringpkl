@@ -76,7 +76,7 @@ class SuratFragment : Fragment() {
         setupNasabahDropdown()
         setupDatePicker()
         setupImagePicker()
-        setupImagePickerGallery()
+//        setupImagePickerGallery()
         setupPdfPicker()
 
         binding.btnSubmit.setOnClickListener {
@@ -214,13 +214,13 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "Image picker intent launched")
         }
     }
-    private fun setupImagePickerGallery() {
-        binding.btnPilihGambarGallery.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-            Log.d("SuratFragment", "Image picker intent launched")
-        }
-    }
+//    private fun setupImagePickerGallery() {
+//        binding.btnPilihGambarGallery.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+//            Log.d("SuratFragment", "Image picker intent launched")
+//        }
+//    }
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST)
