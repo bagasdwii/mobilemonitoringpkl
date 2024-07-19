@@ -9,8 +9,8 @@
     <string name="welcome">Selamat Datang</string>
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
-    <string name="api_server">http://192.168.201.14:8000/api</string>
-    <string name="api_serverr">http://192.168.201.14:8000/api/</string>
+    <string name="api_server">http://192.168.200.59:8000/api</string>
+    <string name="api_serverr">http://192.168.200.59:8000/api/</string>
     <string name="server">http://192.168.200.137:8000</string>
     <string name="Buatakun">Buat Akun</string>
     <string name="nama">Nama</string>

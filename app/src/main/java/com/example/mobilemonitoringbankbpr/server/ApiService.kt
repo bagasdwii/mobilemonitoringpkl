@@ -5,6 +5,7 @@ import com.example.mobilemonitoringbankbpr.data.Login
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.data.Register
 import com.example.mobilemonitoringbankbpr.data.ResponseLogin
+import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
 import com.example.mobilemonitoringbankbpr.data.ResponseRegister
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.User
@@ -65,7 +66,11 @@ interface ApiService {
     @GET("suratperingatan")
     suspend fun checkSuratPeringatan(@Query("nasabah_no") nasabahNo: Long): Response<SuratPeringatan>
 
-
+    @GET("nasabahs")
+    suspend fun getNasabahs(
+        @Query("search") search: String,
+        @Query("page") page: Int
+    ): Response<ResponseMonitoring>
 
 
 }

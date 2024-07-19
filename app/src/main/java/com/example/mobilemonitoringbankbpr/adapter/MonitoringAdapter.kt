@@ -87,7 +87,7 @@ class MonitoringAdapter(
 
             binding.NamaNasabah.text = nasabah.nama
             binding.CabangNasabah.text = nasabah.cabang
-            binding.detailNasabah.setOnClickListener{
+            binding.detailNasabah.setOnClickListener {
                 showDetailNasabahDialog(nasabah)
             }
 
@@ -99,16 +99,19 @@ class MonitoringAdapter(
                     binding.btnSP2.visibility = View.VISIBLE
                     binding.btnSP3.visibility = View.VISIBLE
                 }
+
                 2 -> {
                     binding.btnSP1.visibility = View.VISIBLE
                     binding.btnSP2.visibility = View.VISIBLE
                     binding.btnSP03.visibility = View.VISIBLE
                 }
+
                 1 -> {
                     binding.btnSP1.visibility = View.VISIBLE
                     binding.btnSP02.visibility = View.VISIBLE
                     binding.btnSP03.visibility = View.VISIBLE
                 }
+
                 else -> {
                     binding.btnSP01.visibility = View.VISIBLE
                     binding.btnSP02.visibility = View.VISIBLE
@@ -128,8 +131,10 @@ class MonitoringAdapter(
 
 
         }
+
         private fun showDetailNasabahDialog(nasabah: Nasabah) {
-            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_nasabah, null)
+            val dialogView =
+                LayoutInflater.from(context).inflate(R.layout.dialog_detail_nasabah, null)
             val alertDialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
@@ -137,10 +142,14 @@ class MonitoringAdapter(
 
             dialogView.findViewById<TextView>(R.id.tvnoNasabah).text = nasabah.no.toString()
             dialogView.findViewById<TextView>(R.id.tvnasabahName).text = nasabah.nama
-            dialogView.findViewById<TextView>(R.id.tvpokok).text = numberFormat.format(nasabah.pokok.toDouble())
-            dialogView.findViewById<TextView>(R.id.tvbunga).text = numberFormat.format(nasabah.bunga.toDouble())
-            dialogView.findViewById<TextView>(R.id.tvdenda).text = numberFormat.format(nasabah.denda.toDouble())
-            dialogView.findViewById<TextView>(R.id.tvtotal).text = numberFormat.format(nasabah.total.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvpokok).text =
+                numberFormat.format(nasabah.pokok.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvbunga).text =
+                numberFormat.format(nasabah.bunga.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvdenda).text =
+                numberFormat.format(nasabah.denda.toDouble())
+            dialogView.findViewById<TextView>(R.id.tvtotal).text =
+                numberFormat.format(nasabah.total.toDouble())
             dialogView.findViewById<TextView>(R.id.tvketerangan).text = nasabah.keterangan
             dialogView.findViewById<TextView>(R.id.tvttd).text = nasabah.ttd
             dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
@@ -155,24 +164,35 @@ class MonitoringAdapter(
 
             alertDialog.show()
         }
-        private fun showSuratPeringatanDialog(suratPeringatanList: List<SuratPeringatan>, tingkat: Int) {
+
+        private fun showSuratPeringatanDialog(
+            suratPeringatanList: List<SuratPeringatan>,
+            tingkat: Int
+        ) {
             val suratPeringatan = suratPeringatanList.find { it.tingkat == tingkat }
             if (suratPeringatan == null) {
                 Log.e("NasabahAdapter", "Surat Peringatan tingkat $tingkat tidak ditemukan")
                 return
             }
 
-            Log.d("NasabahAdapter", "Menampilkan dialog untuk Surat Peringatan No: ${suratPeringatan.no}")
+            Log.d(
+                "NasabahAdapter",
+                "Menampilkan dialog untuk Surat Peringatan No: ${suratPeringatan.no}"
+            )
 
-            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
+            val dialogView =
+                LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
             val alertDialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
 
-            dialogView.findViewById<TextView>(R.id.tvTingkat).text = "Tingkat: ${suratPeringatan.tingkat}"
-            dialogView.findViewById<TextView>(R.id.tvTanggal).text = "Tanggal: ${suratPeringatan.tanggal}"
-            dialogView.findViewById<TextView>(R.id.tvKeterangan).text = "Keterangan: ${suratPeringatan.keterangan}"
+            dialogView.findViewById<TextView>(R.id.tvTingkat).text =
+                "Tingkat: ${suratPeringatan.tingkat}"
+            dialogView.findViewById<TextView>(R.id.tvTanggal).text =
+                "Tanggal: ${suratPeringatan.tanggal}"
+            dialogView.findViewById<TextView>(R.id.tvKeterangan).text =
+                "Keterangan: ${suratPeringatan.keterangan}"
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
             val tvPdfFileName = dialogView.findViewById<TextView>(R.id.tvPdfFileName)
@@ -194,7 +214,9 @@ class MonitoringAdapter(
         }
 
         private fun loadGambar(filename: String, imageView: ImageView) {
-            val imageUrl = context.getString(R.string.api_server) + "/surat-peringatan/gambar/$filename"
+
+            val imageUrl =
+                context.getString(R.string.api_server) + "/surat-peringatan/gambar/$filename"
             Log.d("NasabahAdapter", "Memuat gambar dari URL: $imageUrl")
             Glide.with(imageView.context)
                 .load(imageUrl)
@@ -224,7 +246,8 @@ class MonitoringAdapter(
 
         private fun downloadPdf(filename: String) {
             val pdfUrl = context.getString(R.string.api_server) + "/surat-peringatan/pdf/$filename"
-            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val uri = Uri.parse(pdfUrl)
 
             val request = DownloadManager.Request(uri)
@@ -236,47 +259,7 @@ class MonitoringAdapter(
             downloadManager.enqueue(request)
         }
 
-        private fun downloadPdfContent(urlString: String): ByteArray? {
-            return try {
-                val url = URL(urlString)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.doInput = true
-                connection.connect()
-
-                val inputStream: InputStream = connection.inputStream
-                val buffer = ByteArrayOutputStream()
-                val data = ByteArray(1024)
-                var nRead: Int
-                while (inputStream.read(data, 0, 1024).also { nRead = it } != -1) {
-                    buffer.write(data, 0, nRead)
-                }
-                buffer.flush()
-                buffer.toByteArray()
-            } catch (e: Exception) {
-                Log.e("NasabahAdapter", "Kesalahan dalam downloadPdfContent: ${e.message}")
-                null
-            }
-        }
-
-        private fun displayPdf(file: File, pdfContainer: FrameLayout) {
-            try {
-                val fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-                val renderer = PdfRenderer(fileDescriptor)
-
-                // Display the first page of the PDF
-                val page = renderer.openPage(0)
-                // Add your code to display the page in the pdfContainer
-                Log.d("NasabahAdapter", "Displaying page 0 of the PDF")
-                page.close()
-                renderer.close()
-                fileDescriptor.close()
-            } catch (e: IOException) {
-                Log.e("NasabahAdapter", "Error loading PDF: ${e.message}", e)
-            }
-        }
     }
-
     class NasabahDiffCallback : DiffUtil.ItemCallback<Nasabah>() {
         override fun areItemsTheSame(oldItem: Nasabah, newItem: Nasabah): Boolean {
             return oldItem.no == newItem.no
@@ -287,3 +270,4 @@ class MonitoringAdapter(
         }
     }
 }
+

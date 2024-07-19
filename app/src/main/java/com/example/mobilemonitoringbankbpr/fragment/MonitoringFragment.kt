@@ -42,7 +42,6 @@ class MonitoringFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
-        // Observe isLoading to show/hide loading dialog
         monitoringViewModel.isLoading.observe(viewLifecycleOwner, {
             if (it) {
                 showLoadingDialog()
@@ -57,9 +56,8 @@ class MonitoringFragment : Fragment() {
 
         binding.searchButton.setOnClickListener {
             val query = binding.searchEditText.text.toString()
-            monitoringViewModel.setPage(1) // Reset to the first page
-            monitoringViewModel.getNasabahs(query, requireContext())
-
+            monitoringViewModel.setPage(1)
+            monitoringViewModel.getNasabahs(query)
             updateButtonVisibility()
         }
 
@@ -67,7 +65,7 @@ class MonitoringFragment : Fragment() {
             val currentPage = monitoringViewModel.getCurrentPage()
             if (currentPage > 1) {
                 monitoringViewModel.setPage(currentPage - 1)
-                monitoringViewModel.getNasabahs(binding.searchEditText.text.toString(), requireContext())
+                monitoringViewModel.getNasabahs(binding.searchEditText.text.toString())
                 Log.d("MonitoringFragment", "Previous button clicked, page: ${monitoringViewModel.getCurrentPage()}")
             }
             updateButtonVisibility()
@@ -75,13 +73,12 @@ class MonitoringFragment : Fragment() {
 
         binding.nextButton.setOnClickListener {
             monitoringViewModel.setPage(monitoringViewModel.getCurrentPage() + 1)
-            monitoringViewModel.getNasabahs(binding.searchEditText.text.toString(), requireContext())
+            monitoringViewModel.getNasabahs(binding.searchEditText.text.toString())
             Log.d("MonitoringFragment", "Next button clicked, page: ${monitoringViewModel.getCurrentPage()}")
             updateButtonVisibility()
         }
 
-        // Fetch initial data
-        monitoringViewModel.getNasabahs("", requireContext())
+        monitoringViewModel.getNasabahs("")
     }
 
     private fun showLoadingDialog() {
@@ -103,26 +100,13 @@ class MonitoringFragment : Fragment() {
         binding.previousButton.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
     }
 
-    private fun showSuratPeringatanDialog(suratPeringatan: SuratPeringatan) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
-        val alertDialog = AlertDialog.Builder(context)
-            .setView(dialogView)
-            .setCancelable(true)
-            .create()
-
-        dialogView.findViewById<TextView>(R.id.tvTingkat).text = "Tingkat: ${suratPeringatan.tingkat}"
-        dialogView.findViewById<TextView>(R.id.tvTanggal).text = "Tanggal: ${suratPeringatan.tanggal}"
-        dialogView.findViewById<TextView>(R.id.tvKeterangan).text = "Keterangan: ${suratPeringatan.keterangan}"
-
-        alertDialog.show()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        dismissLoadingDialog() // Ensure dialog is dismissed when fragment is destroyed
+        dismissLoadingDialog()
     }
 }
+
 
 
 

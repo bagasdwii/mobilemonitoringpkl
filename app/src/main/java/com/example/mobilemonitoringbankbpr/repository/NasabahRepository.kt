@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 
 class NasabahRepository(private val context: Context) {
 
-    fun getNasabahsStream(query: String): Flow<PagingData<Nasabah>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 15,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { NasabahPagingSource(context, query) }
-        ).flow
-    }
+//    fun getNasabahsStream(query: String): Flow<PagingData<Nasabah>> {
+//        return Pager(
+//            config = PagingConfig(
+//                pageSize = 15,
+//                enablePlaceholders = false
+//            ),
+//            pagingSourceFactory = { NasabahPagingSource(context, query) }
+//        ).flow
+//    }
 }
