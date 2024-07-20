@@ -11,11 +11,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -257,9 +262,10 @@ class SuratFragment : Fragment() {
                         val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, photoUri)
                         Log.d("SuratFragment", "Bitmap captured: $bitmap")
                         bitmap?.let {
-                            val file = saveBitmapToFile(it)
+                            val watermarkedBitmap = addWatermark(it)
+                            val file = saveBitmapToFile(watermarkedBitmap)
                             selectedImageUri = Uri.fromFile(file)
-                            binding.ivPreviewGambar.setImageBitmap(bitmap)
+                            binding.ivPreviewGambar.setImageBitmap(watermarkedBitmap)
                             binding.ivPreviewGambar.visibility = View.VISIBLE
                             Log.d("SuratFragment", "Image captured and saved: $selectedImageUri")
                         }
@@ -267,29 +273,38 @@ class SuratFragment : Fragment() {
                         Log.e("SuratFragment", "Error processing captured image", e)
                     }
                 }
-                PICK_IMAGE_REQUEST -> {
-                    selectedImageUri = data?.data
-                    Log.d("SuratFragment", "Image URI: $selectedImageUri")
-                    try {
-                        val bitmap = MediaStore.Images.Media.getBitmap(
-                            requireActivity().contentResolver,
-                            selectedImageUri
-                        )
-                        Log.d("SuratFragment", "Bitmap selected: $bitmap")
-                        binding.ivPreviewGambar.setImageBitmap(bitmap)
-                        binding.ivPreviewGambar.visibility = View.VISIBLE
-                    } catch (e: IOException) {
-                        Log.e("SuratFragment", "Error processing selected image", e)
-                    }
-                }
+
                 PICK_PDF_REQUEST -> {
                     selectedPdfUri = data?.data
                     Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
-                    binding.tvPdfName.text = selectedPdfUri?.lastPathSegment
+                    val fileName = selectedPdfUri?.let { getFileNameFromUri(it) }
+                    binding.tvPdfName.text = fileName
                     binding.tvPdfName.visibility = View.VISIBLE
                 }
             }
         }
+    }
+    private fun getFileNameFromUri(uri: Uri): String? {
+        var fileName: String? = null
+        if (uri.scheme == "content") {
+            val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+            cursor.use {
+                if (it != null && it.moveToFirst()) {
+                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (index >= 0) {
+                        fileName = it.getString(index)
+                    }
+                }
+            }
+        }
+        if (fileName == null) {
+            fileName = uri.path
+            val cut = fileName?.lastIndexOf('/')
+            if (cut != null && cut != -1) {
+                fileName = fileName?.substring(cut + 1)
+            }
+        }
+        return fileName
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap): File? {
@@ -297,7 +312,7 @@ class SuratFragment : Fragment() {
         val file = File(requireContext().cacheDir, fileName)
         return try {
             val out = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
             out.flush()
             out.close()
             Log.d("SuratFragment", "Bitmap saved to file: $file")
@@ -351,6 +366,45 @@ class SuratFragment : Fragment() {
         uri ?: return null
         return context?.let { FileUtilsNasabah.getFileFromUri(it, uri) }
     }
+    private fun addWatermark(bitmap: Bitmap): Bitmap {
+        val watermarkText = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+        val result = bitmap.copy(bitmap.config, true)
+        val canvas = Canvas(result)
+
+        // Paint untuk stroke
+        val strokePaint = Paint().apply {
+            color = Color.BLACK
+            textSize = 130f
+            isAntiAlias = true
+            alpha = 255
+            style = Paint.Style.STROKE
+            strokeWidth = 8f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+
+        // Paint untuk isi
+        val textPaint = Paint().apply {
+            color = Color.WHITE
+            textSize = 130f
+            isAntiAlias = true
+            alpha = 255
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+
+        val bounds = Rect()
+        textPaint.getTextBounds(watermarkText, 0, watermarkText.length, bounds)
+
+        val x = bitmap.width - bounds.width() - 20f
+        val y = bitmap.height - 20f
+
+        // Gambar stroke terlebih dahulu
+        canvas.drawText(watermarkText, x, y, strokePaint)
+        // Gambar isi teks di atas stroke
+        canvas.drawText(watermarkText, x, y, textPaint)
+
+        return result
+    }
+
 
     private fun resetForm() {
         binding.autoCompleteNasabah.setText("")
