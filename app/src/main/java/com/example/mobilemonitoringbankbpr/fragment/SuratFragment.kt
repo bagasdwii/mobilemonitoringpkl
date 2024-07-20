@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.ProgressDialog.show
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -76,7 +78,6 @@ class SuratFragment : Fragment() {
         setupNasabahDropdown()
         setupDatePicker()
         setupImagePicker()
-//        setupImagePickerGallery()
         setupPdfPicker()
 
         binding.btnSubmit.setOnClickListener {
@@ -198,6 +199,7 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "PDF picker intent launched")
         }
     }
+
     private fun setupImagePicker() {
         binding.btnPilihGambar.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -214,46 +216,77 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "Image picker intent launched")
         }
     }
-//    private fun setupImagePickerGallery() {
-//        binding.btnPilihGambarGallery.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-//            Log.d("SuratFragment", "Image picker intent launched")
-//        }
-//    }
+
+    private fun getCaptureImageOutputUri(): Uri? {
+        var outputFileUri: Uri? = null
+        val getImage = requireActivity().externalCacheDir
+        if (getImage != null) {
+            val file = File(getImage.path, "captured_image.jpg")
+            outputFileUri = FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.provider",
+                file
+            )
+        }
+        Log.d("SuratFragment", "Image output URI: $outputFileUri")
+        return outputFileUri
+    }
+
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA_REQUEST)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getCaptureImageOutputUri())
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            try {
+                startActivityForResult(intent, CAMERA_REQUEST)
+                Log.d("SuratFragment", "Camera intent launched")
+            } catch (e: ActivityNotFoundException) {
+                Log.e("SuratFragment", "Camera intent could not be launched", e)
+            }
+        }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("SuratFragment", "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 CAMERA_REQUEST -> {
-                    val bitmap = data?.extras?.get("data") as? Bitmap
-                    bitmap?.let {
-                        val file = saveBitmapToFile(it)
-                        selectedImageUri = Uri.fromFile(file)
-                        binding.ivPreviewGambar.setImageBitmap(bitmap)
-                        binding.ivPreviewGambar.visibility = View.VISIBLE
-                        Log.d("SuratFragment", "Image captured: $selectedImageUri")
+                    val photoUri = getCaptureImageOutputUri()
+                    Log.d("SuratFragment", "Photo URI: $photoUri")
+                    try {
+                        val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, photoUri)
+                        Log.d("SuratFragment", "Bitmap captured: $bitmap")
+                        bitmap?.let {
+                            val file = saveBitmapToFile(it)
+                            selectedImageUri = Uri.fromFile(file)
+                            binding.ivPreviewGambar.setImageBitmap(bitmap)
+                            binding.ivPreviewGambar.visibility = View.VISIBLE
+                            Log.d("SuratFragment", "Image captured and saved: $selectedImageUri")
+                        }
+                    } catch (e: IOException) {
+                        Log.e("SuratFragment", "Error processing captured image", e)
                     }
                 }
                 PICK_IMAGE_REQUEST -> {
                     selectedImageUri = data?.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(
-                        requireActivity().contentResolver,
-                        selectedImageUri
-                    )
-                    binding.ivPreviewGambar.setImageBitmap(bitmap)
-                    binding.ivPreviewGambar.visibility = View.VISIBLE
-                    Log.d("SuratFragment", "Image selected: $selectedImageUri")
+                    Log.d("SuratFragment", "Image URI: $selectedImageUri")
+                    try {
+                        val bitmap = MediaStore.Images.Media.getBitmap(
+                            requireActivity().contentResolver,
+                            selectedImageUri
+                        )
+                        Log.d("SuratFragment", "Bitmap selected: $bitmap")
+                        binding.ivPreviewGambar.setImageBitmap(bitmap)
+                        binding.ivPreviewGambar.visibility = View.VISIBLE
+                    } catch (e: IOException) {
+                        Log.e("SuratFragment", "Error processing selected image", e)
+                    }
                 }
                 PICK_PDF_REQUEST -> {
                     selectedPdfUri = data?.data
+                    Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
                     binding.tvPdfName.text = selectedPdfUri?.lastPathSegment
                     binding.tvPdfName.visibility = View.VISIBLE
-                    Log.d("SuratFragment", "PDF selected: $selectedPdfUri")
                 }
             }
         }
@@ -265,15 +298,15 @@ class SuratFragment : Fragment() {
         return try {
             val out = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.flush()
             out.close()
+            Log.d("SuratFragment", "Bitmap saved to file: $file")
             file
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e("SuratFragment", "Error saving bitmap to file", e)
             null
         }
     }
-
-
 
     private fun submitSuratPeringatan() {
         val namaNasabah = binding.autoCompleteNasabah.text.toString()
@@ -312,7 +345,6 @@ class SuratFragment : Fragment() {
         Log.d("SuratFragment", "Gambar URI: $selectedImageUri")
         Log.d("SuratFragment", "Gambar File Path: ${imageFile?.absolutePath}")
         Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
-
     }
 
     private fun getFileFromUri(uri: Uri?): File? {
@@ -359,6 +391,7 @@ class SuratFragment : Fragment() {
         private const val PICK_IMAGE_REQUEST = 1004
     }
 }
+
 
 
 
