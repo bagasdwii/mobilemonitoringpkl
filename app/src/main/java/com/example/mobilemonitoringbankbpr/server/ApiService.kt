@@ -3,6 +3,7 @@ import com.example.mobilemonitoringbankbpr.data.ConnectionResponse
 import com.example.mobilemonitoringbankbpr.data.Jabatan
 import com.example.mobilemonitoringbankbpr.data.Login
 import com.example.mobilemonitoringbankbpr.data.Nasabah
+import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.Register
 import com.example.mobilemonitoringbankbpr.data.ResponseLogin
 import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
@@ -21,6 +22,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface ApiService {
 
@@ -33,7 +35,7 @@ interface ApiService {
         @Part("tingkat") tingkat: RequestBody,
         @Part("tanggal") tanggal: RequestBody,
         @Part("keterangan") keterangan: RequestBody,
-        @Part("idAccountOfficer") idAccountOfficer: RequestBody,
+        @Part("id_account_officer") idAccountOfficer: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?,
         @Part scan_pdf: MultipartBody.Part?
     ): Call<Void>
@@ -61,12 +63,13 @@ interface ApiService {
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
+    @GET("api/nasabah")
+    suspend fun getNasabahList(): List<NasabahSp>
     @GET("surat-peringatan/gambar/{filename}")
-    suspend fun getImage(@Path("filename") filename: String): Response<ResponseBody>
+    suspend fun getGambar(@Path("filename") filename: String): Response<ResponseBody>
 
     @GET("surat-peringatan/pdf/{filename}")
     suspend fun getPdf(@Path("filename") filename: String): Response<ResponseBody>
-
+    @GET
+    fun getImage(@Url url: String): Call<ResponseBody>
 }
-
-

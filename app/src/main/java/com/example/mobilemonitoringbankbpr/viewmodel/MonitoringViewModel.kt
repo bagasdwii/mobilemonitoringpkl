@@ -68,7 +68,28 @@ class MonitoringViewModel(application: Application) : AndroidViewModel(applicati
         return currentPage
     }
 
+//    suspend fun getGambarUrl(filename: String): String? {
+//        return try {
+//            val result = repository.getGambarUrl(filename)
+//            result.getOrNull()
+//        } catch (e: Exception) {
+//            _errorMessage.postValue(e.message)
+//            null
+//        }
+//    }
+//
+//    suspend fun getPdfUrl(filename: String): String? {
+//        return try {
+//            val result = repository.getPdfUrl(filename)
+//            result.getOrNull()
+//        } catch (e: Exception) {
+//            _errorMessage.postValue(e.message)
+//            null
+//        }
+//    }
 }
+
+
 
 
 

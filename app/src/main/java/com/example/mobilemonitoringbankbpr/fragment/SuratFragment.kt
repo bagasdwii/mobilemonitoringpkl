@@ -302,7 +302,7 @@ class SuratFragment : Fragment() {
             keterangan = keterangan,
             bukti_gambar = selectedImageUri.toString(),
             scan_pdf = selectedPdfUri.toString(),
-            id_account_officer = nasabah.idAccountOfficer
+            id_account_officer = nasabah.id_account_officer
         )
 
         val imageFile = selectedImageUri?.let { getFileFromUri(it) }

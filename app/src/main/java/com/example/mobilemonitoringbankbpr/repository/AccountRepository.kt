@@ -40,7 +40,7 @@ class AccountRepository(private val apiService: ApiService) {
     }
 
     fun logout(context: Context, onResult: (Boolean) -> Unit) {
-        val url = context.getString(R.string.api_server) + "/logoutmobile"
+//        val url = context.getString(R.string.api_server) + "/logoutmobile"
         Log.d("AccountRepository", "Starting logout process")
         apiService.logoutUser().enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

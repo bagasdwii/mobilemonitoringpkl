@@ -43,7 +43,12 @@ import com.bumptech.glide.request.target.Target
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.example.mobilemonitoringbankbpr.LocalStorage
+import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import okhttp3.Request
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
@@ -214,12 +219,18 @@ class MonitoringAdapter(
         }
 
         private fun loadGambar(filename: String, imageView: ImageView) {
-
-            val imageUrl =
-                context.getString(R.string.api_server) + "/surat-peringatan/gambar/$filename"
+            val imageUrl = "${RetrofitClient.getBaseUrl()}api/surat-peringatan/gambar/$filename"
             Log.d("NasabahAdapter", "Memuat gambar dari URL: $imageUrl")
+
+            val localStorage = LocalStorage(context)
+            val token = localStorage.token
+
+            val glideUrl = GlideUrl(imageUrl, LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer $token")
+                .build())
+
             Glide.with(imageView.context)
-                .load(imageUrl)
+                .load(glideUrl)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -245,14 +256,17 @@ class MonitoringAdapter(
         }
 
         private fun downloadPdf(filename: String) {
-            val pdfUrl = context.getString(R.string.api_server) + "/surat-peringatan/pdf/$filename"
-            val downloadManager =
-                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val pdfUrl = "${RetrofitClient.getBaseUrl()}api/surat-peringatan/pdf/$filename"
+            val localStorage = LocalStorage(context)
+            val token = localStorage.token
+
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val uri = Uri.parse(pdfUrl)
 
             val request = DownloadManager.Request(uri)
             request.setTitle("Mengunduh $filename")
             request.setDescription("Sedang mengunduh file PDF...")
+            request.addRequestHeader("Authorization", "Bearer $token")
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 

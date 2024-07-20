@@ -33,7 +33,31 @@ class MonitoringRepository(private val apiService: ApiService) {
             Result.failure(e)
         }
     }
-
+//    suspend fun getGambarUrl(filename: String): Result<String> {
+//        return try {
+//            val response = apiService.getGambarUrl(filename)
+//            if (response.isSuccessful) {
+//                Result.success(response.body() ?: "")
+//            } else {
+//                Result.failure(Exception("Failed to get image URL: ${response.errorBody()?.string()}"))
+//            }
+//        } catch (e: Exception) {
+//            Result.failure(e)
+//        }
+//    }
+//
+//    suspend fun getPdfUrl(filename: String): Result<String> {
+//        return try {
+//            val response = apiService.getPdfUrl(filename)
+//            if (response.isSuccessful) {
+//                Result.success(response.body() ?: "")
+//            } else {
+//                Result.failure(Exception("Failed to get PDF URL: ${response.errorBody()?.string()}"))
+//            }
+//        } catch (e: Exception) {
+//            Result.failure(e)
+//        }
+//    }
 }
 
 

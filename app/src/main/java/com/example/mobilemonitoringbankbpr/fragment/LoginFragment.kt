@@ -18,6 +18,7 @@ import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.LocalStorage
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.databinding.FragmentLoginBinding
+import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.viewmodel.LoginViewModel
 import org.json.JSONException
 import org.json.JSONObject
@@ -84,7 +85,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnForget.setOnClickListener {
-            openBrowser(getString(R.string.api_forget))
+            openBrowser("${RetrofitClient.getBaseUrl()}/forgot-password")
         }
     }
 

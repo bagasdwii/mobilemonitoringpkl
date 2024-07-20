@@ -22,52 +22,65 @@ import java.io.File
 
 class SuratRepository(private val context: Context) {
 
-    fun fetchNasabahList(): List<NasabahSp> {
+//    fun fetchNasabahList(): List<NasabahSp> {
+//        Log.d("NasabahRepository", "fetchNasabahList: Start")
+//        val url = context.getString(R.string.api_server) + "/nasabah"
+//        val http = Http(context, url)
+//
+//        http.setMethod("GET")
+//        http.setToken(true)
+//
+//        http.send()
+//
+//        val response = http.getResponse()
+//        val nasabahList = mutableListOf<NasabahSp>()
+//
+//        response?.let {
+//            try {
+//                val jsonArray = JSONArray(it)
+//                for (i in 0 until jsonArray.length()) {
+//                    val jsonObject = jsonArray.getJSONObject(i)
+//                    val nasabah = NasabahSp(
+//                        no = jsonObject.getLong("no"),
+//                        nama = jsonObject.getString("nama"),
+//                        pokok = jsonObject.getString("pokok"),
+//                        bunga = jsonObject.getString("bunga"),
+//                        denda = jsonObject.getString("denda"),
+//                        total = jsonObject.getInt("total"),
+//                        keterangan = jsonObject.getString("keterangan"),
+//                        ttd = jsonObject.getString("ttd"),
+//                        kembali = jsonObject.getString("kembali"),
+//                        cabang = jsonObject.getString("id_cabang"),
+//                        wilayah = jsonObject.getString("id_wilayah"),
+//                        adminkas = jsonObject.getString("id_admin_kas"),
+//                        id_account_officer = jsonObject.getLong("id_account_officer")
+//                    )
+//                    nasabahList.add(nasabah)
+//                }
+//                Log.d("NasabahRepository", "fetchNasabahList: Success")
+//            } catch (e: JSONException) {
+//                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
+//            }
+//        } ?: run {
+//            Log.e("SuratRepository", "fetchNasabahList: No response from server")
+//        }
+//
+//        return nasabahList
+//    }
+    suspend fun fetchNasabahList(): List<NasabahSp> {
         Log.d("NasabahRepository", "fetchNasabahList: Start")
-        val url = context.getString(R.string.api_server) + "/nasabah"
-        val http = Http(context, url)
 
-        http.setMethod("GET")
-        http.setToken(true)
+        val apiService = RetrofitClient.getServiceWithAuth(context)
 
-        http.send()
-
-        val response = http.getResponse()
-        val nasabahList = mutableListOf<NasabahSp>()
-
-        response?.let {
-            try {
-                val jsonArray = JSONArray(it)
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    val nasabah = NasabahSp(
-                        no = jsonObject.getLong("no"),
-                        nama = jsonObject.getString("nama"),
-                        pokok = jsonObject.getString("pokok"),
-                        bunga = jsonObject.getString("bunga"),
-                        denda = jsonObject.getString("denda"),
-                        total = jsonObject.getInt("total"),
-                        keterangan = jsonObject.getString("keterangan"),
-                        ttd = jsonObject.getString("ttd"),
-                        kembali = jsonObject.getString("kembali"),
-                        cabang = jsonObject.getString("id_cabang"),
-                        wilayah = jsonObject.getString("id_wilayah"),
-                        adminkas = jsonObject.getString("id_admin_kas"),
-                        idAccountOfficer = jsonObject.getLong("id_account_officer")
-                    )
-                    nasabahList.add(nasabah)
-                }
-                Log.d("NasabahRepository", "fetchNasabahList: Success")
-            } catch (e: JSONException) {
-                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
-            }
-        } ?: run {
-            Log.e("SuratRepository", "fetchNasabahList: No response from server")
+        return try {
+            val response = apiService.getNasabahList()
+            Log.d("NasabahRepository", "fetchNasabahList: Success")
+            response
+        } catch (e: Exception) {
+            Log.e("NasabahRepository", "fetchNasabahList: Error fetching data", e)
+            emptyList()
         }
-
-        return nasabahList
     }
-
     fun submitSuratPeringatan(
         suratPeringatan: SuratPeringatan,
         imageFile: File?,
@@ -75,13 +88,13 @@ class SuratRepository(private val context: Context) {
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        val apiService = RetrofitClient.getService(context)
+        val apiService = RetrofitClient.getServiceWithAuth(context)
 
         val no = suratPeringatan.no.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tingkat = suratPeringatan.tingkat.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tanggal = suratPeringatan.tanggal.toRequestBody("text/plain".toMediaTypeOrNull())
         val keterangan = suratPeringatan.keterangan.toRequestBody("text/plain".toMediaTypeOrNull())
-        val idAccountOfficer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val id_account_officer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val bukti_gambar = imageFile?.let {
             MultipartBody.Part.createFormData("bukti_gambar", it.name, it.asRequestBody("image/*".toMediaTypeOrNull()))
@@ -92,7 +105,7 @@ class SuratRepository(private val context: Context) {
 
         // Logging before making the request
         Log.d("SuratRepository", "Preparing to send SuratPeringatan data")
-        Log.d("SuratRepository", "Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
+        Log.d("SuratRepository", "Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, id_account_officer=${suratPeringatan.id_account_officer}")
 
         bukti_gambar?.let {
             Log.d("SuratRepository", "buktiGambar: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
@@ -107,7 +120,7 @@ class SuratRepository(private val context: Context) {
             tingkat,
             tanggal,
             keterangan,
-            idAccountOfficer,
+            id_account_officer,
             bukti_gambar,
             scan_pdf
         )
