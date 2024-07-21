@@ -18,7 +18,12 @@
         android:background="@android:drawable/editbox_background"
         />
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="tingkat sp"
+        android:padding="5dp"
+        />
     <Spinner
         android:id="@+id/spinnerTingkatSP"
         android:layout_width="match_parent"
@@ -33,12 +38,6 @@
         android:focusable="false"
         android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/etKeterangan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Keterangan"
-        android:inputType="textMultiLine" />
 
     <Button
         android:id="@+id/btnPilihGambar"

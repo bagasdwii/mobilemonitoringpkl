@@ -34,7 +34,6 @@ interface ApiService {
         @Part("no") no: RequestBody,
         @Part("tingkat") tingkat: RequestBody,
         @Part("tanggal") tanggal: RequestBody,
-        @Part("keterangan") keterangan: RequestBody,
         @Part("id_account_officer") idAccountOfficer: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?,
         @Part scan_pdf: MultipartBody.Part?

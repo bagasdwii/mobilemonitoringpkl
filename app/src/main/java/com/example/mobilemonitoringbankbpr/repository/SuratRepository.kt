@@ -93,7 +93,6 @@ class SuratRepository(private val context: Context) {
         val no = suratPeringatan.no.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tingkat = suratPeringatan.tingkat.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tanggal = suratPeringatan.tanggal.toRequestBody("text/plain".toMediaTypeOrNull())
-        val keterangan = suratPeringatan.keterangan.toRequestBody("text/plain".toMediaTypeOrNull())
         val id_account_officer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val bukti_gambar = imageFile?.let {
@@ -105,7 +104,7 @@ class SuratRepository(private val context: Context) {
 
         // Logging before making the request
         Log.d("SuratRepository", "Preparing to send SuratPeringatan data")
-        Log.d("SuratRepository", "Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, id_account_officer=${suratPeringatan.id_account_officer}")
+        Log.d("SuratRepository", "Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, id_account_officer=${suratPeringatan.id_account_officer}")
 
         bukti_gambar?.let {
             Log.d("SuratRepository", "buktiGambar: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
@@ -119,7 +118,6 @@ class SuratRepository(private val context: Context) {
             no,
             tingkat,
             tanggal,
-            keterangan,
             id_account_officer,
             bukti_gambar,
             scan_pdf
@@ -128,7 +126,7 @@ class SuratRepository(private val context: Context) {
         // Logging the endpoint and data
         val endpointUrl = call.request().url
         Log.d("SuratRepository", "submitSuratPeringatan: URL: $endpointUrl")
-        Log.d("SuratRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, keterangan=${suratPeringatan.keterangan}, idAccountOfficer=${suratPeringatan.id_account_officer}")
+        Log.d("SuratRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, idAccountOfficer=${suratPeringatan.id_account_officer}")
 
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {

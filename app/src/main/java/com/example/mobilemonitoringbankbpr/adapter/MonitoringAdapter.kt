@@ -196,8 +196,7 @@ class MonitoringAdapter(
                 "Tingkat: ${suratPeringatan.tingkat}"
             dialogView.findViewById<TextView>(R.id.tvTanggal).text =
                 "Tanggal: ${suratPeringatan.tanggal}"
-            dialogView.findViewById<TextView>(R.id.tvKeterangan).text =
-                "Keterangan: ${suratPeringatan.keterangan}"
+
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
             val tvPdfFileName = dialogView.findViewById<TextView>(R.id.tvPdfFileName)

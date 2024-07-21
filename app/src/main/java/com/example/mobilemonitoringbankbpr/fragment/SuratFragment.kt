@@ -128,6 +128,7 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "isLoading: $isLoading")
         })
         updateDateInView()
+
     }
 
     private fun setupNasabahDropdown() {
@@ -169,14 +170,19 @@ class SuratFragment : Fragment() {
     }
 
     private fun setupDatePicker() {
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, monthOfYear)
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateDateInView()
-                Log.d("SuratFragment", "Date selected: ${calendar.time}")
-            }
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, monthOfYear)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+            // Pastikan waktu saat ini juga diatur
+            calendar.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+            calendar.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE))
+            calendar.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND))
+
+            updateDateInView()
+            Log.d("SuratFragment", "Date selected: ${calendar.time}")
+        }
 
         binding.etTanggal.setOnClickListener {
             DatePickerDialog(
@@ -190,11 +196,22 @@ class SuratFragment : Fragment() {
     }
 
     private fun updateDateInView() {
-        val format = "yyyy-MM-dd"
+        val format = "yyyy-MM-dd HH:mm:ss"
         val sdf = SimpleDateFormat(format, Locale.US)
-        binding.etTanggal.setText(sdf.format(calendar.time))
-        Log.d("SuratFragment", "Date updated in view: ${sdf.format(calendar.time)}")
+
+        // Pastikan waktu saat ini diatur saat updateDateInView() dipanggil
+        calendar.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+        calendar.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE))
+        calendar.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND))
+
+        val currentTime = calendar.time
+        Log.d("SuratFragment", "Current calendar time: $currentTime")
+        val formattedDate = sdf.format(currentTime)
+        binding.etTanggal.setText(formattedDate)
+        Log.d("SuratFragment", "Date updated in view: $formattedDate")
     }
+
+
 
     private fun setupPdfPicker() {
         binding.btnPilihPdf.setOnClickListener {
@@ -327,9 +344,8 @@ class SuratFragment : Fragment() {
         val namaNasabah = binding.autoCompleteNasabah.text.toString()
         val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
         val tanggal = binding.etTanggal.text.toString()
-        val keterangan = binding.etKeterangan.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || keterangan.isEmpty()) {
+        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty()){
             Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
             Log.w("SuratFragment", "Form submission failed: empty fields")
             return
@@ -347,7 +363,6 @@ class SuratFragment : Fragment() {
             no = nasabah.no,
             tingkat = tingkatSP,
             tanggal = tanggal,
-            keterangan = keterangan,
             bukti_gambar = selectedImageUri.toString(),
             scan_pdf = selectedPdfUri.toString(),
             id_account_officer = nasabah.id_account_officer
@@ -410,7 +425,6 @@ class SuratFragment : Fragment() {
         binding.autoCompleteNasabah.setText("")
         binding.spinnerTingkatSP.setSelection(0)
         updateDateInView()
-        binding.etKeterangan.setText("")
         binding.ivPreviewGambar.visibility = View.GONE
         binding.tvPdfName.visibility = View.GONE
         selectedImageUri = null
