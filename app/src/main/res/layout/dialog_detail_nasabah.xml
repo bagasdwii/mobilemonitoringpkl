@@ -15,17 +15,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detail Nasabah SP"
+                android:textSize="20sp"
+                android:paddingBottom="20dp"
+                android:fontFamily="@font/poppins_bold"/>
+            <TextView
                 android:id="@+id/noNasabah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="No"
-                android:textStyle="bold"
                 android:textSize="18sp"
+                android:fontFamily="@font/poppins_semibold"
                 />
             <TextView
                 android:id="@+id/tvnoNasabah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="noNasabah"
                 android:paddingBottom="8dp"/>
 
@@ -34,13 +42,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nama Nasabah"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                />
             <TextView
                 android:id="@+id/tvnasabahName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Nama"
                 android:paddingBottom="8dp"/>
 
@@ -49,14 +58,15 @@
                 android:id="@+id/pokok"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:textSize="18sp"
+                android:fontFamily="@font/poppins_semibold"
 
                 android:text="Pokok:"/>
             <TextView
                 android:id="@+id/tvpokok"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="pokok"
                 android:paddingBottom="8dp"/>
 
@@ -64,13 +74,14 @@
                 android:id="@+id/bunga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Bunga:"/>
             <TextView
                 android:id="@+id/tvbunga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="bunga"
                 android:paddingBottom="8dp"/>
 
@@ -78,14 +89,15 @@
                 android:id="@+id/denda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:textSize="18sp"
+                android:fontFamily="@font/poppins_semibold"
 
                 android:text="Denda:"/>
             <TextView
                 android:id="@+id/tvdenda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="denda"
                 android:paddingBottom="8dp"/>
 
@@ -93,13 +105,14 @@
                 android:id="@+id/total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Total:"/>
             <TextView
                 android:id="@+id/tvtotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="total"
                 android:paddingBottom="8dp"/>
 
@@ -107,13 +120,14 @@
                 android:id="@+id/keterangan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Keterangan:"/>
             <TextView
                 android:id="@+id/tvketerangan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="keterangan"
                 android:paddingBottom="8dp"/>
 
@@ -121,13 +135,14 @@
                 android:id="@+id/ttd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="TTD:"/>
             <TextView
                 android:id="@+id/tvttd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="ttd"
                 android:paddingBottom="8dp"/>
 
@@ -135,13 +150,14 @@
                 android:id="@+id/kembali"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Kembali:"/>
             <TextView
                 android:id="@+id/tvkembali"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="kembali"
                 android:paddingBottom="8dp"/>
 
@@ -149,13 +165,14 @@
                 android:id="@+id/cabang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Cabang:"/>
             <TextView
                 android:id="@+id/tvcabang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="cabang"
                 android:paddingBottom="8dp"/>
 
@@ -163,13 +180,14 @@
                 android:id="@+id/wilayah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Wilayah:"/>
             <TextView
                 android:id="@+id/tvwilayah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="wilayah"
                 android:paddingBottom="8dp"/>
 
@@ -177,13 +195,14 @@
                 android:id="@+id/adminKas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Admin Kas:"/>
             <TextView
                 android:id="@+id/tvadminKas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="adminKas"
                 android:paddingBottom="8dp"/>
 
@@ -191,13 +210,14 @@
                 android:id="@+id/accountOfficer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                 android:text="Account Officer:"/>
             <TextView
                 android:id="@+id/tvaccountOfficer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
                 android:text="accountOfficer"
                 android:paddingBottom="8dp"/>
 

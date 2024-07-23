@@ -98,6 +98,7 @@ class MonitoringFragment : Fragment() {
     private fun updateButtonVisibility() {
         val currentPage = monitoringViewModel.getCurrentPage()
         binding.previousButton.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
+        binding.buttonSpacer.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

@@ -193,7 +193,7 @@ class MonitoringAdapter(
                 .create()
 
             dialogView.findViewById<TextView>(R.id.tvTingkat).text =
-                "Tingkat: ${suratPeringatan.tingkat}"
+                "SP Ke : ${suratPeringatan.tingkat}"
             dialogView.findViewById<TextView>(R.id.tvTanggal).text =
                 "Tanggal: ${suratPeringatan.tanggal}"
 

@@ -4,7 +4,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@android:color/white"
@@ -14,9 +14,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Course"
+        android:text="Daftar Nasabah SP"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_bold"
         />
 
     <!-- Edit text to allow user to type name
@@ -25,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_text"
-        android:hint="Search..."
+        android:hint="Cari Nasabah"
+        android:fontFamily="@font/poppins_semibold"
         android:padding="12dp"
         android:singleLine="true"
         android:layout_marginTop="8dp"
@@ -37,7 +39,9 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:id="@+id/list_view"
+
         />
 
 </LinearLayout>

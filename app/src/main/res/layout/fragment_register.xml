@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/register"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="10dp"
     tools:context=".fragment.RegisterFragment">
 
     <LinearLayout
@@ -13,15 +13,17 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:orientation="vertical"
-        android:layout_marginTop="60dp">
-
+        android:layout_marginTop="70dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/nama"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"/>
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_semibold"
+            />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +33,11 @@
             android:paddingBottom="8dp"
             android:inputType="text"
             android:textSize="15dp"
-            android:background="@drawable/edittext_border"/>
+            android:background="@drawable/edittext_border_login"
+            android:textColorHint="@color/color2"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -39,7 +45,10 @@
             android:text="@string/email"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"/>
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_semibold"
+            />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,8 +57,11 @@
             android:padding="16dp"
             android:inputType="textEmailAddress"
             android:textSize="15dp"
-
-            android:background="@drawable/edittext_border"/>
+            android:background="@drawable/edittext_border_login"
+            android:textColorHint="@color/color2"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -57,7 +69,10 @@
             android:text="@string/password"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"/>
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_semibold"
+            />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,9 +80,12 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textSize="15dp"
-
             android:padding="16dp"
-            android:background="@drawable/edittext_border"/>
+            android:background="@drawable/edittext_border_login"
+            android:textColorHint="@color/color2"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -75,8 +93,10 @@
             android:text="@string/nip"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_semibold"
+            />
 
-            android:paddingBottom="8dp"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,8 +105,11 @@
             android:padding="16dp"
             android:inputType="number"
             android:textSize="15dp"
-
-            android:background="@drawable/edittext_border"/>
+            android:background="@drawable/edittext_border_login"
+            android:textColorHint="@color/color2"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -94,17 +117,24 @@
             android:text="@string/jabatan"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
-            android:paddingBottom="8dp"/>
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_semibold"
+            />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border">
+            android:background="@drawable/edittext_border_login"
+
+
+            >
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/jabatanSpinnerRegis"
-                android:padding="14dp" />
+                android:padding="10dp"
+                />
         </RelativeLayout>
 
         <Button
@@ -113,9 +143,11 @@
             android:padding="16dp"
             android:id="@+id/register"
             android:layout_marginTop="25dp"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:text="@string/register"
-            android:textColor="@color/white"
-            android:background="@drawable/selector_button_login"/>
+            android:textColor="@color/color4"
+            android:background="@drawable/selector_button_login"
+            android:fontFamily="@font/poppins_medium"
+            />
     </LinearLayout>
 </LinearLayout>

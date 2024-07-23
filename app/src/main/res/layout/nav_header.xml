@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:orientation="vertical"
-    android:background="@color/green1"
+    android:background="@drawable/background_pattern"
     android:padding="16dp"
     android:gravity="bottom"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -15,14 +15,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bank Ekadharma"
-        android:textColor="@color/white"
-        android:textStyle="bold"/>
+        android:text="Selamat Datang"
+        android:textColor="@color/orange"
+        android:fontFamily="@font/poppins_bold"/>
     <TextView
+        android:id="@+id/namaUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bank Ekadharma"
-        android:textColor="@color/white"
+        android:textColor="@color/orange"
+        android:fontFamily="@font/poppins_semibold"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
 

@@ -20,7 +20,7 @@
             android:id="@+id/toolbar"
             android:elevation="4dp"
 
-            app:titleTextColor="@color/black"
+            app:titleTextColor="@color/orange"
             android:background="@color/white"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -39,8 +39,8 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        app:itemTextColor="@color/green1"
-        app:itemIconTint="@color/green1"
+        app:itemTextColor="@color/orange"
+        app:itemIconTint="@color/orange"
 
         />
 

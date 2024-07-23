@@ -17,12 +17,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Search" />
+            android:hint=" Mencari Nasabah"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <Button
             android:id="@+id/searchButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:background="@drawable/ic_search"
             />
 
@@ -31,25 +33,40 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="534dp" />
+        android:layout_height="500dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center">
 
         <Button
             android:id="@+id/previousButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Previous"
+            android:text="Kembali"
+            android:padding="10dp"
+            android:textColor="@color/color4"
+            android:background="@drawable/selector_button_login"
+            android:fontFamily="@font/poppins_semibold"
             android:visibility="gone"/>
 
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/buttonSpacer"/>
         <Button
             android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next"/>
+            android:text="Lanjut"
+            android:padding="10dp"
+            android:textColor="@color/color4"
+            android:background="@drawable/selector_button_login"
+            android:fontFamily="@font/poppins_semibold"/>
 
     </LinearLayout>
 </LinearLayout>

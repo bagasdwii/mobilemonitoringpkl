@@ -50,6 +50,7 @@ class AccountRepository(private val apiService: ApiService) {
                     localStorage.token = null
                     localStorage.userId = -1
                     localStorage.jabatan = -1
+                    localStorage.name = null
                     onResult(true)
                 } else {
                     Log.e("AccountRepository", "Logout failed with code: ${response.code()}")
@@ -84,6 +85,7 @@ class AccountRepository(private val apiService: ApiService) {
         localStorage.token = null
         localStorage.userId = -1
         localStorage.jabatan = -1
+        localStorage.name = null
     }
 }
 

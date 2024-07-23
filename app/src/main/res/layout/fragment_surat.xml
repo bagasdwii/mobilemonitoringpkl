@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/autoCompleteNasabah"
-        android:hint="Select course"
+        android:hint="Nasabah Yang Tersedia"
         android:padding="12dp"
+        android:fontFamily="@font/poppins_semibold"
         android:gravity="center_vertical"
         android:drawableEnd="@drawable/ic_dropdown"
         android:background="@android:drawable/editbox_background"
@@ -21,14 +22,18 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="tingkat sp"
-        android:padding="5dp"
+        android:text="Pilih Tingkat SP"
+        android:fontFamily="@font/poppins_semibold"
+        android:paddingStart="6sp"
+        android:paddingTop="8dp"
         />
     <Spinner
         android:id="@+id/spinnerTingkatSP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/tingkat_sp_array" />
+        android:padding="12dp"
+        android:entries="@array/tingkat_sp_array"
+        />
 
     <EditText
         android:id="@+id/etTanggal"
@@ -40,10 +45,16 @@
 
 
     <Button
+        android:layout_marginTop="8dp"
         android:id="@+id/btnPilihGambar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pilih Gambar" />
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/selector_button_login"
+        android:textColor="@color/color4"
+        android:text="kamera"
+        android:layout_marginBottom="8dp"/>
 
 
     <ImageView
@@ -51,23 +62,38 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/btnPilihPdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pilih PDF" />
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/selector_button_login"
+        android:textColor="@color/color4"
+        android:text="PDF"
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/tvPdfName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_semibold"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:text="Kirim"
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/selector_button_login"
+        android:textColor="@color/color4"
+        android:layout_marginBottom="8dp"/>
 </LinearLayout>

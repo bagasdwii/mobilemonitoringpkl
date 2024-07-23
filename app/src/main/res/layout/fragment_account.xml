@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".fragment.AccountFragment">
 
     <LinearLayout
@@ -24,11 +25,12 @@
             android:id="@+id/tvNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name:"
+            android:text="Nama:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginTop="8dp" />
+            android:textColor="@color/color1"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <TextView
             android:id="@+id/tvName"
@@ -37,7 +39,9 @@
             android:textSize="18sp"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
 
         <TextView
             android:id="@+id/tvEmailLabel"
@@ -46,8 +50,9 @@
             android:text="Email:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp" />
+            android:textColor="@color/color1"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <TextView
             android:id="@+id/tvEmail"
@@ -56,7 +61,10 @@
             android:textSize="18sp"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <TextView
             android:id="@+id/tvJabatanLabel"
@@ -65,8 +73,9 @@
             android:text="Jabatan:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp" />
+            android:textColor="@color/color1"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <TextView
             android:id="@+id/tvJabatan"
@@ -75,8 +84,12 @@
             android:textSize="18sp"
             android:padding="10dp"
             android:background="@drawable/edittext_border"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
 
+
+        <!-- Elements with visibility="gone" -->
         <TextView
             android:id="@+id/tvCabangLabel"
             android:layout_width="wrap_content"
@@ -84,9 +97,10 @@
             android:text="Cabang:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvCabang"
             android:layout_width="match_parent"
@@ -96,7 +110,10 @@
             android:text="@string/nothing"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <TextView
             android:id="@+id/tvWilayahLabel"
@@ -105,9 +122,10 @@
             android:text="Wilayah:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvWilayah"
             android:layout_width="match_parent"
@@ -117,7 +135,10 @@
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <TextView
             android:id="@+id/tvDireksiLabel"
@@ -126,9 +147,10 @@
             android:text="Direksi:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvDireksi"
             android:layout_width="match_parent"
@@ -138,7 +160,10 @@
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <TextView
             android:id="@+id/tvKepalaCabangLabel"
@@ -147,9 +172,10 @@
             android:text="Kepala Cabang:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvKepalaCabang"
             android:layout_width="match_parent"
@@ -159,7 +185,10 @@
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <TextView
             android:id="@+id/tvSupervisorLabel"
@@ -168,9 +197,10 @@
             android:text="Supervisor:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvSupervisor"
             android:layout_width="match_parent"
@@ -180,7 +210,9 @@
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
 
 
         <TextView
@@ -190,9 +222,10 @@
             android:text="Admin Kas:"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/color1"
             android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:fontFamily="@font/poppins_semibold"/>
         <TextView
             android:id="@+id/tvAdminKas"
             android:layout_width="match_parent"
@@ -202,8 +235,9 @@
             android:padding="10dp"
             android:background="@drawable/edittext_border"
             android:layout_marginTop="4dp"
-            android:visibility="gone"/>
-
+            android:visibility="gone"
+            android:textColor="@color/color1"
+            android:fontFamily="@font/poppins_medium"/>
 
 
     </LinearLayout>

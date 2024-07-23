@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Monitoring SP</string>
+    <string name="app_name">NasMon</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email">Email</string>
@@ -10,7 +10,7 @@
     <string name="jabatan">Jabatan</string>
     <string name="textRegis">Belum Punya Akun? Klik Disini</string>
     <string name="base_url">http://192.168.1.14:8000/</string>
-    <string name="api_server">http://192.168.1.14:8000/api</string>
+    <string name="api_server">http://192.168.39.195:8000/api</string>
     <string name="api_serverr">http://192.168.1.14:8000/api/</string>
     <string name="server">http://192.168.200.137:8000</string>
     <string name="Buatakun">Buat Akun</string>
@@ -25,6 +25,7 @@
     <string name="judul_surat">Surat Nasabah</string>
     <string name="nip">NIP</string>
     <string name="nothing">Tidak Diketahui</string>
+
 
     <string-array name="tingkat_sp_array">
         <item>1</item>

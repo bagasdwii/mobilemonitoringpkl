@@ -39,12 +39,14 @@ class LoginRepository(private val context: Context) {
                         val token = responseBody.token
                         val userId = responseBody.user_id
                         val jabatan = responseBody.jabatan_id
+                        val name = responseBody.name
 
                         // Simpan userId dan token ke LocalStorage
                         val localStorage = LocalStorage(context)
                         localStorage.userId = userId
                         localStorage.token = token
                         localStorage.jabatan = jabatan
+                        localStorage.name = name
 
                         callback(Result.success(token))
                     } else {

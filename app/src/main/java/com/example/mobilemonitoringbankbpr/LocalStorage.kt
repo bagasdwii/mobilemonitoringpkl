@@ -27,5 +27,11 @@ class LocalStorage(private val context: Context) {
             Log.d("LocalStorage", "Saving jabatan: $value") // Log saat menyimpan jabatan
             sharedPreferences.edit().putInt("jabatan", value).apply()
         }
+    var name: String?
+        get() = sharedPreferences.getString("nama", null)
+        set(value) {
+            Log.d("LocalStorage", "Saving nama: $value") // Log saat menyimpan jabatan
+            sharedPreferences.edit().putString("nama", value).apply()
+        }
 }
 

@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:text="Nama Nasabah"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <TextView
             android:id="@+id/CabangNasabah"
@@ -28,7 +29,8 @@
             android:layout_height="wrap_content"
             android:text="Cabang"
             android:textSize="14sp"
-            android:textColor="#888888" />
+            android:textColor="#888888"
+            android:fontFamily="@font/poppins_medium"/>
     </LinearLayout>
 
     <LinearLayout

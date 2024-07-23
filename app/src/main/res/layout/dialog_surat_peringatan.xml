@@ -7,59 +7,85 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detail Surat Peingatan"
+            android:textSize="20sp"
+            android:paddingBottom="20dp"
+            android:fontFamily="@font/poppins_bold"/>
+        <TextView
+            android:id="@+id/Tingkat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tingkat Surat SP"
+            android:textSize="16sp"
+            android:fontFamily="@font/poppins_semibold" />
         <TextView
             android:id="@+id/tvTingkat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tingkat"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
+            android:text="Tingkat Surat SP"
+            android:textSize="14sp"
+            android:paddingBottom="8dp"
+            android:fontFamily="@font/poppins_medium" />
+        <TextView
+            android:id="@+id/Tanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="16sp" />
         <TextView
             android:id="@+id/tvTanggal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tanggal"
-            android:textSize="14sp"
-            android:paddingTop="8dp" />
+            android:fontFamily="@font/poppins_medium"
+            android:paddingBottom="8dp"
+            android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvKeterangan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Keterangan"
-            android:textSize="14sp"
-            android:paddingTop="8dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="gambar" />
+            android:text="Bukti Foto"
+            android:textSize="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            />
 
         <ImageView
             android:id="@+id/ivBuktiGambar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="pdf" />
+            android:text="Bukti PDF SP"
+            android:textSize="16dp"
+            android:fontFamily="@font/poppins_semibold"/>
 
         <TextView
             android:id="@+id/tvPdfFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PDF File Name"
-            android:textColor="@android:color/black" />
+            android:paddingBottom="8dp"
+            android:fontFamily="@font/poppins_medium"/>
+
 
         <Button
             android:id="@+id/btnDownloadPdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/selector_button_login"
+            android:padding="16dp"
+            android:textColor="@color/color4"
+            android:fontFamily="@font/poppins_semibold"
             android:text="Download PDF" />
     </LinearLayout>
 </ScrollView>
