@@ -46,4 +46,14 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id == R.id.mainFragment) {
+            // Jika saat ini di MainFragment, keluar aplikasi
+            finish()
+        } else {
+            // Jika tidak, navigasi kembali ke fragment sebelumnya
+            super.onBackPressed()
+        }
+    }
+
 }

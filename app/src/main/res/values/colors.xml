@@ -7,4 +7,9 @@
     <color name="gray">#808080</color>
     <color name="brighterGreen1">#C2F0F0</color>
     <color name="brighterGreen2">#A0E0E0</color>
+    <color name="color1">#059212</color>
+    <color name="color2">#06D001</color>
+    <color name="color3">#9BEC00</color>
+    <color name="color4">#F3FF90</color>
+
 </resources>

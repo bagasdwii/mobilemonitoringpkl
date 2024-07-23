@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.LocalStorage
@@ -30,6 +31,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private val binding get() = _binding!!
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var accountViewModel: AccountViewModel
+    private lateinit var localStorage: LocalStorage
     private var loadingDialog: AlertDialog? = null
 
     override fun onCreateView(
@@ -62,6 +64,18 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        // Inisialisasi LocalStorage
+        localStorage = LocalStorage(requireContext())
+
+        // Ambil jabatan user dari LocalStorage
+        val jabatan = localStorage.jabatan
+
+        // Sesuaikan menu berdasarkan jabatan user
+        val menu = navigationView.menu
+        if (jabatan != 5) {
+            menu.findItem(R.id.nav_surat).isVisible = false
+        }
 
         if (savedInstanceState == null) {
             parentFragmentManager.beginTransaction()
@@ -110,41 +124,20 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         return true
     }
 
-//    private fun logout() {
-//        accountViewModel.isLoading.value = true
-//        val url = getString(R.string.api_server) + "/logoutmobile"
-//        Log.d("MainFragment", "Mulai proses logout")
-//        Thread {
-//            val http = Http(requireContext(), url)
-//            http.setMethod("POST")
-//            http.setToken(true)
-//            http.send()
-//
-//            requireActivity().runOnUiThread {
-//                val code = http.getStatusCode()
-//                if (code == 200) {
-//                    Log.d("MainFragment", "Logout berhasil")
-//                    val localStorage = LocalStorage(requireContext())
-//                    localStorage.token = null
-//                    localStorage.userId = -1
-//                    findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
-//                } else {
-//                    Log.e("MainFragment", "Logout gagal dengan kode: $code")
-//                    Toast.makeText(requireContext(), "Error $code", Toast.LENGTH_SHORT).show()
-//                }
-//                accountViewModel.isLoading.value = false
-//            }
-//        }.start()
-//    }
     private fun logout() {
         accountViewModel.logout { success ->
             if (success) {
-                findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.mainFragment, true)
+                    .build()
+                findNavController().navigate(R.id.action_mainFragment_to_loginFragment, null, navOptions)
             } else {
                 Toast.makeText(requireContext(), "Logout gagal", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
             loadingDialog = AlertDialog.Builder(requireContext())

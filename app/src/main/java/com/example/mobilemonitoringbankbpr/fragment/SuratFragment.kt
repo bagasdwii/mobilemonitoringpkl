@@ -456,7 +456,6 @@ class SuratFragment : Fragment() {
         private const val CAMERA_REQUEST = 1001
         private const val PICK_PDF_REQUEST = 1002
         private const val REQUEST_CAMERA_PERMISSION = 1003
-        private const val PICK_IMAGE_REQUEST = 1004
     }
 }
 
