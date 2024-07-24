@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -46,8 +47,10 @@ class RegisterFragment : Fragment() {
             val jabatanNames = jabatanList.map { it.nama_jabatan ?: "Unknown" }
             Log.d("RegisterFragment", "Jabatan names: $jabatanNames")
 
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, jabatanNames)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, jabatanNames)
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, jabatanNames)
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             binding.jabatanSpinnerRegis.adapter = adapter
 
             binding.jabatanSpinnerRegis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -66,7 +69,7 @@ class RegisterFragment : Fragment() {
         registerViewModel.fetchJabatanData()
 
         binding.register.setOnClickListener {
-            checkRegister()
+            showConfirmationDialog()
         }
     }
 
@@ -94,25 +97,60 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    private fun showConfirmationDialog() {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Peringatan"
+        alertMessage.text = "Apakah data yang akan dikirimkan sudah benar ?"
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "iYA") { dialog, _ ->
+            checkRegister()
+            dialog.dismiss()
+        }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"TIDAK"){ dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
     private fun alertSuccess(message: String) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Sukses")
-            .setIcon(R.drawable.ic_check)
-            .setMessage(message)
-            .setPositiveButton("Login") { dialog, _ ->
-                dialog.dismiss()
-                navigateToLogin()
-            }
-            .show()
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_succes, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Berhasil"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            dialog.dismiss()
+            navigateToLogin()
+        }
+        alertDialog.show()
     }
 
     private fun alertFail(message: String) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Gagal")
-            .setIcon(R.drawable.ic_warning)
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_fail, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Gagal"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
     }
 
     private fun navigateToLogin() {

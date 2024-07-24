@@ -6,6 +6,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.bumptech.glide.Glide
 import com.example.mobilemonitoringbankbpr.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,10 +15,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var localStorage: LocalStorage
 
+    private lateinit var appLifecycleObserver: AppLifecycleObserver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000) // Untuk menampilkan splash screen
         installSplashScreen()
+
+        appLifecycleObserver = AppLifecycleObserver(this)
+        lifecycle.addObserver(appLifecycleObserver)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -54,6 +59,16 @@ class MainActivity : AppCompatActivity() {
             // Jika tidak, navigasi kembali ke fragment sebelumnya
             super.onBackPressed()
         }
+    }
+    private fun clearCache() {
+        Glide.get(this).clearMemory()
+        Thread {
+            Glide.get(this).clearDiskCache()
+        }.start()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(appLifecycleObserver)
     }
 
 }

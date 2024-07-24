@@ -6,6 +6,8 @@ import com.example.mobilemonitoringbankbpr.data.ConnectionResponse
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.Login
 import com.example.mobilemonitoringbankbpr.data.ResponseLogin
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +55,14 @@ class LoginRepository(private val context: Context) {
                         callback(Result.failure(Exception("Response body is null")))
                     }
                 } else {
-                    callback(Result.failure(Exception("Login failed: ${response.message()}")))
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage = try {
+                        val jsonObject = JSONObject(errorBody)
+                        jsonObject.getString("message")
+                    } catch (e: JSONException) {
+                        "Login gagal"
+                    }
+                    callback(Result.failure(Exception(errorMessage)))
                 }
             }
 

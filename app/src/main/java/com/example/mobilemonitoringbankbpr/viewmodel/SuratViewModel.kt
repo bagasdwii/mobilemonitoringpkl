@@ -29,7 +29,8 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
-
+    private val _submissionError = MutableLiveData<String?>()
+    val submissionError: LiveData<String?> get() = _submissionError
     fun fetchNasabahList() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,11 +61,13 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
                 onSuccess = {
                     _isSubmitting.postValue(false)
                     _isSubmissionSuccessful.postValue(true)
+                    _submissionError.postValue(null)
                     Log.d("SuratViewModel", "submitSuratPeringatan: Success")
                 },
                 onFailure = { error ->
                     _isSubmitting.postValue(false)
                     _isSubmissionSuccessful.postValue(false)
+                    _submissionError.postValue(error.message)
                     Log.e("SuratViewModel", "submitSuratPeringatan: Error", error)
                 }
             )

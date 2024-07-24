@@ -6,6 +6,7 @@ import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
+import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import retrofit2.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,6 +16,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import retrofit2.Call
 import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
 
@@ -22,51 +24,7 @@ import java.io.File
 
 class SuratRepository(private val context: Context) {
 
-//    fun fetchNasabahList(): List<NasabahSp> {
-//        Log.d("NasabahRepository", "fetchNasabahList: Start")
-//        val url = context.getString(R.string.api_server) + "/nasabah"
-//        val http = Http(context, url)
-//
-//        http.setMethod("GET")
-//        http.setToken(true)
-//
-//        http.send()
-//
-//        val response = http.getResponse()
-//        val nasabahList = mutableListOf<NasabahSp>()
-//
-//        response?.let {
-//            try {
-//                val jsonArray = JSONArray(it)
-//                for (i in 0 until jsonArray.length()) {
-//                    val jsonObject = jsonArray.getJSONObject(i)
-//                    val nasabah = NasabahSp(
-//                        no = jsonObject.getLong("no"),
-//                        nama = jsonObject.getString("nama"),
-//                        pokok = jsonObject.getString("pokok"),
-//                        bunga = jsonObject.getString("bunga"),
-//                        denda = jsonObject.getString("denda"),
-//                        total = jsonObject.getInt("total"),
-//                        keterangan = jsonObject.getString("keterangan"),
-//                        ttd = jsonObject.getString("ttd"),
-//                        kembali = jsonObject.getString("kembali"),
-//                        cabang = jsonObject.getString("id_cabang"),
-//                        wilayah = jsonObject.getString("id_wilayah"),
-//                        adminkas = jsonObject.getString("id_admin_kas"),
-//                        id_account_officer = jsonObject.getLong("id_account_officer")
-//                    )
-//                    nasabahList.add(nasabah)
-//                }
-//                Log.d("NasabahRepository", "fetchNasabahList: Success")
-//            } catch (e: JSONException) {
-//                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
-//            }
-//        } ?: run {
-//            Log.e("SuratRepository", "fetchNasabahList: No response from server")
-//        }
-//
-//        return nasabahList
-//    }
+
     suspend fun fetchNasabahList(): List<NasabahSp> {
         Log.d("NasabahRepository", "fetchNasabahList: Start")
 
@@ -128,26 +86,78 @@ class SuratRepository(private val context: Context) {
         Log.d("SuratRepository", "submitSuratPeringatan: URL: $endpointUrl")
         Log.d("SuratRepository", "submitSuratPeringatan: Data: no=${suratPeringatan.no}, tingkat=${suratPeringatan.tingkat}, tanggal=${suratPeringatan.tanggal}, idAccountOfficer=${suratPeringatan.id_account_officer}")
 
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        call.enqueue(object : Callback<ResponseSuratPeringatan> {
+            override fun onResponse(call: Call<ResponseSuratPeringatan>, response: Response<ResponseSuratPeringatan>) {
                 if (response.isSuccessful) {
                     onSuccess()
                     Log.d("SuratRepository", "submitSuratPeringatan: Success")
                 } else {
-                    onFailure(Exception("Failed with status code ${response.code()}"))
-                    Log.e("SuratRepository", "submitSuratPeringatan: Failed with status code ${response.code()}")
+                    val errorResponse = response.errorBody()?.string()
+                    val errorMessage = try {
+                        JSONObject(errorResponse).getString("error")
+                    } catch (e: Exception) {
+                        "Unknown error"
+                    }
+                    onFailure(Exception(errorMessage))
+                    Log.e("SuratRepository", "submitSuratPeringatan: Error ${response.code()}: $errorMessage")
                 }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseSuratPeringatan>, t: Throwable) {
                 onFailure(t)
                 Log.e("SuratRepository", "submitSuratPeringatan: Failed", t)
             }
         })
+
+
     }
 
 
 }
 
 
-
+//    fun fetchNasabahList(): List<NasabahSp> {
+//        Log.d("NasabahRepository", "fetchNasabahList: Start")
+//        val url = context.getString(R.string.api_server) + "/nasabah"
+//        val http = Http(context, url)
+//
+//        http.setMethod("GET")
+//        http.setToken(true)
+//
+//        http.send()
+//
+//        val response = http.getResponse()
+//        val nasabahList = mutableListOf<NasabahSp>()
+//
+//        response?.let {
+//            try {
+//                val jsonArray = JSONArray(it)
+//                for (i in 0 until jsonArray.length()) {
+//                    val jsonObject = jsonArray.getJSONObject(i)
+//                    val nasabah = NasabahSp(
+//                        no = jsonObject.getLong("no"),
+//                        nama = jsonObject.getString("nama"),
+//                        pokok = jsonObject.getString("pokok"),
+//                        bunga = jsonObject.getString("bunga"),
+//                        denda = jsonObject.getString("denda"),
+//                        total = jsonObject.getInt("total"),
+//                        keterangan = jsonObject.getString("keterangan"),
+//                        ttd = jsonObject.getString("ttd"),
+//                        kembali = jsonObject.getString("kembali"),
+//                        cabang = jsonObject.getString("id_cabang"),
+//                        wilayah = jsonObject.getString("id_wilayah"),
+//                        adminkas = jsonObject.getString("id_admin_kas"),
+//                        id_account_officer = jsonObject.getLong("id_account_officer")
+//                    )
+//                    nasabahList.add(nasabah)
+//                }
+//                Log.d("NasabahRepository", "fetchNasabahList: Success")
+//            } catch (e: JSONException) {
+//                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
+//            }
+//        } ?: run {
+//            Log.e("SuratRepository", "fetchNasabahList: No response from server")
+//        }
+//
+//        return nasabahList
+//    }

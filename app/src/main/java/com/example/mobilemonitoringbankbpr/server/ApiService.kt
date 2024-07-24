@@ -8,6 +8,7 @@ import com.example.mobilemonitoringbankbpr.data.Register
 import com.example.mobilemonitoringbankbpr.data.ResponseLogin
 import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
 import com.example.mobilemonitoringbankbpr.data.ResponseRegister
+import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.User
 import okhttp3.MultipartBody
@@ -37,7 +38,7 @@ interface ApiService {
         @Part("id_account_officer") idAccountOfficer: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?,
         @Part scan_pdf: MultipartBody.Part?
-    ): Call<Void>
+    ): Call<ResponseSuratPeringatan>
     @GET("api/jabatan")
     fun getJabatanData(): Call<List<Jabatan>>
 

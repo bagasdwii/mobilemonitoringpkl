@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobilemonitoringbankbpr.viewmodelfactory.AccountViewModelFactory
@@ -178,15 +179,22 @@ class AccountFragment : Fragment() {
     }
 
     private fun showAlertConnectionLost() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Koneksi Terputus")
-            .setIcon(R.drawable.ic_warning)
-            .setMessage("Koneksi internet terputus. Aplikasi akan keluar.")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                requireActivity().finish()
-            }
-            .show()
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_fail, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Gagal"
+        alertMessage.text = "Koneksi dengan Server terputus. Aplikasi akan keluar."
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            dialog.dismiss()
+            requireActivity().finish()
+        }
+        alertDialog.show()
     }
 
     override fun onDestroyView() {

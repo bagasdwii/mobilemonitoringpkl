@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -84,9 +85,10 @@ class SuratFragment : Fragment() {
         setupDatePicker()
         setupImagePicker()
         setupPdfPicker()
-
+        setupTingkatSPSpinner()
+        observeViewModel()
         binding.btnSubmit.setOnClickListener {
-            submitSuratPeringatan()
+            showConfirmationDialog()
         }
 
         nasabahViewModel.isSubmitting.observe(viewLifecycleOwner, { isSubmitting ->
@@ -99,24 +101,7 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "isSubmitting: $isSubmitting")
         })
 
-        nasabahViewModel.isSubmissionSuccessful.observe(viewLifecycleOwner, { isSuccessful ->
-            if (isSuccessful) {
-                Toast.makeText(
-                    requireContext(),
-                    "Surat peringatan berhasil dikirim",
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.d("SuratFragment", "Surat peringatan berhasil dikirim")
-                resetForm()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Gagal mengirim surat peringatan",
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.e("SuratFragment", "Gagal mengirim surat peringatan")
-            }
-        })
+
 
         nasabahViewModel.fetchNasabahList()
         nasabahViewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
@@ -129,6 +114,53 @@ class SuratFragment : Fragment() {
         })
         updateDateInView()
 
+    }
+    private fun showConfirmationDialog() {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Peringatan"
+        alertMessage.text = "Apakah Anda yakin ingin mengirimkan data nasabah ini ?"
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "iYA") { dialog, _ ->
+            submitSuratPeringatan()
+            dialog.dismiss()
+        }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"TIDAK"){ dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    private fun observeViewModel() {
+        nasabahViewModel.submissionError.observe(viewLifecycleOwner, { errorMessage ->
+            errorMessage?.let {
+                alertFail(it)
+                Log.w("SuratFragment", "Form submission failed: $it")
+            }
+        })
+
+        nasabahViewModel.isSubmissionSuccessful.observe(viewLifecycleOwner, { isSuccessful ->
+            if (isSuccessful) {
+                resetForm()
+                alertSuccess("Surat peringatan berhasil dikirim.")
+            }
+        })
+    }
+    private fun setupTingkatSPSpinner() {
+        val adapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.tingkat_sp_array,
+            R.layout.spinner_item_surat_tingkatsp // gunakan layout untuk item spinner
+        ).apply {
+            setDropDownViewResource(R.layout.spinner_dropdown_item__surat_tingkatsp) // gunakan layout untuk dropdown item
+        }
+        binding.spinnerTingkatSP.adapter = adapter
     }
 
     private fun setupNasabahDropdown() {
@@ -145,12 +177,13 @@ class SuratFragment : Fragment() {
         val dialogBinding = DialogSeacrhSpinnerBinding.inflate(layoutInflater)
         val dialog = Dialog(requireContext()).apply {
             setContentView(dialogBinding.root)
-            window?.setLayout(650, 800)
+            window?.setLayout(900, 2000)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, arrayList)
+        val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item_surat, arrayList)
+
         dialogBinding.listView.adapter = adapter
 
         dialogBinding.editText.addTextChangedListener(object : TextWatcher {
@@ -168,6 +201,7 @@ class SuratFragment : Fragment() {
             dialog.dismiss()
         }
     }
+
 
     private fun setupDatePicker() {
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -345,8 +379,9 @@ class SuratFragment : Fragment() {
         val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
         val tanggal = binding.etTanggal.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty()){
-            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
+        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || selectedImageUri==null || selectedPdfUri==null){
+//            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
+            alertFail("Nasabah, Tingkat SP, Foto dan PDF wajib diisi.")
             Log.w("SuratFragment", "Form submission failed: empty fields")
             return
         }
@@ -376,7 +411,39 @@ class SuratFragment : Fragment() {
         Log.d("SuratFragment", "Gambar File Path: ${imageFile?.absolutePath}")
         Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
     }
+    private fun alertSuccess(message: String) {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_succes, null)
 
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Berhasil"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    private fun alertFail(message: String) {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_fail, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Gagal"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
+    }
     private fun getFileFromUri(uri: Uri?): File? {
         uri ?: return null
         return context?.let { FileUtilsNasabah.getFileFromUri(it, uri) }
