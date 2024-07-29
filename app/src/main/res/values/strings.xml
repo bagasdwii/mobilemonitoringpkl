@@ -20,10 +20,10 @@
     <string name="api_forget">http://192.168.200.137:8000/forgot-password</string>
     <string name="close_nav">Close Navigation Drawer</string>
     <string name="open_nav">Open Navigation Drawer</string>
-    <string name="judul_account">Account Setting</string>
+    <string name="judul_account">Akun</string>
     <string name="judul_monitoring">Monitoring Nasabah</string>
     <string name="judul_surat">Surat Nasabah</string>
-    <string name="nip">NIP</string>
+    <string name="key">Key</string>
     <string name="nothing">Tidak Diketahui</string>
 
 

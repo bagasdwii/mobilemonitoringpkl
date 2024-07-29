@@ -11,19 +11,20 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_polos"/>
+        android:src="@drawable/logo_polos"
+        android:layout_marginBottom="8dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Selamat Datang"
-        android:textColor="@color/orange"
+        android:textColor="@color/black"
         android:fontFamily="@font/poppins_bold"/>
     <TextView
         android:id="@+id/namaUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bank Ekadharma"
-        android:textColor="@color/orange"
+        android:textColor="@color/black"
         android:fontFamily="@font/poppins_semibold"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>

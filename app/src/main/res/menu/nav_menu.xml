@@ -7,7 +7,7 @@
         <item
         android:id="@+id/nav_account"
         android:icon="@drawable/icon_account"
-        android:title="Account Setting">
+        android:title="Akun">
 
         </item>
         <item
@@ -31,7 +31,7 @@
                 <item
                     android:id="@+id/nav_logout"
                     android:icon="@drawable/ic_logout"
-                    android:title="Logout">
+                    android:title="Keluar">
                 </item>
             </menu>
     </item>

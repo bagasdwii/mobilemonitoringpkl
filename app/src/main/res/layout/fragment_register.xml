@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register"
+    android:background="@drawable/registerbaru"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".fragment.RegisterFragment">
@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/nip"
+            android:text="@string/key"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
             android:textColor="@color/color1"
@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registerNip"
-            android:hint="@string/nip"
+            android:hint="@string/key"
             android:padding="16dp"
             android:inputType="number"
             android:textSize="15dp"
