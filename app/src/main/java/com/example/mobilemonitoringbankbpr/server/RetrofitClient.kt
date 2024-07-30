@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.1.14:8000/"
+    private const val BASE_URL = "http://192.168.1.15:8000/"
     private val gson: Gson = GsonBuilder()
         .setLenient()
         .create()
@@ -53,6 +53,7 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(provideOkHttpClientWithoutAuth()) // Use OkHttpClient without Auth
             .build()
+        Log.d("RetrofitClient", "Base URL: $retrofit (Without Auth)")
 
         return retrofit.create(ApiService::class.java)
     }

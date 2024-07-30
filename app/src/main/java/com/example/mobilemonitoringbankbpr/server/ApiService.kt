@@ -9,6 +9,7 @@ import com.example.mobilemonitoringbankbpr.data.ResponseLogin
 import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
 import com.example.mobilemonitoringbankbpr.data.ResponseRegister
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
+import com.example.mobilemonitoringbankbpr.data.ResponseUserList
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.User
 import okhttp3.MultipartBody
@@ -63,6 +64,11 @@ interface ApiService {
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
+    @GET("api/usermobileadmin")
+    suspend fun getUser(
+        @Query("search") search: String,
+        @Query("page") page: Int
+    ): Response<ResponseUserList>
     @GET("api/nasabah")
     suspend fun getNasabahList(): List<NasabahSp>
     @GET("surat-peringatan/gambar/{filename}")

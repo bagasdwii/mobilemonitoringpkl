@@ -297,6 +297,14 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_user -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, AdminFragment()).commit()
+//                binding.toolbar.title = getString(R.string.judul_account)
+                setToolbarTitle(getString(R.string.judul_account))
+
+                Log.d("MainFragment", "Navigasi ke Akun")
+            }
             R.id.nav_account -> {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, AccountFragment()).commit()
