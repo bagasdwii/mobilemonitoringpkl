@@ -95,6 +95,26 @@ class AdminAdapter(
             }
         }
 
+//        private fun showUserDialog(user: User) {
+//            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_user, null)
+//            val alertDialog = AlertDialog.Builder(context)
+//                .setView(dialogView)
+//                .setCancelable(true)
+//                .create()
+//
+//            dialogView.findViewById<TextView>(R.id.tvUserName).text = user.name
+//            dialogView.findViewById<TextView>(R.id.tvgmail).text = user.email
+//            dialogView.findViewById<TextView>(R.id.tvjabatannn).text = user.jabatan
+//            dialogView.findViewById<TextView>(R.id.tvCabang).text = user.cabang
+//            dialogView.findViewById<TextView>(R.id.tvWilayah).text = user.wilayah
+//            dialogView.findViewById<TextView>(R.id.tvDireksi).text = user.id_direksi
+//            dialogView.findViewById<TextView>(R.id.tvKepalaCabang).text = user.id_kepala_cabang
+//            dialogView.findViewById<TextView>(R.id.tvSupervisor).text = user.id_supervisor
+//            dialogView.findViewById<TextView>(R.id.tvAdminKas).text = user.id_admin_kas
+//            dialogView.findViewById<TextView>(R.id.tvStatus).text = user.status
+//
+//            alertDialog.show()
+//        }
         private fun showUserDialog(user: User) {
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_user, null)
             val alertDialog = AlertDialog.Builder(context)
@@ -102,16 +122,84 @@ class AdminAdapter(
                 .setCancelable(true)
                 .create()
 
-            dialogView.findViewById<TextView>(R.id.tvUserName).text = user.name
-            dialogView.findViewById<TextView>(R.id.tvgmail).text = user.email
-            dialogView.findViewById<TextView>(R.id.tvjabatannn).text = user.jabatan
-            dialogView.findViewById<TextView>(R.id.tvCabang).text = user.cabang
-            dialogView.findViewById<TextView>(R.id.tvWilayah).text = user.wilayah
-            dialogView.findViewById<TextView>(R.id.tvDireksi).text = user.id_direksi
-            dialogView.findViewById<TextView>(R.id.tvKepalaCabang).text = user.id_kepala_cabang
-            dialogView.findViewById<TextView>(R.id.tvSupervisor).text = user.id_supervisor
-            dialogView.findViewById<TextView>(R.id.tvAdminKas).text = user.id_admin_kas
-            dialogView.findViewById<TextView>(R.id.tvStatus).text = user.status
+            val tvUserName = dialogView.findViewById<TextView>(R.id.tvUserName)
+            val tvGmail = dialogView.findViewById<TextView>(R.id.tvgmail)
+            val tvJabatan = dialogView.findViewById<TextView>(R.id.tvjabatannn)
+            val Cabang = dialogView.findViewById<TextView>(R.id.Cabang)
+            val tvCabang = dialogView.findViewById<TextView>(R.id.tvCabang)
+            val Wilayah = dialogView.findViewById<TextView>(R.id.Wilayah)
+            val tvWilayah = dialogView.findViewById<TextView>(R.id.tvWilayah)
+            val Direksi = dialogView.findViewById<TextView>(R.id.Direksi)
+            val tvDireksi = dialogView.findViewById<TextView>(R.id.tvDireksi)
+            val KepalaCabang = dialogView.findViewById<TextView>(R.id.KepalaCabang)
+            val tvKepalaCabang = dialogView.findViewById<TextView>(R.id.tvKepalaCabang)
+            val Supervisor = dialogView.findViewById<TextView>(R.id.Supervisor)
+            val tvSupervisor = dialogView.findViewById<TextView>(R.id.tvSupervisor)
+            val AdminKas = dialogView.findViewById<TextView>(R.id.AdminKas)
+            val tvAdminKas = dialogView.findViewById<TextView>(R.id.tvAdminKas)
+            val tvStatus = dialogView.findViewById<TextView>(R.id.tvStatus)
+
+            tvUserName.text = user.name
+            tvGmail.text = user.email
+            tvJabatan.text = user.jabatan
+            tvCabang.text = user.cabang
+            tvWilayah.text = user.wilayah
+            tvDireksi.text = user.id_direksi
+            tvKepalaCabang.text = user.id_kepala_cabang
+            tvSupervisor.text = user.id_supervisor
+            tvAdminKas.text = user.id_admin_kas
+            tvStatus.text = user.status
+
+            when (user.jabatan.toLowerCase()) {
+                "direksi" -> {
+                    Cabang.visibility = View.GONE
+                    tvCabang.visibility = View.GONE
+                    Wilayah.visibility = View.GONE
+                    tvWilayah.visibility = View.GONE
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
+                }
+                "kepala cabang" -> {
+                    Wilayah.visibility = View.GONE
+                    tvWilayah.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
+                }
+                "supervisor" -> {
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
+                }
+                "admin kas" -> {
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
+                }
+                "account officer" -> {
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
+                }
+            }
 
             alertDialog.show()
         }
@@ -139,7 +227,7 @@ class AdminAdapter(
 
     class UserDiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-            return oldItem.id_user == newItem.id_user
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {

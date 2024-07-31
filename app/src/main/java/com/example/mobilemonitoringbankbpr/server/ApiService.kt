@@ -30,6 +30,7 @@ interface ApiService {
 
     @GET("api/checkconnection")
     fun checkConnection(): Call<ConnectionResponse>
+
     @Multipart
     @POST("api/surat_peringatan")
     fun submitSuratPeringatan(
@@ -40,13 +41,15 @@ interface ApiService {
         @Part bukti_gambar: MultipartBody.Part?,
         @Part scan_pdf: MultipartBody.Part?
     ): Call<ResponseSuratPeringatan>
+
     @GET("api/jabatan")
     fun getJabatanData(): Call<List<Jabatan>>
 
     @POST("api/registermobile")
     fun registerUser(
         @Body registerRequest: Register
-        ): Call<ResponseRegister>
+    ): Call<ResponseRegister>
+
     @POST("api/loginmobile")
     fun loginUser(
         @Body loginRequest: Login
@@ -64,18 +67,19 @@ interface ApiService {
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
+
     @GET("api/usermobileadmin")
     suspend fun getUser(
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseUserList>
+
     @GET("api/nasabah")
     suspend fun getNasabahList(): List<NasabahSp>
+
     @GET("surat-peringatan/gambar/{filename}")
     suspend fun getGambar(@Path("filename") filename: String): Response<ResponseBody>
 
     @GET("surat-peringatan/pdf/{filename}")
     suspend fun getPdf(@Path("filename") filename: String): Response<ResponseBody>
-    @GET
-    fun getImage(@Url url: String): Call<ResponseBody>
 }
