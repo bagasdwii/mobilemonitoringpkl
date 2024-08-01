@@ -1,8 +1,4 @@
 package com.example.mobilemonitoringbankbpr.data
 
-data class AdminKas( val id: Int,
-                     val name: String){
-    override fun toString(): String {
-        return name
-    }
-}
+data class AdminKas( val id_admin_kas: Int,
+                     val nama_admin_kas: String)

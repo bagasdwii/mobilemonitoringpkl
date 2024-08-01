@@ -1,5 +1,6 @@
 package com.example.mobilemonitoringbankbpr.adapter
 
+import android.app.Dialog
 import java.text.NumberFormat
 import java.util.Locale
 import android.app.DownloadManager
@@ -7,21 +8,27 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Environment
 import android.os.ParcelFileDescriptor
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -49,6 +56,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.example.mobilemonitoringbankbpr.LocalStorage
 import com.example.mobilemonitoringbankbpr.data.User
+import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.ItemUserBinding
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.viewmodel.AdminViewModel
@@ -94,27 +102,6 @@ class AdminAdapter(
                 showUserEditDialog(user)
             }
         }
-
-//        private fun showUserDialog(user: User) {
-//            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_user, null)
-//            val alertDialog = AlertDialog.Builder(context)
-//                .setView(dialogView)
-//                .setCancelable(true)
-//                .create()
-//
-//            dialogView.findViewById<TextView>(R.id.tvUserName).text = user.name
-//            dialogView.findViewById<TextView>(R.id.tvgmail).text = user.email
-//            dialogView.findViewById<TextView>(R.id.tvjabatannn).text = user.jabatan
-//            dialogView.findViewById<TextView>(R.id.tvCabang).text = user.cabang
-//            dialogView.findViewById<TextView>(R.id.tvWilayah).text = user.wilayah
-//            dialogView.findViewById<TextView>(R.id.tvDireksi).text = user.id_direksi
-//            dialogView.findViewById<TextView>(R.id.tvKepalaCabang).text = user.id_kepala_cabang
-//            dialogView.findViewById<TextView>(R.id.tvSupervisor).text = user.id_supervisor
-//            dialogView.findViewById<TextView>(R.id.tvAdminKas).text = user.id_admin_kas
-//            dialogView.findViewById<TextView>(R.id.tvStatus).text = user.status
-//
-//            alertDialog.show()
-//        }
         private fun showUserDialog(user: User) {
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_user, null)
             val alertDialog = AlertDialog.Builder(context)
@@ -211,16 +198,109 @@ class AdminAdapter(
                 .setCancelable(true)
                 .create()
 
-            dialogView.findViewById<TextView>(R.id.editJabatan).text = user.jabatan
-            dialogView.findViewById<TextView>(R.id.editCabang).text = user.cabang
-            dialogView.findViewById<TextView>(R.id.editWilayah).text = user.wilayah
-            dialogView.findViewById<TextView>(R.id.editDireksi).text = user.id_direksi
-            dialogView.findViewById<TextView>(R.id.editKepalaCabang).text = user.id_kepala_cabang
-            dialogView.findViewById<TextView>(R.id.editSupervisor).text = user.id_supervisor
-            dialogView.findViewById<TextView>(R.id.editAdminKas).text = user.id_admin_kas
-            dialogView.findViewById<TextView>(R.id.editStatus).text = user.status
+            val editCabang = dialogView.findViewById<TextView>(R.id.editCabang)
+            val editWilayah = dialogView.findViewById<TextView>(R.id.editWilayah)
+            val editJabatan = dialogView.findViewById<TextView>(R.id.editJabatan)
+            val editDireksi = dialogView.findViewById<TextView>(R.id.editDireksi)
+            val editKepalaCabang = dialogView.findViewById<TextView>(R.id.editKepalaCabang)
+            val editSupervisor = dialogView.findViewById<TextView>(R.id.editSupervisor)
+            val editAdminKas = dialogView.findViewById<TextView>(R.id.editAdminKas)
+            val editStatus = dialogView.findViewById<TextView>(R.id.editStatus)
+
+            // Set initial user data
+            editCabang.text = user.cabang
+            editWilayah.text = user.wilayah
+            editJabatan.text = user.jabatan
+            editDireksi.text = user.id_direksi
+            editKepalaCabang.text = user.id_kepala_cabang
+            editSupervisor.text = user.id_supervisor
+            editAdminKas.text = user.id_admin_kas
+            editStatus.text = user.status
+
+
+            // Observe cabang data and show dialog when editCabang is clicked
+            editCabang.setOnClickListener {
+                viewModel.cabang.observe(lifecycleOwner, { cabangList ->
+                    val arrayList = ArrayList(cabangList.map { it.nama_cabang })
+                    showDialog(arrayList, editCabang)
+                })
+            }
+            editWilayah.setOnClickListener {
+                viewModel.wilayah.observe(lifecycleOwner, { wilayahList ->
+                    val arrayList = ArrayList(wilayahList.map { it.nama_wilayah })
+                    showDialog(arrayList, editWilayah)
+                })
+            }
+            editJabatan.setOnClickListener {
+                viewModel.jabatan.observe(lifecycleOwner, { jabatanList ->
+                    val arrayList = ArrayList(jabatanList.map { it.nama_jabatan })
+                    showDialog(arrayList, editJabatan)
+                })
+            }
+            editDireksi.setOnClickListener {
+                viewModel.direksi.observe(lifecycleOwner, { direksiList ->
+                    val arrayList = ArrayList(direksiList.map { it.nama })
+                    showDialog(arrayList, editDireksi)
+                })
+            }
+            editKepalaCabang.setOnClickListener {
+                viewModel.kepalacabang.observe(lifecycleOwner, { kepalacabangList ->
+                    val arrayList = ArrayList(kepalacabangList.map { it.nama_kepala_cabang })
+                    showDialog(arrayList, editKepalaCabang)
+                })
+            }
+            editSupervisor.setOnClickListener {
+                viewModel.supervisor.observe(lifecycleOwner, { supervisorList ->
+                    val arrayList = ArrayList(supervisorList.map { it.nama_supervisor })
+                    showDialog(arrayList, editSupervisor)
+                })
+            }
+            editAdminKas.setOnClickListener {
+                viewModel.adminkas.observe(lifecycleOwner, { adminkasList ->
+                    val arrayList = ArrayList(adminkasList.map { it.nama_admin_kas })
+                    showDialog(arrayList, editAdminKas)
+                })
+            }
+//            editStatus.setOnClickListener {
+//                viewModel.status.observe(lifecycleOwner, { statusList ->
+//                    val arrayList = ArrayList(statusList.map { it.nama_status })
+//                    showDialog(arrayList, editStatus)
+//                })
+//            }
+
+
+
+
 
             alertDialog.show()
+        }
+        private fun showDialog(arrayList: ArrayList<String>, editTextView: TextView) {
+            val dialogBinding = DialogSeacrhSpinnerBinding.inflate(LayoutInflater.from(context))
+            val dialog = Dialog(context).apply {
+                setContentView(dialogBinding.root)
+                window?.setLayout(900, 2000)
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                show()
+            }
+
+            val adapter = ArrayAdapter(context, R.layout.spinner_item_surat, arrayList)
+
+            dialogBinding.listView.adapter = adapter
+
+            dialogBinding.editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    adapter.filter.filter(s)
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
+            dialogBinding.listView.setOnItemClickListener { _, _, position, _ ->
+                editTextView.text = adapter.getItem(position)
+                dialog.dismiss()
+            }
         }
     }
 

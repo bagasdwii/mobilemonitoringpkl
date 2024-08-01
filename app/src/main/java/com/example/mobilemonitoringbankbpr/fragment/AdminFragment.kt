@@ -18,20 +18,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.adapter.AdminAdapter
-import com.example.mobilemonitoringbankbpr.adapter.MonitoringAdapter
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.FragmentAdminBinding
-import com.example.mobilemonitoringbankbpr.databinding.FragmentMonitoringBinding
 import com.example.mobilemonitoringbankbpr.viewmodel.AdminViewModel
-import com.example.mobilemonitoringbankbpr.viewmodel.MonitoringViewModel
+import com.example.mobilemonitoringbankbpr.viewmodel.SuratViewModel
 import java.util.ArrayList
+
 
 class AdminFragment : Fragment() {
     private var _binding: FragmentAdminBinding? = null
     private val binding get() = _binding!!
     private lateinit var adminViewModel: AdminViewModel
     private var loadingDialog: AlertDialog? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,7 +62,7 @@ class AdminFragment : Fragment() {
         binding.searchButton.setOnClickListener {
             val query = binding.searchEditText.text.toString()
             adminViewModel.setPage(1)
-            adminViewModel.getNasabahs(query)
+            adminViewModel.getUser(query)
             updateButtonVisibility()
         }
 
@@ -72,7 +70,7 @@ class AdminFragment : Fragment() {
             val currentPage = adminViewModel.getCurrentPage()
             if (currentPage > 1) {
                 adminViewModel.setPage(currentPage - 1)
-                adminViewModel.getNasabahs(binding.searchEditText.text.toString())
+                adminViewModel.getUser(binding.searchEditText.text.toString())
                 Log.d("AdminFragment", "Previous button clicked, page: ${adminViewModel.getCurrentPage()}")
             }
             updateButtonVisibility()
@@ -80,13 +78,22 @@ class AdminFragment : Fragment() {
 
         binding.nextButton.setOnClickListener {
             adminViewModel.setPage(adminViewModel.getCurrentPage() + 1)
-            adminViewModel.getNasabahs(binding.searchEditText.text.toString())
+            adminViewModel.getUser(binding.searchEditText.text.toString())
             Log.d("AdminFragment", "Next button clicked, page: ${adminViewModel.getCurrentPage()}")
             updateButtonVisibility()
         }
 
-        adminViewModel.getNasabahs("")
+        adminViewModel.getUser("")
+        adminViewModel.fetchCabangList()
+        adminViewModel.fetchWilayahList()
+        adminViewModel.fetchJabatanList()
+        adminViewModel.fetchDireksiList()
+        adminViewModel.fetchKepalacabangList()
+        adminViewModel.fetchSupervisorList()
+        adminViewModel.fetchAdminKasList()
+
     }
+
 
 
     private fun showLoadingDialog() {
@@ -115,7 +122,6 @@ class AdminFragment : Fragment() {
         dismissLoadingDialog()
     }
 }
-
 
 
 

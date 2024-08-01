@@ -1,6 +1,10 @@
 package com.example.mobilemonitoringbankbpr.server
+import com.example.mobilemonitoringbankbpr.data.AdminKas
+import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.ConnectionResponse
+import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
+import com.example.mobilemonitoringbankbpr.data.KepalaCabang
 import com.example.mobilemonitoringbankbpr.data.Login
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
@@ -10,8 +14,10 @@ import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
 import com.example.mobilemonitoringbankbpr.data.ResponseRegister
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.ResponseUserList
+import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.User
+import com.example.mobilemonitoringbankbpr.data.Wilayah
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -68,15 +74,31 @@ interface ApiService {
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
 
+
+    @GET("api/nasabah")
+    suspend fun getNasabahList(): List<NasabahSp>
     @GET("api/usermobileadmin")
     suspend fun getUser(
         @Query("search") search: String,
         @Query("page") page: Int
     ): Response<ResponseUserList>
 
-    @GET("api/nasabah")
-    suspend fun getNasabahList(): List<NasabahSp>
-
+    @GET("api/cabang")
+    suspend fun getCabangList(): List<Cabang>
+    @GET("api/wilayah")
+    suspend fun getWilayahList(): List<Wilayah>
+    @GET("api/jabatanauth")
+    suspend fun getJabatanList(): List<Jabatan>
+    @GET("api/direksi")
+    suspend fun getDireksiList(): List<Direksi>
+    @GET("api/supervisor")
+    suspend fun getSupervisorList(): List<Supervisor>
+    @GET("api/adminkas")
+    suspend fun getAdminkasList(): List<AdminKas>
+    @GET("api/kepalacabang")
+    suspend fun getKepalacabangList(): List<KepalaCabang>
+    @GET("api/status")
+    suspend fun getStatusList(): List<Cabang>
     @GET("surat-peringatan/gambar/{filename}")
     suspend fun getGambar(@Path("filename") filename: String): Response<ResponseBody>
 
