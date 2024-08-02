@@ -197,7 +197,8 @@ class AdminAdapter(
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
-
+            val tvUserName = dialogView.findViewById<TextView>(R.id.tvUserName)
+            val tvGmail = dialogView.findViewById<TextView>(R.id.tvgmail)
             val editCabang = dialogView.findViewById<TextView>(R.id.editCabang)
             val editWilayah = dialogView.findViewById<TextView>(R.id.editWilayah)
             val editJabatan = dialogView.findViewById<TextView>(R.id.editJabatan)
@@ -206,6 +207,9 @@ class AdminAdapter(
             val editSupervisor = dialogView.findViewById<TextView>(R.id.editSupervisor)
             val editAdminKas = dialogView.findViewById<TextView>(R.id.editAdminKas)
             val editStatus = dialogView.findViewById<TextView>(R.id.editStatus)
+
+            tvUserName.text = user.name
+            tvGmail.text = user.email
 
             // Set initial user data
             editCabang.text = user.cabang
@@ -217,63 +221,45 @@ class AdminAdapter(
             editAdminKas.text = user.id_admin_kas
             editStatus.text = user.status
 
-
-            // Observe cabang data and show dialog when editCabang is clicked
-            editCabang.setOnClickListener {
-                viewModel.cabang.observe(lifecycleOwner, { cabangList ->
-                    val arrayList = ArrayList(cabangList.map { it.nama_cabang })
+            // Use data from AllDataResponse
+            viewModel.allData.observe(lifecycleOwner, { allDataResponse ->
+                editCabang.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.cabang.map { it.nama_cabang })
                     showDialog(arrayList, editCabang)
-                })
-            }
-            editWilayah.setOnClickListener {
-                viewModel.wilayah.observe(lifecycleOwner, { wilayahList ->
-                    val arrayList = ArrayList(wilayahList.map { it.nama_wilayah })
+                }
+                editWilayah.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.wilayah.map { it.nama_wilayah })
                     showDialog(arrayList, editWilayah)
-                })
-            }
-            editJabatan.setOnClickListener {
-                viewModel.jabatan.observe(lifecycleOwner, { jabatanList ->
-                    val arrayList = ArrayList(jabatanList.map { it.nama_jabatan })
+                }
+                editJabatan.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.jabatan.map { it.nama_jabatan })
                     showDialog(arrayList, editJabatan)
-                })
-            }
-            editDireksi.setOnClickListener {
-                viewModel.direksi.observe(lifecycleOwner, { direksiList ->
-                    val arrayList = ArrayList(direksiList.map { it.nama })
+                }
+                editDireksi.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.direksi.map { it.nama })
                     showDialog(arrayList, editDireksi)
-                })
-            }
-            editKepalaCabang.setOnClickListener {
-                viewModel.kepalacabang.observe(lifecycleOwner, { kepalacabangList ->
-                    val arrayList = ArrayList(kepalacabangList.map { it.nama_kepala_cabang })
+                }
+                editKepalaCabang.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.kepala_cabang.map { it.nama_kepala_cabang })
                     showDialog(arrayList, editKepalaCabang)
-                })
-            }
-            editSupervisor.setOnClickListener {
-                viewModel.supervisor.observe(lifecycleOwner, { supervisorList ->
-                    val arrayList = ArrayList(supervisorList.map { it.nama_supervisor })
+                }
+                editSupervisor.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.supervisor.map { it.nama_supervisor })
                     showDialog(arrayList, editSupervisor)
-                })
-            }
-            editAdminKas.setOnClickListener {
-                viewModel.adminkas.observe(lifecycleOwner, { adminkasList ->
-                    val arrayList = ArrayList(adminkasList.map { it.nama_admin_kas })
+                }
+                editAdminKas.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.admin_kas.map { it.nama_admin_kas })
                     showDialog(arrayList, editAdminKas)
-                })
-            }
-//            editStatus.setOnClickListener {
-//                viewModel.status.observe(lifecycleOwner, { statusList ->
-//                    val arrayList = ArrayList(statusList.map { it.nama_status })
-//                    showDialog(arrayList, editStatus)
-//                })
-//            }
-
-
-
-
+                }
+                editStatus.setOnClickListener {
+                    val arrayList = ArrayList(allDataResponse.status.map { it.nama_status })
+                    showDialog(arrayList, editStatus)
+                }
+            })
 
             alertDialog.show()
         }
+
         private fun showDialog(arrayList: ArrayList<String>, editTextView: TextView) {
             val dialogBinding = DialogSeacrhSpinnerBinding.inflate(LayoutInflater.from(context))
             val dialog = Dialog(context).apply {

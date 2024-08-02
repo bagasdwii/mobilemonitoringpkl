@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.data.AdminKas
+import com.example.mobilemonitoringbankbpr.data.AllDataResponse
 import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
@@ -50,13 +51,21 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     val errorMessage: LiveData<String> get() = _errorMessage
 
     private var currentPage = 1
+    private val _allData = MutableLiveData<AllDataResponse>()
+    val allData: LiveData<AllDataResponse> get() = _allData
 
     init {
         val apiService = RetrofitClient.getServiceWithAuth(application)
         repository = AdminRepository(apiService,application)
         Log.d("AdminViewModel", "ViewModel initialized with apiService")
     }
-
+    fun fetchAllData() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _allData.value = repository.fetchAllData()
+            _isLoading.value = false
+        }
+    }
     fun getUser(searchQuery: String) {
         _isLoading.value = true
         viewModelScope.launch {

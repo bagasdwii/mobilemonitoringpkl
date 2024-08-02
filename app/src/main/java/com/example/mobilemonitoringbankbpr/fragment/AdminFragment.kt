@@ -84,13 +84,14 @@ class AdminFragment : Fragment() {
         }
 
         adminViewModel.getUser("")
-        adminViewModel.fetchCabangList()
-        adminViewModel.fetchWilayahList()
-        adminViewModel.fetchJabatanList()
-        adminViewModel.fetchDireksiList()
-        adminViewModel.fetchKepalacabangList()
-        adminViewModel.fetchSupervisorList()
-        adminViewModel.fetchAdminKasList()
+        adminViewModel.fetchAllData()
+//        adminViewModel.fetchCabangList()
+//        adminViewModel.fetchWilayahList()
+//        adminViewModel.fetchJabatanList()
+//        adminViewModel.fetchDireksiList()
+//        adminViewModel.fetchKepalacabangList()
+//        adminViewModel.fetchSupervisorList()
+//        adminViewModel.fetchAdminKasList()
 
     }
 
@@ -122,7 +123,6 @@ class AdminFragment : Fragment() {
         dismissLoadingDialog()
     }
 }
-
 
 
 

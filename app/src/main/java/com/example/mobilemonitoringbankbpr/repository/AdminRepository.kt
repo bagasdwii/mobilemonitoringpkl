@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mobilemonitoringbankbpr.data.AdminKas
+import com.example.mobilemonitoringbankbpr.data.AllDataResponse
 import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
@@ -41,6 +42,18 @@ class AdminRepository(private val apiService: ApiService, private val context: C
         } catch (e: Exception) {
             Log.e("AdminRepository", "Exception occurred: ${e.message}", e)
             Result.failure(e)
+        }
+    }
+    suspend fun fetchAllData(): AllDataResponse? {
+        return try {
+            val response = apiService.getAllData()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
         }
     }
     suspend fun fetchCabangList(): List<Cabang> {

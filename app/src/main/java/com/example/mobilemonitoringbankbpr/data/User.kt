@@ -11,7 +11,5 @@ data class User(
     val id_direksi: String? = null,
     val id_kepala_cabang: String? = null,
     val id_supervisor: String? = null,
-    val id_admin_kas: String? = null,
-    val edit_user: List<User>
-
+    val id_admin_kas: String? = null
 )

@@ -1,5 +1,6 @@
 package com.example.mobilemonitoringbankbpr.server
 import com.example.mobilemonitoringbankbpr.data.AdminKas
+import com.example.mobilemonitoringbankbpr.data.AllDataResponse
 import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.ConnectionResponse
 import com.example.mobilemonitoringbankbpr.data.Direksi
@@ -104,4 +105,9 @@ interface ApiService {
 
     @GET("surat-peringatan/pdf/{filename}")
     suspend fun getPdf(@Path("filename") filename: String): Response<ResponseBody>
+    @GET("api/alldata")
+    suspend fun getAllData(): Response<AllDataResponse>
+
+
+
 }
