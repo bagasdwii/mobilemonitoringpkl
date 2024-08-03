@@ -206,6 +206,15 @@
                 android:drawableEnd="@drawable/ic_dropdown"
                 android:background="@android:drawable/editbox_background"
                 />
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simpan"
+                android:padding="10dp"
+                android:textColor="@color/color4"
+                android:background="@drawable/selector_button_login"
+                android:fontFamily="@font/poppins_semibold"/>
 
         </LinearLayout>
     </ScrollView>

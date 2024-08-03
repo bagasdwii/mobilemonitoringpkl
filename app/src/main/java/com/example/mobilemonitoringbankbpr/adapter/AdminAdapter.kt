@@ -55,6 +55,7 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.example.mobilemonitoringbankbpr.LocalStorage
+import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.ItemUserBinding
@@ -191,12 +192,139 @@ class AdminAdapter(
             alertDialog.show()
         }
 
+//        private fun showUserEditDialog(user: User) {
+//            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_user, null)
+//            val alertDialog = AlertDialog.Builder(context)
+//                .setView(dialogView)
+//                .setCancelable(true)
+//                .create()
+//
+//            val tvUserName = dialogView.findViewById<TextView>(R.id.tvUserName)
+//            val tvGmail = dialogView.findViewById<TextView>(R.id.tvgmail)
+//            val editCabang = dialogView.findViewById<TextView>(R.id.editCabang)
+//            val editWilayah = dialogView.findViewById<TextView>(R.id.editWilayah)
+//            val editJabatan = dialogView.findViewById<TextView>(R.id.editJabatan)
+//            val editDireksi = dialogView.findViewById<TextView>(R.id.editDireksi)
+//            val editKepalaCabang = dialogView.findViewById<TextView>(R.id.editKepalaCabang)
+//            val editSupervisor = dialogView.findViewById<TextView>(R.id.editSupervisor)
+//            val editAdminKas = dialogView.findViewById<TextView>(R.id.editAdminKas)
+//            val editStatus = dialogView.findViewById<TextView>(R.id.editStatus)
+//
+//            tvUserName.text = user.name
+//            tvGmail.text = user.email
+//
+//            // Variables to store IDs
+//            var selectedCabangId: Int? = user.cabang?.toIntOrNull()
+//            var selectedWilayahId: Int? = user.wilayah?.toIntOrNull()
+//            var selectedJabatanId: Int? = user.jabatan?.toIntOrNull()
+//            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
+//            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
+//            var selectedSupervisorId: Int? = user.id_supervisor?.toIntOrNull()
+//            var selectedAdminKasId: Int? = user.id_admin_kas?.toIntOrNull()
+//            var selectedStatusId: Int? = user.status?.toIntOrNull()
+//
+//            // Set initial user data
+//            editCabang.text = user.cabang
+//            editWilayah.text = user.wilayah
+//            editJabatan.text = user.jabatan
+//            editDireksi.text = user.id_direksi
+//            editKepalaCabang.text = user.id_kepala_cabang
+//            editSupervisor.text = user.id_supervisor
+//            editAdminKas.text = user.id_admin_kas
+//            editStatus.text = user.status
+//
+//            viewModel.allData.observe(lifecycleOwner, { allDataResponse ->
+//                editCabang.setOnClickListener {
+//                    val cabangMap = allDataResponse.cabang.associate { it.nama_cabang to it.id_cabang }
+//                    showDialog(ArrayList(cabangMap.keys), editCabang) { selectedName ->
+//                        editCabang.text = selectedName
+//                        selectedCabangId = cabangMap[selectedName]
+//                    }
+//                }
+//                editWilayah.setOnClickListener {
+//                    val wilayahMap = allDataResponse.wilayah.associate { it.nama_wilayah to it.id_wilayah }
+//                    showDialog(ArrayList(wilayahMap.keys), editWilayah) { selectedName ->
+//                        editWilayah.text = selectedName
+//                        selectedWilayahId = wilayahMap[selectedName]
+//                    }
+//                }
+//                editJabatan.setOnClickListener {
+//                    val jabatanMap = allDataResponse.jabatan.associate { it.nama_jabatan to it.id_jabatan }
+//                    showDialog(ArrayList(jabatanMap.keys), editJabatan) { selectedName ->
+//                        editJabatan.text = selectedName
+//                        selectedJabatanId = jabatanMap[selectedName]
+//                    }
+//                }
+//                editDireksi.setOnClickListener {
+//                    val direksiMap = allDataResponse.direksi.associate { it.nama to it.id_direksi }
+//                    showDialog(ArrayList(direksiMap.keys), editDireksi) { selectedName ->
+//                        editDireksi.text = selectedName
+//                        selectedDireksiId = direksiMap[selectedName]
+//                    }
+//                }
+//                editKepalaCabang.setOnClickListener {
+//                    val kepalaCabangMap = allDataResponse.kepala_cabang.associate { it.nama_kepala_cabang to it.id_kepala_cabang }
+//                    showDialog(ArrayList(kepalaCabangMap.keys), editKepalaCabang) { selectedName ->
+//                        editKepalaCabang.text = selectedName
+//                        selectedKepalaCabangId = kepalaCabangMap[selectedName]
+//                    }
+//                }
+//                editSupervisor.setOnClickListener {
+//                    val supervisorMap = allDataResponse.supervisor.associate { it.nama_supervisor to it.id_supervisor }
+//                    showDialog(ArrayList(supervisorMap.keys), editSupervisor) { selectedName ->
+//                        editSupervisor.text = selectedName
+//                        selectedSupervisorId = supervisorMap[selectedName]
+//                    }
+//                }
+//                editAdminKas.setOnClickListener {
+//                    val adminKasMap = allDataResponse.admin_kas.associate { it.nama_admin_kas to it.id_admin_kas }
+//                    showDialog(ArrayList(adminKasMap.keys), editAdminKas) { selectedName ->
+//                        editAdminKas.text = selectedName
+//                        selectedAdminKasId = adminKasMap[selectedName]
+//                    }
+//                }
+//                editStatus.setOnClickListener {
+//                    val statusMap = allDataResponse.status.associate { it.nama_status to it.id }
+//                    showDialog(ArrayList(statusMap.keys), editStatus) { selectedName ->
+//                        editStatus.text = selectedName
+//                        selectedStatusId = statusMap[selectedName]
+//                    }
+//                }
+//            })
+//
+//            dialogView.findViewById<Button>(R.id.saveButton).setOnClickListener {
+//                val updatedUser = UpdateUser(
+//                    name = user.name,
+//                    email = user.email,
+//                    jabatan = selectedJabatanId,
+//                    cabang = selectedCabangId,
+//                    wilayah = selectedWilayahId,
+//                    id_direksi = selectedDireksiId,
+//                    id_kepala_cabang = selectedKepalaCabangId,
+//                    id_supervisor = selectedSupervisorId,
+//                    id_admin_kas = selectedAdminKasId,
+//                    status = selectedStatusId
+//                )
+//
+//                viewModel.updateUser(user.id, updatedUser)
+//                alertDialog.dismiss()
+//            }
+//
+//            alertDialog.show()
+//        }
+        fun getValueOrDefault(selectedValue: Int?, userValue: String?): Int {
+            return selectedValue ?: userValue?.toIntOrNull() ?: 0
+        }
+
         private fun showUserEditDialog(user: User) {
+            Log.d("UserEditDialog", "Updating user with editJabatan: $user")
+
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_user, null)
             val alertDialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
+
             val tvUserName = dialogView.findViewById<TextView>(R.id.tvUserName)
             val tvGmail = dialogView.findViewById<TextView>(R.id.tvgmail)
             val editCabang = dialogView.findViewById<TextView>(R.id.editCabang)
@@ -211,6 +339,16 @@ class AdminAdapter(
             tvUserName.text = user.name
             tvGmail.text = user.email
 
+            // Variables to store IDs
+            var selectedCabangId: Int? = user.cabang?.toIntOrNull()
+            var selectedWilayahId: Int? = user.wilayah?.toIntOrNull()
+            var selectedJabatanId: Int? = user.jabatan?.toIntOrNull()
+            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
+            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
+            var selectedSupervisorId: Int? = user.id_supervisor?.toIntOrNull()
+            var selectedAdminKasId: Int? = user.id_admin_kas?.toIntOrNull()
+            var selectedStatusId: Int? = user.status?.toIntOrNull()
+
             // Set initial user data
             editCabang.text = user.cabang
             editWilayah.text = user.wilayah
@@ -221,46 +359,88 @@ class AdminAdapter(
             editAdminKas.text = user.id_admin_kas
             editStatus.text = user.status
 
-            // Use data from AllDataResponse
             viewModel.allData.observe(lifecycleOwner, { allDataResponse ->
                 editCabang.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.cabang.map { it.nama_cabang })
-                    showDialog(arrayList, editCabang)
+                    val cabangMap = allDataResponse.cabang.associate { it.nama_cabang to it.id_cabang }
+                    showDialog(ArrayList(cabangMap.keys), editCabang) { selectedName ->
+                        editCabang.text = selectedName
+                        selectedCabangId = cabangMap[selectedName]
+                    }
                 }
                 editWilayah.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.wilayah.map { it.nama_wilayah })
-                    showDialog(arrayList, editWilayah)
+                    val wilayahMap = allDataResponse.wilayah.associate { it.nama_wilayah to it.id_wilayah }
+                    showDialog(ArrayList(wilayahMap.keys), editWilayah) { selectedName ->
+                        editWilayah.text = selectedName
+                        selectedWilayahId = wilayahMap[selectedName]
+                    }
                 }
                 editJabatan.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.jabatan.map { it.nama_jabatan })
-                    showDialog(arrayList, editJabatan)
+                    val jabatanMap = allDataResponse.jabatan.associate { it.nama_jabatan to it.id_jabatan }
+                    showDialog(ArrayList(jabatanMap.keys), editJabatan) { selectedName ->
+                        editJabatan.text = selectedName
+                        selectedJabatanId = jabatanMap[selectedName]
+                    }
                 }
                 editDireksi.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.direksi.map { it.nama })
-                    showDialog(arrayList, editDireksi)
+                    val direksiMap = allDataResponse.direksi.associate { it.nama to it.id_direksi }
+                    showDialog(ArrayList(direksiMap.keys), editDireksi) { selectedName ->
+                        editDireksi.text = selectedName
+                        selectedDireksiId = direksiMap[selectedName]
+                    }
                 }
                 editKepalaCabang.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.kepala_cabang.map { it.nama_kepala_cabang })
-                    showDialog(arrayList, editKepalaCabang)
+                    val kepalaCabangMap = allDataResponse.kepala_cabang.associate { it.nama_kepala_cabang to it.id_kepala_cabang }
+                    showDialog(ArrayList(kepalaCabangMap.keys), editKepalaCabang) { selectedName ->
+                        editKepalaCabang.text = selectedName
+                        selectedKepalaCabangId = kepalaCabangMap[selectedName]
+                    }
                 }
                 editSupervisor.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.supervisor.map { it.nama_supervisor })
-                    showDialog(arrayList, editSupervisor)
+                    val supervisorMap = allDataResponse.supervisor.associate { it.nama_supervisor to it.id_supervisor }
+                    showDialog(ArrayList(supervisorMap.keys), editSupervisor) { selectedName ->
+                        editSupervisor.text = selectedName
+                        selectedSupervisorId = supervisorMap[selectedName]
+                    }
                 }
                 editAdminKas.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.admin_kas.map { it.nama_admin_kas })
-                    showDialog(arrayList, editAdminKas)
+                    val adminKasMap = allDataResponse.admin_kas.associate { it.nama_admin_kas to it.id_admin_kas }
+                    showDialog(ArrayList(adminKasMap.keys), editAdminKas) { selectedName ->
+                        editAdminKas.text = selectedName
+                        selectedAdminKasId = adminKasMap[selectedName]
+                    }
                 }
                 editStatus.setOnClickListener {
-                    val arrayList = ArrayList(allDataResponse.status.map { it.nama_status })
-                    showDialog(arrayList, editStatus)
+                    val statusMap = allDataResponse.status.associate { it.nama_status to it.id }
+                    showDialog(ArrayList(statusMap.keys), editStatus) { selectedName ->
+                        editStatus.text = selectedName
+                        selectedStatusId = statusMap[selectedName]
+                    }
                 }
             })
+
+            dialogView.findViewById<Button>(R.id.saveButton).setOnClickListener {
+                // Ensure all required fields are set
+                val updatedUser = UpdateUser(
+                    name = user.name,
+                    email = user.email,
+                    jabatan = selectedJabatanId ?: user.id_jabatan,
+                    cabang = selectedCabangId ?: user.id_cabang,
+                    wilayah = selectedWilayahId ?: user.id_wilayah,
+                    id_direksi = selectedDireksiId ?: user.direksi_id,
+                    id_kepala_cabang = selectedKepalaCabangId ?: user.kepalacabang_id,
+                    id_supervisor = selectedSupervisorId ?: user.supervisor_id,
+                    id_admin_kas = selectedAdminKasId ?: user.adminkas_id,
+                    status = selectedStatusId ?: user.status_id
+                )
+                Log.d("UserEditDialog", "Updating user with data: $updatedUser")
+                viewModel.updateUser(user.id, updatedUser)
+                alertDialog.dismiss()
+            }
 
             alertDialog.show()
         }
 
-        private fun showDialog(arrayList: ArrayList<String>, editTextView: TextView) {
+        private fun showDialog(arrayList: ArrayList<String>, editTextView: TextView, onItemSelected: (String) -> Unit) {
             val dialogBinding = DialogSeacrhSpinnerBinding.inflate(LayoutInflater.from(context))
             val dialog = Dialog(context).apply {
                 setContentView(dialogBinding.root)
@@ -284,10 +464,13 @@ class AdminAdapter(
             })
 
             dialogBinding.listView.setOnItemClickListener { _, _, position, _ ->
-                editTextView.text = adapter.getItem(position)
+                val selectedName = adapter.getItem(position)
+                editTextView.text = selectedName
+                onItemSelected(selectedName!!)
                 dialog.dismiss()
             }
         }
+
     }
 
 

@@ -17,6 +17,8 @@ import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.ResponseUserList
 import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
+import com.example.mobilemonitoringbankbpr.data.UpdateUser
+import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.Wilayah
 import okhttp3.MultipartBody
@@ -28,6 +30,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -107,7 +110,11 @@ interface ApiService {
     suspend fun getPdf(@Path("filename") filename: String): Response<ResponseBody>
     @GET("api/alldata")
     suspend fun getAllData(): Response<AllDataResponse>
-
+    @PUT("api/user/update/{id}")
+    fun updateUser(
+        @Path("id") id: Int,
+        @Body updateUser: UpdateUser
+    ): Call<UpdateUserResponse>
 
 
 }

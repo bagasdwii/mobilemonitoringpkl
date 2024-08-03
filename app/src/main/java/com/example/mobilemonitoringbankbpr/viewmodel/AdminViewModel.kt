@@ -13,6 +13,8 @@ import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
 import com.example.mobilemonitoringbankbpr.data.KepalaCabang
 import com.example.mobilemonitoringbankbpr.data.Supervisor
+import com.example.mobilemonitoringbankbpr.data.UpdateUser
+import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.Wilayah
 import com.example.mobilemonitoringbankbpr.repository.AdminRepository
@@ -53,11 +55,25 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     private var currentPage = 1
     private val _allData = MutableLiveData<AllDataResponse>()
     val allData: LiveData<AllDataResponse> get() = _allData
+    private val _updateUserResult = MutableLiveData<Result<UpdateUserResponse>>()
+    val updateUserResult: LiveData<Result<UpdateUserResponse>> get() = _updateUserResult
 
     init {
         val apiService = RetrofitClient.getServiceWithAuth(application)
         repository = AdminRepository(apiService,application)
         Log.d("AdminViewModel", "ViewModel initialized with apiService")
+    }
+
+//    fun updateUser(userId: Int, updateUser: UpdateUser) {
+//        viewModelScope.launch {
+//            val result = repository.updateUser(userId, updateUser)
+//            _updateUserResult.postValue(result)
+//        }
+//    }
+    fun updateUser(userId: Int, updateUser: UpdateUser) {
+        repository.updateUser(userId, updateUser) { result ->
+            _updateUserResult.postValue(result)
+        }
     }
     fun fetchAllData() {
         viewModelScope.launch {
@@ -81,111 +97,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.postValue(false)
         }
     }
-    fun fetchCabangList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val cabang = repository.fetchCabangList()
-                _cabang.postValue(cabang)
-                Log.d("AdminViewModel", "fetchCabangList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchCabangList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchCabangList completed")
-            }
-        }
-    }
-    fun fetchWilayahList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val wilayah = repository.fetchWilayahList()
-                _wilayah.postValue(wilayah)
-                Log.d("AdminViewModel", "fetchWilayahList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchWilayahList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchWilayahList completed")
-            }
-        }
-    }
-    fun fetchJabatanList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val jabatan = repository.fetchJabatanList()
-                _jabatan.postValue(jabatan)
-                Log.d("AdminViewModel", "fetchJabatanList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchJabatanList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchJabatanList completed")
-            }
-        }
-    }
-    fun fetchDireksiList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val direksi = repository.fetchDireksiList()
-                _direksi.postValue(direksi)
-                Log.d("AdminViewModel", "fetchDireksiList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchDireksiList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchDireksiList completed")
-            }
-        }
-    }
-    fun fetchKepalacabangList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val kepalacabang = repository.fetchKepalaCabangList()
-                _kepalacabang.postValue(kepalacabang)
-                Log.d("AdminViewModel", "fetchKepalacabangList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchKepalacabangList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchKepalacabangList completed")
-            }
-        }
-    }
-    fun fetchSupervisorList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val supervisor = repository.fetchSupervisorList()
-                _supervisor.postValue(supervisor)
-                Log.d("AdminViewModel", "fetchSupervisorList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchSupervisorList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchSupervisorList completed")
-            }
-        }
-    }
-    fun fetchAdminKasList() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val adminkas = repository.fetchAdminKasList()
-                _adminkas.postValue(adminkas)
-                Log.d("AdminViewModel", "fetchAdminKasList: Success")
-            } catch (e: Exception) {
-                Log.e("AdminViewModel", "fetchAdminKasList: Error", e)
-            } finally {
-                _isLoading.postValue(false)
-                Log.d("AdminViewModel", "fetchAdminKasList completed")
-            }
-        }
-    }
+
     fun setPage(page: Int) {
         currentPage = page
         Log.d("AdminViewModel", "Page set to: $currentPage")

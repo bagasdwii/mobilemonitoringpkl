@@ -13,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +32,7 @@ class AdminFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adminViewModel: AdminViewModel
     private var loadingDialog: AlertDialog? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +49,25 @@ class AdminFragment : Fragment() {
         val adapter = AdminAdapter(adminViewModel, requireContext(), viewLifecycleOwner, viewLifecycleOwner.lifecycleScope)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
+//        adminViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+//            result.fold(
+//                onSuccess = { updateUserResponse ->
+//                    Toast.makeText(context, "User updated successfully: ${updateUserResponse}", Toast.LENGTH_SHORT).show()
+//                },
+//                onFailure = { exception ->
+//                    Toast.makeText(context, "Update failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+//                }
+//            )
+//        })
+        adminViewModel.updateUserResult.observe(viewLifecycleOwner, { result ->
+            result.onSuccess { response ->
+                // Handle success, update UI with response data
+                Toast.makeText(context, "Update successful: ${response.message}", Toast.LENGTH_SHORT).show()
+            }.onFailure { exception ->
+                // Handle failure, show error message
+                Toast.makeText(context, "Update failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         adminViewModel.isLoading.observe(viewLifecycleOwner, {
             if (it) {
@@ -85,13 +107,7 @@ class AdminFragment : Fragment() {
 
         adminViewModel.getUser("")
         adminViewModel.fetchAllData()
-//        adminViewModel.fetchCabangList()
-//        adminViewModel.fetchWilayahList()
-//        adminViewModel.fetchJabatanList()
-//        adminViewModel.fetchDireksiList()
-//        adminViewModel.fetchKepalacabangList()
-//        adminViewModel.fetchSupervisorList()
-//        adminViewModel.fetchAdminKasList()
+
 
     }
 
