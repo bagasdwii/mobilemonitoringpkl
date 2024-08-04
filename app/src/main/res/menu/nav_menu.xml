@@ -6,8 +6,8 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_user"
-            android:icon="@drawable/icon_account"
-            android:title="User">
+            android:icon="@drawable/ic_admin"
+            android:title="Admin">
         </item>
         <item
         android:id="@+id/nav_account"

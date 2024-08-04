@@ -13,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -49,31 +51,20 @@ class AdminFragment : Fragment() {
         val adapter = AdminAdapter(adminViewModel, requireContext(), viewLifecycleOwner, viewLifecycleOwner.lifecycleScope)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-//        adminViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-//            result.fold(
-//                onSuccess = { updateUserResponse ->
-//                    Toast.makeText(context, "User updated successfully: ${updateUserResponse}", Toast.LENGTH_SHORT).show()
-//                },
-//                onFailure = { exception ->
-//                    Toast.makeText(context, "Update failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-//                }
-//            )
-//        })
-        adminViewModel.updateUserResult.observe(viewLifecycleOwner, { result ->
-            result.onSuccess { response ->
-                // Handle success, update UI with response data
-                Toast.makeText(context, "Update successful: ${response.message}", Toast.LENGTH_SHORT).show()
-            }.onFailure { exception ->
-                // Handle failure, show error message
-                Toast.makeText(context, "Update failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
 
-        adminViewModel.isLoading.observe(viewLifecycleOwner, {
-            if (it) {
+        adminViewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
+            if (isLoading) {
                 showLoadingDialog()
             } else {
                 dismissLoadingDialog()
+            }
+        })
+
+        adminViewModel.updateUserResult.observe(viewLifecycleOwner, { result ->
+            result.onSuccess { response ->
+                alertSuccess("Data User berhasil di Update")
+            }.onFailure { exception ->
+                alertFail("Data User Gagal di Update")
             }
         })
 
@@ -111,7 +102,13 @@ class AdminFragment : Fragment() {
 
     }
 
-
+    private fun navigateToAdminFragment() {
+        val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container, AdminFragment())
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
 
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
@@ -131,6 +128,39 @@ class AdminFragment : Fragment() {
         val currentPage = adminViewModel.getCurrentPage()
         binding.previousButton.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
         binding.buttonSpacer.visibility = if (currentPage > 1) View.VISIBLE else View.GONE
+    }
+    private fun alertSuccess(message: String) {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_succes, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Berhasil"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            dialog.dismiss()
+            navigateToAdminFragment()
+        }
+        alertDialog.show()
+    }
+    private fun alertFail(message: String) {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_fail, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Gagal"
+        alertMessage.text = message
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
     }
 
     override fun onDestroyView() {

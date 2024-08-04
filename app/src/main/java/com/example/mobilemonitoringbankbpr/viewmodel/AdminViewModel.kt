@@ -35,17 +35,6 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     private val _jabatan = MutableLiveData<List<Jabatan>>()
     val jabatan: LiveData<List<Jabatan>> get() = _jabatan
 
-    private val _direksi = MutableLiveData<List<Direksi>>()
-    val direksi: LiveData<List<Direksi>> get() = _direksi
-
-    private val _kepalacabang = MutableLiveData<List<KepalaCabang>>()
-    val kepalacabang: LiveData<List<KepalaCabang>> get() = _kepalacabang
-    private val _supervisor = MutableLiveData<List<Supervisor>>()
-    val supervisor: LiveData<List<Supervisor>> get() = _supervisor
-
-    val adminkas: LiveData<List<AdminKas>> get() = _adminkas
-    private val _adminkas = MutableLiveData<List<AdminKas>>()
-
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -64,17 +53,14 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("AdminViewModel", "ViewModel initialized with apiService")
     }
 
-//    fun updateUser(userId: Int, updateUser: UpdateUser) {
-//        viewModelScope.launch {
-//            val result = repository.updateUser(userId, updateUser)
-//            _updateUserResult.postValue(result)
-//        }
-//    }
     fun updateUser(userId: Int, updateUser: UpdateUser) {
+        _isLoading.value = true
         repository.updateUser(userId, updateUser) { result ->
             _updateUserResult.postValue(result)
+            _isLoading.postValue(false)
         }
     }
+
     fun fetchAllData() {
         viewModelScope.launch {
             _isLoading.value = true

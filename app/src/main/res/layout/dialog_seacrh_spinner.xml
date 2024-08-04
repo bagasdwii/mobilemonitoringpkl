@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Daftar Nasabah SP"
+        android:text="Daftar Data"
         android:textSize="20sp"
         android:padding="16dp"
         android:fontFamily="@font/poppins_bold"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_text"
-        android:hint="Cari Nasabah"
+        android:hint="Mencari Data"
         android:fontFamily="@font/poppins_semibold"
         android:padding="12dp"
         android:singleLine="true"
