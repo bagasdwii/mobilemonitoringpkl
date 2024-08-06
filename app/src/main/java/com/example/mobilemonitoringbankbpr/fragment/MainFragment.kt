@@ -84,9 +84,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         if (jabatan != 5 && jabatan!=99) {
             menu.findItem(R.id.nav_surat).isVisible = false
-        }else if (jabatan !=99){
+        }
+        if (jabatan !=99){
             menu.findItem(R.id.nav_user).isVisible=false
-            
+
         }
         // Set font untuk menu
         setMenuFont(menu)

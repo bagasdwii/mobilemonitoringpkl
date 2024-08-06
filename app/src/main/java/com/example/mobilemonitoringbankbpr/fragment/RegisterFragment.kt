@@ -28,7 +28,7 @@ class RegisterFragment : Fragment() {
     private var name: String? = null
     private var email: String? = null
     private var password: String? = null
-    private var nip: String? = null
+    private var key: String? = null
     private var jabatanId: Int? = null
 
     override fun onCreateView(
@@ -42,31 +42,31 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        registerViewModel.jabatanList.observe(viewLifecycleOwner, Observer { jabatanList ->
-            Log.d("RegisterFragment", "Received Jabatan list: $jabatanList")
-            val jabatanNames = jabatanList.map { it.nama_jabatan ?: "Unknown" }
-            Log.d("RegisterFragment", "Jabatan names: $jabatanNames")
-
-//            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, jabatanNames)
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, jabatanNames)
-            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-            binding.jabatanSpinnerRegis.adapter = adapter
-
-            binding.jabatanSpinnerRegis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    jabatanId = jabatanList[position].id_jabatan
-                    Log.d("RegisterFragment", "Selected Jabatan ID: $jabatanId")
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Tidak melakukan apapun
-                }
-            }
-            hideLoadingDialog()
-        })
-        showLoadingDialog()
-        registerViewModel.fetchJabatanData()
+//        registerViewModel.jabatanList.observe(viewLifecycleOwner, Observer { jabatanList ->
+//            Log.d("RegisterFragment", "Received Jabatan list: $jabatanList")
+//            val jabatanNames = jabatanList.map { it.nama_jabatan ?: "Unknown" }
+//            Log.d("RegisterFragment", "Jabatan names: $jabatanNames")
+//
+////            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, jabatanNames)
+////            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, jabatanNames)
+//            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+//            binding.jabatanSpinnerRegis.adapter = adapter
+//
+//            binding.jabatanSpinnerRegis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+//                    jabatanId = jabatanList[position].id_jabatan
+//                    Log.d("RegisterFragment", "Selected Jabatan ID: $jabatanId")
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>) {
+//                    // Tidak melakukan apapun
+//                }
+//            }
+//            hideLoadingDialog()
+//        })
+//        showLoadingDialog()
+//        registerViewModel.fetchJabatanData()
 
         binding.register.setOnClickListener {
             showConfirmationDialog()
@@ -77,12 +77,12 @@ class RegisterFragment : Fragment() {
         name = binding.registerName.text.toString()
         email = binding.registerEmail.text.toString()
         password = binding.registerPassword.text.toString()
-        nip = binding.registerNip.text.toString()
+        key = binding.registerKey.text.toString()
 
-        if (name.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty() || nip.isNullOrEmpty() || jabatanId == null) {
-            alertFail("Nama, Email, Password, NIP dan Jabatan wajib diisi.")
+        if (name.isNullOrEmpty() || email.isNullOrEmpty() || password.isNullOrEmpty() || key.isNullOrEmpty()){
+            alertFail("Nama, Email, Password, dan Key.")
         } else {
-            val registerRequest = Register(name!!, email!!, password!!, nip!!.toInt(), jabatanId!!)
+            val registerRequest = Register(name!!, email!!, password!!, key!!.toInt())
             showLoadingDialog()
             registerViewModel.registerUser(registerRequest,
                 onSuccess = { requireActivity().runOnUiThread {

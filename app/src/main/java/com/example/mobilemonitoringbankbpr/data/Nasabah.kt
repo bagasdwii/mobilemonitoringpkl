@@ -11,6 +11,6 @@ data class Nasabah(val no: Long,
                    val kembali: String,
                    val cabang: String,
                    val wilayah: String,
-                   val adminkas: String,
+                   val adminKas: String,
                    val accountOfficer: String,
                    val suratPeringatan: List<SuratPeringatan>)

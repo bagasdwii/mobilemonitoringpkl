@@ -64,78 +64,78 @@ class AccountFragment : Fragment() {
             when {
                 user.jabatan == "Kepala Cabang" && user.cabang == null -> {
                     binding.tvCabangLabel.visibility = View.VISIBLE
-                    binding.tvDireksiLabel.visibility = View.VISIBLE
+//                    binding.tvDireksiLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
-                    binding.tvDireksi.visibility = View.VISIBLE
+//                    binding.tvDireksi.visibility = View.VISIBLE
                 }
                 user.jabatan == "Kepala Cabang" && user.cabang != null -> {
                     Log.d("AccountFragment", "User cabang: ${user.cabang}, ${user.jabatan}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvCabang.text = user.cabang
-                    binding.tvDireksiLabel.visibility = View.VISIBLE
-                    binding.tvDireksi.visibility = View.VISIBLE
-                    binding.tvDireksi.text = user.id_direksi
+//                    binding.tvDireksiLabel.visibility = View.VISIBLE
+//                    binding.tvDireksi.visibility = View.VISIBLE
+//                    binding.tvDireksi.text = user.id_direksi
                 }
                 user.jabatan == "Supervisor" && user.cabang == null -> {
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvKepalaCabangLabel.visibility = View.VISIBLE
+//                    binding.tvKepalaCabangLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvWilayah.visibility = View.VISIBLE
-                    binding.tvKepalaCabang.visibility = View.VISIBLE
+//                    binding.tvKepalaCabang.visibility = View.VISIBLE
                 }
                 user.jabatan == "Supervisor" && user.cabang != null -> {
                     Log.d("AccountFragment", "User supervisor: ${user.id_kepala_cabang}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvKepalaCabangLabel.visibility = View.VISIBLE
+//                    binding.tvKepalaCabangLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvCabang.text = user.cabang
                     binding.tvWilayah.visibility = View.VISIBLE
                     binding.tvWilayah.text = user.wilayah
-                    binding.tvKepalaCabang.visibility = View.VISIBLE
-                    binding.tvKepalaCabang.text = user.id_kepala_cabang
+//                    binding.tvKepalaCabang.visibility = View.VISIBLE
+//                    binding.tvKepalaCabang.text = user.id_kepala_cabang
                 }
                 user.jabatan == "Admin Kas" && user.cabang == null -> {
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvSupervisorLabel.visibility = View.VISIBLE
+//                    binding.tvSupervisorLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvWilayah.visibility = View.VISIBLE
-                    binding.tvSupervisor.visibility = View.VISIBLE
+//                    binding.tvSupervisor.visibility = View.VISIBLE
                 }
                 user.jabatan == "Admin Kas" && user.cabang != null -> {
                     Log.d("AccountFragment", "User supervisor: ${user.id_supervisor}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvSupervisorLabel.visibility = View.VISIBLE
+//                    binding.tvSupervisorLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvCabang.text = user.cabang
                     binding.tvWilayah.visibility = View.VISIBLE
                     binding.tvWilayah.text = user.wilayah
-                    binding.tvSupervisor.visibility = View.VISIBLE
-                    binding.tvSupervisor.text = user.id_supervisor
+//                    binding.tvSupervisor.visibility = View.VISIBLE
+//                    binding.tvSupervisor.text = user.id_supervisor
                 }
                 user.jabatan == "Account Officer" && user.cabang == null -> {
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvAdminKasLabel.visibility = View.VISIBLE
+//                    binding.tvAdminKasLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvWilayah.visibility = View.VISIBLE
-                    binding.tvAdminKas.visibility = View.VISIBLE
+//                    binding.tvAdminKas.visibility = View.VISIBLE
                 }
                 user.jabatan == "Account Officer" && user.cabang != null -> {
                     Log.d("AccountFragment", "User supervisor: ${user.id_admin_kas}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
-                    binding.tvAdminKasLabel.visibility = View.VISIBLE
+//                    binding.tvAdminKasLabel.visibility = View.VISIBLE
                     binding.tvCabang.visibility = View.VISIBLE
                     binding.tvCabang.text = user.cabang
                     binding.tvWilayah.visibility = View.VISIBLE
                     binding.tvWilayah.text = user.wilayah
-                    binding.tvAdminKas.visibility = View.VISIBLE
-                    binding.tvAdminKas.text = user.id_admin_kas
+//                    binding.tvAdminKas.visibility = View.VISIBLE
+//                    binding.tvAdminKas.text = user.id_admin_kas
                 }
                 else -> {
                     // Handle other cases

@@ -100,7 +100,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/registerNip"
+            android:id="@+id/registerKey"
             android:hint="@string/key"
             android:padding="16dp"
             android:inputType="number"
@@ -111,29 +111,7 @@
             android:fontFamily="@font/poppins_medium"
             />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/jabatan"
-            android:layout_marginTop="18dp"
-            android:paddingStart="16dp"
-            android:textColor="@color/color1"
-            android:fontFamily="@font/poppins_semibold"
-            />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border_login"
-            >
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/jabatanSpinnerRegis"
-                android:padding="10dp"
-                />
-        </RelativeLayout>
 
         <Button
             android:layout_width="match_parent"
@@ -141,7 +119,7 @@
             android:padding="16dp"
             android:id="@+id/register"
             android:layout_marginTop="25dp"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:text="@string/register"
             android:textColor="@color/color4"
             android:background="@drawable/selector_button_login"

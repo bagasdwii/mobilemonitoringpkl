@@ -160,7 +160,7 @@ class MonitoringAdapter(
             dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
             dialogView.findViewById<TextView>(R.id.tvcabang).text = nasabah.cabang
             dialogView.findViewById<TextView>(R.id.tvwilayah).text = nasabah.wilayah
-            dialogView.findViewById<TextView>(R.id.tvadminKas).text = nasabah.adminkas
+            dialogView.findViewById<TextView>(R.id.tvadminKas).text = nasabah.adminKas
             dialogView.findViewById<TextView>(R.id.tvaccountOfficer).text = nasabah.accountOfficer
 
             dialogView.findViewById<Button>(R.id.closeButton).setOnClickListener {
