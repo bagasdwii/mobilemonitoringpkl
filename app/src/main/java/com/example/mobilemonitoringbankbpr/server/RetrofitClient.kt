@@ -11,13 +11,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-//    private const val BASE_URL = "http://192.168.200.42:8000/"
-//    private const val BASE_URL = "http://192.168.200.56:8000/"
-    private const val BASE_URL = "http://192.168.1.15:8000/"
+//    private const val BASE_URL = "https://monitoringsp.69dev.id/"
+//    private const val BASE_URL = "http://192.168.200.94:8000/"
+    private const val BASE_URL = "http://192.168.1.11:8000/"
+
     private val gson: Gson = GsonBuilder()
         .setLenient()
         .create()
+    fun getServiceWithAuth(context: Context): ApiService {
+        Log.d("RetrofitClient", "Base URL: $BASE_URL (With Auth)")
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(provideOkHttpClientWithAuth(context)) // Use OkHttpClient with Auth
+            .build()
+
+        return retrofit.create(ApiService::class.java)
+    }
     private fun provideOkHttpClientWithAuth(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
@@ -35,17 +46,7 @@ object RetrofitClient {
             .build()
     }
 
-    fun getServiceWithAuth(context: Context): ApiService {
-        Log.d("RetrofitClient", "Base URL: $BASE_URL (With Auth)")
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(provideOkHttpClientWithAuth(context)) // Use OkHttpClient with Auth
-            .build()
-
-        return retrofit.create(ApiService::class.java)
-    }
 
     fun getServiceWithoutAuth(): ApiService {
         Log.d("RetrofitClient", "Base URL: $BASE_URL (Without Auth)")

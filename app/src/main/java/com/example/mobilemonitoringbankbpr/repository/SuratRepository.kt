@@ -8,6 +8,7 @@ import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
+import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
 import retrofit2.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -20,29 +21,12 @@ import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
 
-
-
 class SuratRepository(private val context: Context) {
 
-
-    suspend fun fetchNasabahList(): List<NasabahSp> {
-        Log.d("NasabahRepository", "fetchNasabahList: Start")
-
-        val apiService = RetrofitClient.getServiceWithAuth(context)
-
-        return try {
-            val response = apiService.getNasabahList()
-            Log.d("NasabahRepository", "fetchNasabahList: Success")
-            response
-        } catch (e: Exception) {
-            Log.e("NasabahRepository", "fetchNasabahList: Error fetching data", e)
-            emptyList()
-        }
-    }
     fun submitSuratPeringatan(
         suratPeringatan: SuratPeringatan,
         imageFile: File?,
-        pdfFile: File?,
+//        pdfFile: File?,
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
@@ -56,9 +40,9 @@ class SuratRepository(private val context: Context) {
         val bukti_gambar = imageFile?.let {
             MultipartBody.Part.createFormData("bukti_gambar", it.name, it.asRequestBody("image/*".toMediaTypeOrNull()))
         }
-        val scan_pdf = pdfFile?.let {
-            MultipartBody.Part.createFormData("scan_pdf", it.name, it.asRequestBody("application/pdf".toMediaTypeOrNull()))
-        }
+//        val scan_pdf = pdfFile?.let {
+//            MultipartBody.Part.createFormData("scan_pdf", it.name, it.asRequestBody("application/pdf".toMediaTypeOrNull()))
+//        }
 
         // Logging before making the request
         Log.d("SuratRepository", "Preparing to send SuratPeringatan data")
@@ -68,17 +52,17 @@ class SuratRepository(private val context: Context) {
             Log.d("SuratRepository", "buktiGambar: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
         }
 
-        scan_pdf?.let {
-            Log.d("SuratRepository", "scanPdf: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
-        }
+//        scan_pdf?.let {
+//            Log.d("SuratRepository", "scanPdf: name=${it.body.contentType()}, length=${it.body.contentLength()} bytes")
+//        }
 
-        val call = apiService.submitSuratPeringatan(
+        val call = apiService.updateSuratPeringatan(
             no,
             tingkat,
             tanggal,
-            id_account_officer,
+//            id_account_officer,
             bukti_gambar,
-            scan_pdf
+//            scan_pdf
         )
 
         // Logging the endpoint and data
@@ -112,52 +96,23 @@ class SuratRepository(private val context: Context) {
 
     }
 
+    suspend fun fetchNasabahList(): List<SuratPeringatanListNasabahDropdown> {
+        Log.d("NasabahRepository", "fetchNasabahList: Start")
+
+        val apiService = RetrofitClient.getServiceWithAuth(context)
+
+        return try {
+            val response = apiService.getNasabahList()
+            Log.d("NasabahRepository", "fetchNasabahList: Success")
+            response
+        } catch (e: Exception) {
+            Log.e("NasabahRepository", "fetchNasabahList: Error fetching data", e)
+            emptyList()
+        }
+    }
+
+
 
 }
 
 
-//    fun fetchNasabahList(): List<NasabahSp> {
-//        Log.d("NasabahRepository", "fetchNasabahList: Start")
-//        val url = context.getString(R.string.api_server) + "/nasabah"
-//        val http = Http(context, url)
-//
-//        http.setMethod("GET")
-//        http.setToken(true)
-//
-//        http.send()
-//
-//        val response = http.getResponse()
-//        val nasabahList = mutableListOf<NasabahSp>()
-//
-//        response?.let {
-//            try {
-//                val jsonArray = JSONArray(it)
-//                for (i in 0 until jsonArray.length()) {
-//                    val jsonObject = jsonArray.getJSONObject(i)
-//                    val nasabah = NasabahSp(
-//                        no = jsonObject.getLong("no"),
-//                        nama = jsonObject.getString("nama"),
-//                        pokok = jsonObject.getString("pokok"),
-//                        bunga = jsonObject.getString("bunga"),
-//                        denda = jsonObject.getString("denda"),
-//                        total = jsonObject.getInt("total"),
-//                        keterangan = jsonObject.getString("keterangan"),
-//                        ttd = jsonObject.getString("ttd"),
-//                        kembali = jsonObject.getString("kembali"),
-//                        cabang = jsonObject.getString("id_cabang"),
-//                        wilayah = jsonObject.getString("id_wilayah"),
-//                        adminkas = jsonObject.getString("id_admin_kas"),
-//                        id_account_officer = jsonObject.getLong("id_account_officer")
-//                    )
-//                    nasabahList.add(nasabah)
-//                }
-//                Log.d("NasabahRepository", "fetchNasabahList: Success")
-//            } catch (e: JSONException) {
-//                Log.e("SuratRepository", "fetchNasabahList: Error parsing JSON", e)
-//            }
-//        } ?: run {
-//            Log.e("SuratRepository", "fetchNasabahList: No response from server")
-//        }
-//
-//        return nasabahList
-//    }

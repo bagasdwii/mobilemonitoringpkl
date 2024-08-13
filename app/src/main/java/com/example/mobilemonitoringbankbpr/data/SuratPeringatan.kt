@@ -7,4 +7,5 @@ data class SuratPeringatan(
     val bukti_gambar: String? = null,
     val scan_pdf: String? = null,
     val id_account_officer: Long
+
 )

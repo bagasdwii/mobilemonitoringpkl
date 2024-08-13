@@ -81,7 +81,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnForget.setOnClickListener {
-            openBrowser("${RetrofitClient.getBaseUrl()}forgot-password")
+            openBrowser("${RetrofitClient.getBaseUrl()}forget-password")
         }
     }
 

@@ -138,10 +138,10 @@ class AdminAdapter(
             tvJabatan.text = user.jabatan
             tvCabang.text = user.cabang
             tvWilayah.text = user.wilayah
-            tvDireksi.text = user.id_direksi
-            tvKepalaCabang.text = user.id_kepala_cabang
-            tvSupervisor.text = user.id_supervisor
-            tvAdminKas.text = user.id_admin_kas
+//            tvDireksi.text = user.id_direksi
+//            tvKepalaCabang.text = user.id_kepala_cabang
+//            tvSupervisor.text = user.id_supervisor
+//            tvAdminKas.text = user.id_admin_kas
             tvStatus.text = user.status
 
             when (user.jabatan.toLowerCase()) {
@@ -168,6 +168,8 @@ class AdminAdapter(
                     tvSupervisor.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     tvAdminKas.visibility = View.GONE
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
                 }
                 "supervisor" -> {
                     Direksi.visibility = View.GONE
@@ -176,6 +178,8 @@ class AdminAdapter(
                     tvSupervisor.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     tvAdminKas.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
                 }
                 "admin kas" -> {
                     Direksi.visibility = View.GONE
@@ -184,6 +188,8 @@ class AdminAdapter(
                     tvKepalaCabang.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     tvAdminKas.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
                 }
                 "account officer" -> {
                     Direksi.visibility = View.GONE
@@ -192,6 +198,8 @@ class AdminAdapter(
                     tvKepalaCabang.visibility = View.GONE
                     Supervisor.visibility = View.GONE
                     tvSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
                 }
             }
 
@@ -232,20 +240,20 @@ class AdminAdapter(
             var selectedCabangId: Int? = user.cabang?.toIntOrNull()
             var selectedWilayahId: Int? = user.wilayah?.toIntOrNull()
             var selectedJabatanId: Int? = user.jabatan?.toIntOrNull()
-            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
-            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
-            var selectedSupervisorId: Int? = user.id_supervisor?.toIntOrNull()
-            var selectedAdminKasId: Int? = user.id_admin_kas?.toIntOrNull()
+//            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
+//            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
+//            var selectedSupervisorId: Int? = user.id_supervisor?.toIntOrNull()
+//            var selectedAdminKasId: Int? = user.id_admin_kas?.toIntOrNull()
             var selectedStatusId: Int? = user.status?.toIntOrNull()
 
             // Set initial user data
             editCabang.text = user.cabang
             editWilayah.text = user.wilayah
             editJabatan.text = user.jabatan
-            editDireksi.text = user.id_direksi
-            editKepalaCabang.text = user.id_kepala_cabang
-            editSupervisor.text = user.id_supervisor
-            editAdminKas.text = user.id_admin_kas
+//            editDireksi.text = user.id_direksi
+//            editKepalaCabang.text = user.id_kepala_cabang
+//            editSupervisor.text = user.id_supervisor
+//            editAdminKas.text = user.id_admin_kas
             editStatus.text = user.status
             when (user.jabatan.toLowerCase()) {
                 "direksi" -> {
@@ -271,6 +279,8 @@ class AdminAdapter(
                     editSupervisor.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     editAdminKas.visibility = View.GONE
+                    Direksi.visibility = View.GONE
+                    editDireksi.visibility = View.GONE
                 }
                 "supervisor" -> {
                     Direksi.visibility = View.GONE
@@ -279,6 +289,8 @@ class AdminAdapter(
                     editSupervisor.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     editAdminKas.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    editKepalaCabang.visibility = View.GONE
                 }
                 "admin kas" -> {
                     Direksi.visibility = View.GONE
@@ -287,6 +299,8 @@ class AdminAdapter(
                     editKepalaCabang.visibility = View.GONE
                     AdminKas.visibility = View.GONE
                     editAdminKas.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    editSupervisor.visibility = View.GONE
                 }
                 "account officer" -> {
                     Direksi.visibility = View.GONE
@@ -295,6 +309,8 @@ class AdminAdapter(
                     editKepalaCabang.visibility = View.GONE
                     Supervisor.visibility = View.GONE
                     editSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    editAdminKas.visibility = View.GONE
                 }
             }
 
@@ -320,34 +336,34 @@ class AdminAdapter(
                         selectedJabatanId = jabatanMap[selectedName]
                     }
                 }
-                editDireksi.setOnClickListener {
-                    val direksiMap = allDataResponse.direksi.associate { it.nama to it.id_direksi }
-                    showDialog(ArrayList(direksiMap.keys), editDireksi) { selectedName ->
-                        editDireksi.text = selectedName
-                        selectedDireksiId = direksiMap[selectedName]
-                    }
-                }
-                editKepalaCabang.setOnClickListener {
-                    val kepalaCabangMap = allDataResponse.kepala_cabang.associate { it.nama_kepala_cabang to it.id_kepala_cabang }
-                    showDialog(ArrayList(kepalaCabangMap.keys), editKepalaCabang) { selectedName ->
-                        editKepalaCabang.text = selectedName
-                        selectedKepalaCabangId = kepalaCabangMap[selectedName]
-                    }
-                }
-                editSupervisor.setOnClickListener {
-                    val supervisorMap = allDataResponse.supervisor.associate { it.nama_supervisor to it.id_supervisor }
-                    showDialog(ArrayList(supervisorMap.keys), editSupervisor) { selectedName ->
-                        editSupervisor.text = selectedName
-                        selectedSupervisorId = supervisorMap[selectedName]
-                    }
-                }
-                editAdminKas.setOnClickListener {
-                    val adminKasMap = allDataResponse.admin_kas.associate { it.nama_admin_kas to it.id_admin_kas }
-                    showDialog(ArrayList(adminKasMap.keys), editAdminKas) { selectedName ->
-                        editAdminKas.text = selectedName
-                        selectedAdminKasId = adminKasMap[selectedName]
-                    }
-                }
+//                editDireksi.setOnClickListener {
+//                    val direksiMap = allDataResponse.direksi.associate { it.nama to it.id_direksi }
+//                    showDialog(ArrayList(direksiMap.keys), editDireksi) { selectedName ->
+//                        editDireksi.text = selectedName
+//                        selectedDireksiId = direksiMap[selectedName]
+//                    }
+//                }
+//                editKepalaCabang.setOnClickListener {
+//                    val kepalaCabangMap = allDataResponse.kepala_cabang.associate { it.nama_kepala_cabang to it.id_kepala_cabang }
+//                    showDialog(ArrayList(kepalaCabangMap.keys), editKepalaCabang) { selectedName ->
+//                        editKepalaCabang.text = selectedName
+//                        selectedKepalaCabangId = kepalaCabangMap[selectedName]
+//                    }
+//                }
+//                editSupervisor.setOnClickListener {
+//                    val supervisorMap = allDataResponse.supervisor.associate { it.nama_supervisor to it.id_supervisor }
+//                    showDialog(ArrayList(supervisorMap.keys), editSupervisor) { selectedName ->
+//                        editSupervisor.text = selectedName
+//                        selectedSupervisorId = supervisorMap[selectedName]
+//                    }
+//                }
+//                editAdminKas.setOnClickListener {
+//                    val adminKasMap = allDataResponse.admin_kas.associate { it.nama_admin_kas to it.id_admin_kas }
+//                    showDialog(ArrayList(adminKasMap.keys), editAdminKas) { selectedName ->
+//                        editAdminKas.text = selectedName
+//                        selectedAdminKasId = adminKasMap[selectedName]
+//                    }
+//                }
                 editStatus.setOnClickListener {
                     val statusMap = allDataResponse.status.associate { it.nama_status to it.id }
                     showDialog(ArrayList(statusMap.keys), editStatus) { selectedName ->
@@ -365,10 +381,10 @@ class AdminAdapter(
                     jabatan = selectedJabatanId ?: user.id_jabatan,
                     cabang = selectedCabangId ?: user.id_cabang,
                     wilayah = selectedWilayahId ?: user.id_wilayah,
-                    id_direksi = selectedDireksiId ?: user.direksi_id,
-                    id_kepala_cabang = selectedKepalaCabangId ?: user.kepalacabang_id,
-                    id_supervisor = selectedSupervisorId ?: user.supervisor_id,
-                    id_admin_kas = selectedAdminKasId ?: user.adminkas_id,
+//                    id_direksi = selectedDireksiId ?: user.direksi_id,
+//                    id_kepala_cabang = selectedKepalaCabangId ?: user.kepalacabang_id,
+//                    id_supervisor = selectedSupervisorId ?: user.supervisor_id,
+//                    id_admin_kas = selectedAdminKasId ?: user.adminkas_id,
                     status = selectedStatusId ?: user.status_id
                 )
                 Log.d("UserEditDialog", "Updating user with data: $updatedUser")

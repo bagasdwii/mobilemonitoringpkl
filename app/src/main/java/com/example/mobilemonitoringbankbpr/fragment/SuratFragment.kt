@@ -66,7 +66,7 @@ class SuratFragment : Fragment() {
 
     private val calendar = Calendar.getInstance()
     private var selectedImageUri: Uri? = null
-    private var selectedPdfUri: Uri? = null
+//    private var selectedPdfUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,7 +84,7 @@ class SuratFragment : Fragment() {
         setupNasabahDropdown()
         setupDatePicker()
         setupImagePicker()
-        setupPdfPicker()
+//        setupPdfPicker()
         setupTingkatSPSpinner()
         observeViewModel()
         binding.btnSubmit.setOnClickListener {
@@ -247,14 +247,14 @@ class SuratFragment : Fragment() {
 
 
 
-    private fun setupPdfPicker() {
-        binding.btnPilihPdf.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "application/pdf"
-            startActivityForResult(intent, PICK_PDF_REQUEST)
-            Log.d("SuratFragment", "PDF picker intent launched")
-        }
-    }
+//    private fun setupPdfPicker() {
+//        binding.btnPilihPdf.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_GET_CONTENT)
+//            intent.type = "application/pdf"
+//            startActivityForResult(intent, PICK_PDF_REQUEST)
+//            Log.d("SuratFragment", "PDF picker intent launched")
+//        }
+//    }
 
     private fun setupImagePicker() {
         binding.btnPilihGambar.setOnClickListener {
@@ -325,38 +325,38 @@ class SuratFragment : Fragment() {
                     }
                 }
 
-                PICK_PDF_REQUEST -> {
-                    selectedPdfUri = data?.data
-                    Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
-                    val fileName = selectedPdfUri?.let { getFileNameFromUri(it) }
-                    binding.tvPdfName.text = fileName
-                    binding.tvPdfName.visibility = View.VISIBLE
-                }
+//                PICK_PDF_REQUEST -> {
+//                    selectedPdfUri = data?.data
+//                    Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
+//                    val fileName = selectedPdfUri?.let { getFileNameFromUri(it) }
+//                    binding.tvPdfName.text = fileName
+//                    binding.tvPdfName.visibility = View.VISIBLE
+//                }
             }
         }
     }
-    private fun getFileNameFromUri(uri: Uri): String? {
-        var fileName: String? = null
-        if (uri.scheme == "content") {
-            val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-            cursor.use {
-                if (it != null && it.moveToFirst()) {
-                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (index >= 0) {
-                        fileName = it.getString(index)
-                    }
-                }
-            }
-        }
-        if (fileName == null) {
-            fileName = uri.path
-            val cut = fileName?.lastIndexOf('/')
-            if (cut != null && cut != -1) {
-                fileName = fileName?.substring(cut + 1)
-            }
-        }
-        return fileName
-    }
+//    private fun getFileNameFromUri(uri: Uri): String? {
+//        var fileName: String? = null
+//        if (uri.scheme == "content") {
+//            val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+//            cursor.use {
+//                if (it != null && it.moveToFirst()) {
+//                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+//                    if (index >= 0) {
+//                        fileName = it.getString(index)
+//                    }
+//                }
+//            }
+//        }
+//        if (fileName == null) {
+//            fileName = uri.path
+//            val cut = fileName?.lastIndexOf('/')
+//            if (cut != null && cut != -1) {
+//                fileName = fileName?.substring(cut + 1)
+//            }
+//        }
+//        return fileName
+//    }
 
     private fun saveBitmapToFile(bitmap: Bitmap): File? {
         val fileName = "captured_image_${System.currentTimeMillis()}.jpg"
@@ -379,7 +379,7 @@ class SuratFragment : Fragment() {
         val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
         val tanggal = binding.etTanggal.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || selectedImageUri==null || selectedPdfUri==null){
+        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || selectedImageUri==null){
 //            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
             alertFail("Nasabah, Tingkat SP, Foto dan PDF wajib diisi.")
             Log.w("SuratFragment", "Form submission failed: empty fields")
@@ -399,17 +399,18 @@ class SuratFragment : Fragment() {
             tingkat = tingkatSP,
             tanggal = tanggal,
             bukti_gambar = selectedImageUri.toString(),
-            scan_pdf = selectedPdfUri.toString(),
+//            scan_pdf = selectedPdfUri.toString(),
             id_account_officer = nasabah.id_account_officer
         )
 
         val imageFile = selectedImageUri?.let { getFileFromUri(it) }
-        val pdfFile = selectedPdfUri?.let { getFileFromUri(it) }
-        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile, pdfFile)
+//        val pdfFile = selectedPdfUri?.let { getFileFromUri(it) }
+//        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile, pdfFile)
+        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile)
         Log.d("SuratFragment", "Surat peringatan submitted: $suratPeringatan")
         Log.d("SuratFragment", "Gambar URI: $selectedImageUri")
         Log.d("SuratFragment", "Gambar File Path: ${imageFile?.absolutePath}")
-        Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
+//        Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
     }
     private fun alertSuccess(message: String) {
         val alertDialog = AlertDialog.Builder(requireContext()).create()
@@ -424,6 +425,7 @@ class SuratFragment : Fragment() {
 
         alertDialog.setView(dialogView)
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            nasabahViewModel.fetchNasabahList()
             dialog.dismiss()
         }
         alertDialog.show()
@@ -493,9 +495,9 @@ class SuratFragment : Fragment() {
         binding.spinnerTingkatSP.setSelection(0)
         updateDateInView()
         binding.ivPreviewGambar.visibility = View.GONE
-        binding.tvPdfName.visibility = View.GONE
+//        binding.tvPdfName.visibility = View.GONE
         selectedImageUri = null
-        selectedPdfUri = null
+//        selectedPdfUri = null
         Log.d("SuratFragment", "Form reset completed")
     }
 
@@ -521,7 +523,7 @@ class SuratFragment : Fragment() {
 
     companion object {
         private const val CAMERA_REQUEST = 1001
-        private const val PICK_PDF_REQUEST = 1002
+//        private const val PICK_PDF_REQUEST = 1002
         private const val REQUEST_CAMERA_PERMISSION = 1003
     }
 }

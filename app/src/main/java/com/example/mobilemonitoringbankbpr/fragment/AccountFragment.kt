@@ -86,7 +86,7 @@ class AccountFragment : Fragment() {
 //                    binding.tvKepalaCabang.visibility = View.VISIBLE
                 }
                 user.jabatan == "Supervisor" && user.cabang != null -> {
-                    Log.d("AccountFragment", "User supervisor: ${user.id_kepala_cabang}")
+//                    Log.d("AccountFragment", "User supervisor: ${user.id_kepala_cabang}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
 //                    binding.tvKepalaCabangLabel.visibility = View.VISIBLE
@@ -106,7 +106,7 @@ class AccountFragment : Fragment() {
 //                    binding.tvSupervisor.visibility = View.VISIBLE
                 }
                 user.jabatan == "Admin Kas" && user.cabang != null -> {
-                    Log.d("AccountFragment", "User supervisor: ${user.id_supervisor}")
+//                    Log.d("AccountFragment", "User supervisor: ${user.id_supervisor}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
 //                    binding.tvSupervisorLabel.visibility = View.VISIBLE
@@ -126,7 +126,7 @@ class AccountFragment : Fragment() {
 //                    binding.tvAdminKas.visibility = View.VISIBLE
                 }
                 user.jabatan == "Account Officer" && user.cabang != null -> {
-                    Log.d("AccountFragment", "User supervisor: ${user.id_admin_kas}")
+//                    Log.d("AccountFragment", "User supervisor: ${user.id_admin_kas}")
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvWilayahLabel.visibility = View.VISIBLE
 //                    binding.tvAdminKasLabel.visibility = View.VISIBLE

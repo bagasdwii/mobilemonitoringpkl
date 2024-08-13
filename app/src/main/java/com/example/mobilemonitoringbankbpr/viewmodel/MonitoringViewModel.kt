@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.Http
 import com.example.mobilemonitoringbankbpr.R
+import com.example.mobilemonitoringbankbpr.data.Cabang
 import com.example.mobilemonitoringbankbpr.data.Nasabah
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.repository.MonitoringRepository
@@ -33,20 +34,37 @@ class MonitoringViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
+    private val _cabang = MutableLiveData<List<Cabang>>()
+    val cabang: LiveData<List<Cabang>> get() = _cabang
 
     private var currentPage = 1
 
     init {
         val apiService = RetrofitClient.getServiceWithAuth(application)
-        repository = MonitoringRepository(apiService)
+        repository = MonitoringRepository(apiService, application)
         Log.d("MonitoringViewModel", "ViewModel initialized with apiService")
     }
 
-    fun getNasabahs(searchQuery: String) {
+//    fun getNasabahs(searchQuery: String) {
+//        _isLoading.value = true
+//        viewModelScope.launch {
+//            Log.d("MonitoringViewModel", "Getting nasabahs for query: $searchQuery, page: $currentPage")
+//            val result = repository.getNasabahs(searchQuery, currentPage)
+//            result.onSuccess {
+//                Log.d("MonitoringViewModel", "Nasabahs retrieved successfully: $it")
+//                _nasabahs.postValue(it)
+//            }.onFailure {
+//                Log.e("MonitoringViewModel", "Failed to retrieve nasabahs: ${it.message}")
+//                _errorMessage.postValue(it.message)
+//            }
+//            _isLoading.postValue(false)
+//        }
+//    }
+    fun getNasabahs(searchQuery: String, cabang: String) {
         _isLoading.value = true
         viewModelScope.launch {
-            Log.d("MonitoringViewModel", "Getting nasabahs for query: $searchQuery, page: $currentPage")
-            val result = repository.getNasabahs(searchQuery, currentPage)
+            Log.d("MonitoringViewModel", "Getting nasabahs for query: $searchQuery, cabang: $cabang, page: $currentPage")
+            val result = repository.getNasabahs(searchQuery, cabang, currentPage)
             result.onSuccess {
                 Log.d("MonitoringViewModel", "Nasabahs retrieved successfully: $it")
                 _nasabahs.postValue(it)
@@ -58,6 +76,21 @@ class MonitoringViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
+    fun getCabangList() {
+        _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val cabang = repository.getCabangList()
+                _cabang.postValue(cabang)
+                Log.d("AdminViewModel", "fetchCabangList: Success")
+            } catch (e: Exception) {
+                Log.e("AdminViewModel", "fetchCabangList: Error", e)
+            } finally {
+                _isLoading.postValue(false)
+                Log.d("AdminViewModel", "fetchCabangList completed")
+            }
+        }
+    }
     fun setPage(page: Int) {
         currentPage = page
         Log.d("MonitoringViewModel", "Page set to: $currentPage")

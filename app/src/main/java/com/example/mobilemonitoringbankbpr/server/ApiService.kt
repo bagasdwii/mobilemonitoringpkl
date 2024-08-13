@@ -17,6 +17,7 @@ import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.ResponseUserList
 import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
+import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
 import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
@@ -37,20 +38,31 @@ import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface ApiService {
-
-    @GET("api/checkconnection")
-    fun checkConnection(): Call<ConnectionResponse>
-
+//    @Multipart
+//    @POST("api/surat_peringatan")
+//    fun submitSuratPeringatan(
+//        @Part("no") no: RequestBody,
+//        @Part("tingkat") tingkat: RequestBody,
+//        @Part("tanggal") tanggal: RequestBody,
+//        @Part("id_account_officer") idAccountOfficer: RequestBody,
+//        @Part bukti_gambar: MultipartBody.Part?,
+//        @Part scan_pdf: MultipartBody.Part?
+//    ): Call<ResponseSuratPeringatan>
     @Multipart
-    @POST("api/surat_peringatan")
-    fun submitSuratPeringatan(
+    @POST("api/surat_peringatan/update")
+    fun updateSuratPeringatan(
         @Part("no") no: RequestBody,
         @Part("tingkat") tingkat: RequestBody,
         @Part("tanggal") tanggal: RequestBody,
-        @Part("id_account_officer") idAccountOfficer: RequestBody,
-        @Part bukti_gambar: MultipartBody.Part?,
-        @Part scan_pdf: MultipartBody.Part?
+        @Part bukti_gambar: MultipartBody.Part?
     ): Call<ResponseSuratPeringatan>
+
+    @GET("api/usermobile")
+    fun getUser(): Call<User>
+    @GET("api/checkconnection")
+    fun checkConnection(): Call<ConnectionResponse>
+
+
 
     @GET("api/jabatan")
     fun getJabatanData(): Call<List<Jabatan>>
@@ -65,8 +77,7 @@ interface ApiService {
         @Body loginRequest: Login
     ): Call<ResponseLogin>
 
-    @GET("api/usermobile")
-    fun getUser(): Call<User>
+
 
     @POST("api/logoutmobile")
     fun logoutUser(): Call<Void>
@@ -75,12 +86,13 @@ interface ApiService {
     @GET("api/nasabahs")
     suspend fun getNasabahs(
         @Query("search") search: String,
+        @Query("cabang") cabang: String,
         @Query("page") page: Int
     ): Response<ResponseMonitoring>
 
 
     @GET("api/nasabah")
-    suspend fun getNasabahList(): List<NasabahSp>
+    suspend fun getNasabahList(): List<SuratPeringatanListNasabahDropdown>
     @GET("api/usermobileadmin")
     suspend fun getUser(
         @Query("search") search: String,

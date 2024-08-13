@@ -204,6 +204,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center_vertical"
                 android:drawableEnd="@drawable/ic_dropdown"
+                android:layout_marginBottom="8dp"
                 android:background="@android:drawable/editbox_background"
                 />
             <Button

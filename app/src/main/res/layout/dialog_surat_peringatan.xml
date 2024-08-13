@@ -61,6 +61,7 @@
             android:adjustViewBounds="true"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_image_not_supported" />
             />
 
         <TextView
@@ -74,7 +75,7 @@
             android:id="@+id/tvPdfFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PDF File Name"
+            android:text="PDF File Tidak Di temukan"
             android:paddingBottom="8dp"
             android:fontFamily="@font/poppins_medium"/>
 

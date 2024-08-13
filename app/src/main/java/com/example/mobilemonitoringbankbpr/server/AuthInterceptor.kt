@@ -12,7 +12,7 @@ class AuthInterceptor(private val context: Context) : Interceptor {
         val token = localStorage.token
 
         val newRequest = request.newBuilder()
-            .addHeader("Authorization", "Bearer $token")
+            .addHeader("X-Authorization", "Bearer $token")
             .build()
 
         return chain.proceed(newRequest)

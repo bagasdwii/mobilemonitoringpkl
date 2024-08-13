@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -104,11 +105,19 @@ class AdminFragment : Fragment() {
 
     private fun navigateToAdminFragment() {
         val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+        // Remove AdminFragment from the back stack if it exists
+        fragmentManager.popBackStack("AdminFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        // Start a new transaction
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, AdminFragment())
-        fragmentTransaction.addToBackStack(null)
+
+        // Add the transaction to the back stack with a unique name
+        fragmentTransaction.addToBackStack("AdminFragment")
         fragmentTransaction.commit()
     }
+
 
     private fun showLoadingDialog() {
         if (loadingDialog == null) {
@@ -143,7 +152,8 @@ class AdminFragment : Fragment() {
         alertDialog.setView(dialogView)
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
             dialog.dismiss()
-            navigateToAdminFragment()
+            adminViewModel.getUser("")
+            adminViewModel.fetchAllData()
         }
         alertDialog.show()
     }

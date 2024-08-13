@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.repository.SuratRepository
 import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
+import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +19,8 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = SuratRepository(application)
 
-    private val _nasabahList = MutableLiveData<List<NasabahSp>>()
-    val nasabahList: LiveData<List<NasabahSp>> get() = _nasabahList
+    private val _nasabahList = MutableLiveData<List<SuratPeringatanListNasabahDropdown>>()
+    val nasabahList: LiveData<List<SuratPeringatanListNasabahDropdown>> get() = _nasabahList
 
     private val _isSubmitting = MutableLiveData<Boolean>()
     val isSubmitting: LiveData<Boolean> get() = _isSubmitting
@@ -50,14 +51,14 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
     fun submitSuratPeringatan(
         suratPeringatan: SuratPeringatan,
         imageFile: File?,
-        pdfFile: File?
+//        pdfFile: File?
     ) {
         _isSubmitting.value = true
         viewModelScope.launch(Dispatchers.IO) {
             repository.submitSuratPeringatan(
                 suratPeringatan,
                 imageFile,
-                pdfFile,
+//                pdfFile,
                 onSuccess = {
                     _isSubmitting.postValue(false)
                     _isSubmissionSuccessful.postValue(true)
