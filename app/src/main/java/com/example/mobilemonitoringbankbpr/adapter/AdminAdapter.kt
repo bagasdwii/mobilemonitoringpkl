@@ -136,13 +136,14 @@ class AdminAdapter(
             tvUserName.text = user.name
             tvGmail.text = user.email
             tvJabatan.text = user.jabatan
-            tvCabang.text = user.cabang
-            tvWilayah.text = user.wilayah
+            tvCabang.text = if (user.cabang.isNullOrEmpty()) "Tidak diketahui" else user.cabang
+            tvWilayah.text = if (user.wilayah.isNullOrEmpty()) "Tidak diketahui" else user.wilayah
+
 //            tvDireksi.text = user.id_direksi
 //            tvKepalaCabang.text = user.id_kepala_cabang
 //            tvSupervisor.text = user.id_supervisor
 //            tvAdminKas.text = user.id_admin_kas
-            tvStatus.text = user.status
+            tvStatus.text = if (user.status.isNullOrEmpty()) "Tidak aktif" else user.status
 
             when (user.jabatan.toLowerCase()) {
                 "direksi" -> {

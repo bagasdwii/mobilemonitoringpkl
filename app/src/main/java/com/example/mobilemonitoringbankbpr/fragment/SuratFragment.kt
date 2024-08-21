@@ -218,7 +218,7 @@ class SuratFragment : Fragment() {
             Log.d("SuratFragment", "Date selected: ${calendar.time}")
         }
 
-        binding.etTanggal.setOnClickListener {
+        binding.etDiserahkan.setOnClickListener {
             DatePickerDialog(
                 requireContext(),
                 dateSetListener,
@@ -241,7 +241,7 @@ class SuratFragment : Fragment() {
         val currentTime = calendar.time
         Log.d("SuratFragment", "Current calendar time: $currentTime")
         val formattedDate = sdf.format(currentTime)
-        binding.etTanggal.setText(formattedDate)
+        binding.etDiserahkan.setText(formattedDate)
         Log.d("SuratFragment", "Date updated in view: $formattedDate")
     }
 
@@ -377,9 +377,9 @@ class SuratFragment : Fragment() {
     private fun submitSuratPeringatan() {
         val namaNasabah = binding.autoCompleteNasabah.text.toString()
         val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
-        val tanggal = binding.etTanggal.text.toString()
+        val diserahkan = binding.etDiserahkan.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP == null || tanggal.isEmpty() || selectedImageUri==null){
+        if (namaNasabah.isEmpty() || tingkatSP == null || diserahkan.isEmpty() || selectedImageUri==null){
 //            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
             alertFail("Nasabah, Tingkat SP, Foto dan PDF wajib diisi.")
             Log.w("SuratFragment", "Form submission failed: empty fields")
@@ -397,7 +397,7 @@ class SuratFragment : Fragment() {
         val suratPeringatan = SuratPeringatan(
             no = nasabah.no,
             tingkat = tingkatSP,
-            tanggal = tanggal,
+            diserahkan = diserahkan,
             bukti_gambar = selectedImageUri.toString(),
 //            scan_pdf = selectedPdfUri.toString(),
             id_account_officer = nasabah.id_account_officer

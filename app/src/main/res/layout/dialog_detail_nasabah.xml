@@ -131,35 +131,35 @@
                 android:text="keterangan"
                 android:paddingBottom="8dp"/>
 
-            <TextView
-                android:id="@+id/ttd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:textSize="18sp"
-                android:text="TTD:"/>
-            <TextView
-                android:id="@+id/tvttd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="ttd"
-                android:paddingBottom="8dp"/>
+<!--            <TextView-->
+<!--                android:id="@+id/ttd"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/poppins_semibold"-->
+<!--                android:textSize="18sp"-->
+<!--                android:text="TTD:"/>-->
+<!--            <TextView-->
+<!--                android:id="@+id/tvttd"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/poppins_medium"-->
+<!--                android:text="ttd"-->
+<!--                android:paddingBottom="8dp"/>-->
 
-            <TextView
-                android:id="@+id/kembali"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:textSize="18sp"
-                android:text="Kembali:"/>
-            <TextView
-                android:id="@+id/tvkembali"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="kembali"
-                android:paddingBottom="8dp"/>
+<!--            <TextView-->
+<!--                android:id="@+id/kembali"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/poppins_semibold"-->
+<!--                android:textSize="18sp"-->
+<!--                android:text="Kembali:"/>-->
+<!--            <TextView-->
+<!--                android:id="@+id/tvkembali"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:fontFamily="@font/poppins_medium"-->
+<!--                android:text="kembali"-->
+<!--                android:paddingBottom="8dp"/>-->
 
             <TextView
                 android:id="@+id/cabang"

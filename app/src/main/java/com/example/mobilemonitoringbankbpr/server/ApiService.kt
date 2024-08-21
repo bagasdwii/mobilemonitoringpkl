@@ -53,7 +53,7 @@ interface ApiService {
     fun updateSuratPeringatan(
         @Part("no") no: RequestBody,
         @Part("tingkat") tingkat: RequestBody,
-        @Part("tanggal") tanggal: RequestBody,
+        @Part("diserahkan") tanggal: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?
     ): Call<ResponseSuratPeringatan>
 

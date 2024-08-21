@@ -30,14 +30,44 @@
             android:paddingBottom="8dp"
             android:fontFamily="@font/poppins_medium" />
         <TextView
-            android:id="@+id/Tanggal"
+            android:id="@+id/Dibuat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal"
+            android:text="Dibuat"
             android:fontFamily="@font/poppins_semibold"
             android:textSize="16sp" />
         <TextView
-            android:id="@+id/tvTanggal"
+            android:id="@+id/tvDibuat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal"
+            android:fontFamily="@font/poppins_medium"
+            android:paddingBottom="8dp"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/Kembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kembali"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvKembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal"
+            android:fontFamily="@font/poppins_medium"
+            android:paddingBottom="8dp"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/Diserahkan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diserahkan"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvDiserahkan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tanggal"

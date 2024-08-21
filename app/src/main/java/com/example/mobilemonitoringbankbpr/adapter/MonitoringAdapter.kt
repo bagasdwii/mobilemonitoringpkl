@@ -156,8 +156,8 @@ class MonitoringAdapter(
             dialogView.findViewById<TextView>(R.id.tvtotal).text =
                 numberFormat.format(nasabah.total.toDouble())
             dialogView.findViewById<TextView>(R.id.tvketerangan).text = nasabah.keterangan
-            dialogView.findViewById<TextView>(R.id.tvttd).text = nasabah.ttd
-            dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
+//            dialogView.findViewById<TextView>(R.id.tvttd).text = nasabah.ttd
+//            dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
             dialogView.findViewById<TextView>(R.id.tvcabang).text = nasabah.cabang
             dialogView.findViewById<TextView>(R.id.tvwilayah).text = nasabah.wilayah
             dialogView.findViewById<TextView>(R.id.tvadminKas).text = nasabah.adminKas
@@ -194,8 +194,12 @@ class MonitoringAdapter(
 
             dialogView.findViewById<TextView>(R.id.tvTingkat).text =
                 "SP Ke : ${suratPeringatan.tingkat}"
-            dialogView.findViewById<TextView>(R.id.tvTanggal).text =
-                "Tanggal: ${suratPeringatan.tanggal}"
+            dialogView.findViewById<TextView>(R.id.tvDibuat).text =
+                "Tanggal: ${suratPeringatan.dibuat}"
+            dialogView.findViewById<TextView>(R.id.tvKembali).text =
+                "Tanggal: ${suratPeringatan.kembali}"
+            dialogView.findViewById<TextView>(R.id.tvDiserahkan).text =
+                "Tanggal: ${suratPeringatan.diserahkan}"
 
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)

@@ -82,7 +82,8 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         // Sesuaikan menu berdasarkan jabatan user
         val menu = navigationView.menu
 
-        if (jabatan != 5 && jabatan!=99) {
+//        if (jabatan != 5 && jabatan!=99) {
+        if (jabatan != 5 ) {
             menu.findItem(R.id.nav_surat).isVisible = false
         }
         if (jabatan !=99){
