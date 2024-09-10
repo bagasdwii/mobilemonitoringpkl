@@ -177,18 +177,18 @@
                 android:paddingBottom="8dp"/>
 
             <TextView
-                android:id="@+id/wilayah"
+                android:id="@+id/kantorkas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
-                android:text="Wilayah:"/>
+                android:text="Kantor Kas:"/>
             <TextView
-                android:id="@+id/tvwilayah"
+                android:id="@+id/tvkantorkas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
-                android:text="wilayah"
+                android:text="Kantor Kas"
                 android:paddingBottom="8dp"/>
 
             <TextView

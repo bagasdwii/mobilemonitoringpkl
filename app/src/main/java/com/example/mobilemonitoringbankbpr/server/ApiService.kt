@@ -7,8 +7,6 @@ import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
 import com.example.mobilemonitoringbankbpr.data.KepalaCabang
 import com.example.mobilemonitoringbankbpr.data.Login
-import com.example.mobilemonitoringbankbpr.data.Nasabah
-import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.Register
 import com.example.mobilemonitoringbankbpr.data.ResponseLogin
 import com.example.mobilemonitoringbankbpr.data.ResponseMonitoring
@@ -16,12 +14,11 @@ import com.example.mobilemonitoringbankbpr.data.ResponseRegister
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.ResponseUserList
 import com.example.mobilemonitoringbankbpr.data.Supervisor
-import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
 import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
-import com.example.mobilemonitoringbankbpr.data.Wilayah
+import com.example.mobilemonitoringbankbpr.data.KantorKas
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -35,7 +32,6 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 interface ApiService {
 //    @Multipart
@@ -101,8 +97,8 @@ interface ApiService {
 
     @GET("api/cabang")
     suspend fun getCabangList(): List<Cabang>
-    @GET("api/wilayah")
-    suspend fun getWilayahList(): List<Wilayah>
+    @GET("api/kantorkas")
+    suspend fun getKantorKasList(): List<KantorKas>
     @GET("api/jabatanauth")
     suspend fun getJabatanList(): List<Jabatan>
     @GET("api/direksi")

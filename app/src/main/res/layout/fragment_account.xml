@@ -116,10 +116,10 @@
 
 
         <TextView
-            android:id="@+id/tvWilayahLabel"
+            android:id="@+id/tvKantorKasLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wilayah:"
+            android:text="Kantor Kas:"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/color1"
@@ -127,7 +127,7 @@
             android:visibility="gone"
             android:fontFamily="@font/poppins_semibold"/>
         <TextView
-            android:id="@+id/tvWilayah"
+            android:id="@+id/tvKantorKas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"

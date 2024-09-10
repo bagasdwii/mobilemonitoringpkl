@@ -6,20 +6,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.mobilemonitoringbankbpr.data.AdminKas
 import com.example.mobilemonitoringbankbpr.data.AllDataResponse
 import com.example.mobilemonitoringbankbpr.data.Cabang
-import com.example.mobilemonitoringbankbpr.data.Direksi
 import com.example.mobilemonitoringbankbpr.data.Jabatan
-import com.example.mobilemonitoringbankbpr.data.KepalaCabang
-import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
-import com.example.mobilemonitoringbankbpr.data.Wilayah
+import com.example.mobilemonitoringbankbpr.data.KantorKas
 import com.example.mobilemonitoringbankbpr.repository.AdminRepository
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AdminViewModel(application: Application) : AndroidViewModel(application) {
@@ -29,8 +24,8 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     val user: LiveData<List<User>> get() = _user
     private val _cabang = MutableLiveData<List<Cabang>>()
     val cabang: LiveData<List<Cabang>> get() = _cabang
-    private val _wilayah = MutableLiveData<List<Wilayah>>()
-    val wilayah: LiveData<List<Wilayah>> get() = _wilayah
+    private val _kantorkas = MutableLiveData<List<KantorKas>>()
+    val kantorkas: LiveData<List<KantorKas>> get() = _kantorkas
 
     private val _jabatan = MutableLiveData<List<Jabatan>>()
     val jabatan: LiveData<List<Jabatan>> get() = _jabatan

@@ -11,7 +11,7 @@ data class NasabahSp(
     val ttd: String,
     val kembali: String,
     val cabang: String,
-    val wilayah: String,
+    val kantorkas: String,
     val adminkas: String,
     val id_account_officer: Long
 )

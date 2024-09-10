@@ -62,7 +62,7 @@ import com.example.mobilemonitoringbankbpr.data.KepalaCabang
 import com.example.mobilemonitoringbankbpr.data.Supervisor
 import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.User
-import com.example.mobilemonitoringbankbpr.data.Wilayah
+import com.example.mobilemonitoringbankbpr.data.KantorKas
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.ItemUserBinding
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
@@ -121,8 +121,8 @@ class AdminAdapter(
             val tvJabatan = dialogView.findViewById<TextView>(R.id.tvjabatannn)
             val Cabang = dialogView.findViewById<TextView>(R.id.Cabang)
             val tvCabang = dialogView.findViewById<TextView>(R.id.tvCabang)
-            val Wilayah = dialogView.findViewById<TextView>(R.id.Wilayah)
-            val tvWilayah = dialogView.findViewById<TextView>(R.id.tvWilayah)
+            val KantorKas = dialogView.findViewById<TextView>(R.id.KantorKas)
+            val tvKantorKas = dialogView.findViewById<TextView>(R.id.tvKantorKas)
             val Direksi = dialogView.findViewById<TextView>(R.id.Direksi)
             val tvDireksi = dialogView.findViewById<TextView>(R.id.tvDireksi)
             val KepalaCabang = dialogView.findViewById<TextView>(R.id.KepalaCabang)
@@ -137,7 +137,7 @@ class AdminAdapter(
             tvGmail.text = user.email
             tvJabatan.text = user.jabatan
             tvCabang.text = if (user.cabang.isNullOrEmpty()) "Tidak diketahui" else user.cabang
-            tvWilayah.text = if (user.wilayah.isNullOrEmpty()) "Tidak diketahui" else user.wilayah
+            tvKantorKas.text = if (user.kantorkas.isNullOrEmpty()) "Tidak diketahui" else user.kantorkas
 
 //            tvDireksi.text = user.id_direksi
 //            tvKepalaCabang.text = user.id_kepala_cabang
@@ -149,8 +149,8 @@ class AdminAdapter(
                 "direksi" -> {
                     Cabang.visibility = View.GONE
                     tvCabang.visibility = View.GONE
-                    Wilayah.visibility = View.GONE
-                    tvWilayah.visibility = View.GONE
+                    KantorKas.visibility = View.GONE
+                    tvKantorKas.visibility = View.GONE
                     Direksi.visibility = View.GONE
                     tvDireksi.visibility = View.GONE
                     KepalaCabang.visibility = View.GONE
@@ -161,8 +161,8 @@ class AdminAdapter(
                     tvAdminKas.visibility = View.GONE
                 }
                 "kepala cabang" -> {
-                    Wilayah.visibility = View.GONE
-                    tvWilayah.visibility = View.GONE
+                    KantorKas.visibility = View.GONE
+                    tvKantorKas.visibility = View.GONE
                     KepalaCabang.visibility = View.GONE
                     tvKepalaCabang.visibility = View.GONE
                     Supervisor.visibility = View.GONE
@@ -221,8 +221,8 @@ class AdminAdapter(
             val tvGmail = dialogView.findViewById<TextView>(R.id.tvgmail)
             val Cabang = dialogView.findViewById<TextView>(R.id.Cabang)
             val editCabang = dialogView.findViewById<TextView>(R.id.editCabang)
-            val Wilayah = dialogView.findViewById<TextView>(R.id.Wilayah)
-            val editWilayah = dialogView.findViewById<TextView>(R.id.editWilayah)
+            val KantorKas = dialogView.findViewById<TextView>(R.id.KantorKas)
+            val editKantorKas = dialogView.findViewById<TextView>(R.id.editKantorKas)
             val editJabatan = dialogView.findViewById<TextView>(R.id.editJabatan)
             val Direksi = dialogView.findViewById<TextView>(R.id.Direksi)
             val editDireksi = dialogView.findViewById<TextView>(R.id.editDireksi)
@@ -239,7 +239,7 @@ class AdminAdapter(
 
             // Variables to store IDs
             var selectedCabangId: Int? = user.cabang?.toIntOrNull()
-            var selectedWilayahId: Int? = user.wilayah?.toIntOrNull()
+            var selectedKantorKasId: Int? = user.kantorkas?.toIntOrNull()
             var selectedJabatanId: Int? = user.jabatan?.toIntOrNull()
 //            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
 //            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
@@ -249,7 +249,7 @@ class AdminAdapter(
 
             // Set initial user data
             editCabang.text = user.cabang
-            editWilayah.text = user.wilayah
+            editKantorKas.text = user.kantorkas
             editJabatan.text = user.jabatan
 //            editDireksi.text = user.id_direksi
 //            editKepalaCabang.text = user.id_kepala_cabang
@@ -260,8 +260,8 @@ class AdminAdapter(
                 "direksi" -> {
                     Cabang.visibility = View.GONE
                     editCabang.visibility = View.GONE
-                    Wilayah.visibility = View.GONE
-                    editWilayah.visibility = View.GONE
+                    KantorKas.visibility = View.GONE
+                    editKantorKas.visibility = View.GONE
                     Direksi.visibility = View.GONE
                     editDireksi.visibility = View.GONE
                     KepalaCabang.visibility = View.GONE
@@ -272,8 +272,8 @@ class AdminAdapter(
                     editAdminKas.visibility = View.GONE
                 }
                 "kepala cabang" -> {
-                    Wilayah.visibility = View.GONE
-                    editWilayah.visibility = View.GONE
+                    KantorKas.visibility = View.GONE
+                    editKantorKas.visibility = View.GONE
                     KepalaCabang.visibility = View.GONE
                     editKepalaCabang.visibility = View.GONE
                     Supervisor.visibility = View.GONE
@@ -323,11 +323,11 @@ class AdminAdapter(
                         selectedCabangId = cabangMap[selectedName]
                     }
                 }
-                editWilayah.setOnClickListener {
-                    val wilayahMap = allDataResponse.wilayah.associate { it.nama_wilayah to it.id_wilayah }
-                    showDialog(ArrayList(wilayahMap.keys), editWilayah) { selectedName ->
-                        editWilayah.text = selectedName
-                        selectedWilayahId = wilayahMap[selectedName]
+                editKantorKas.setOnClickListener {
+                    val kantorkasMap = allDataResponse.kantorkas.associate { it.nama_kantorkas to it.id_kantorkas }
+                    showDialog(ArrayList(kantorkasMap.keys), editKantorKas) { selectedName ->
+                        editKantorKas.text = selectedName
+                        selectedKantorKasId = kantorkasMap[selectedName]
                     }
                 }
                 editJabatan.setOnClickListener {
@@ -381,7 +381,7 @@ class AdminAdapter(
                     email = user.email,
                     jabatan = selectedJabatanId ?: user.id_jabatan,
                     cabang = selectedCabangId ?: user.id_cabang,
-                    wilayah = selectedWilayahId ?: user.id_wilayah,
+                    kantorkas = selectedKantorKasId ?: user.id_kantorkas,
 //                    id_direksi = selectedDireksiId ?: user.direksi_id,
 //                    id_kepala_cabang = selectedKepalaCabangId ?: user.kepalacabang_id,
 //                    id_supervisor = selectedSupervisorId ?: user.supervisor_id,

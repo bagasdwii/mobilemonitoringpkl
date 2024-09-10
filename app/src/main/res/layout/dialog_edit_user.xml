@@ -96,17 +96,17 @@
                 />
 
             <TextView
-                android:id="@+id/Wilayah"
+                android:id="@+id/KantorKas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
-                android:text="Wilayah:"/>
+                android:text="Kantor Kas:"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editWilayah"
-                android:hint="Wilayah Yang Tersedia"
+                android:id="@+id/editKantorKas"
+                android:hint="Kantor Kas Yang Tersedia"
                 android:padding="12dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center_vertical"

@@ -159,7 +159,7 @@ class MonitoringAdapter(
 //            dialogView.findViewById<TextView>(R.id.tvttd).text = nasabah.ttd
 //            dialogView.findViewById<TextView>(R.id.tvkembali).text = nasabah.kembali
             dialogView.findViewById<TextView>(R.id.tvcabang).text = nasabah.cabang
-            dialogView.findViewById<TextView>(R.id.tvwilayah).text = nasabah.wilayah
+            dialogView.findViewById<TextView>(R.id.tvkantorkas).text = nasabah.kantorkas
             dialogView.findViewById<TextView>(R.id.tvadminKas).text = nasabah.adminKas
             dialogView.findViewById<TextView>(R.id.tvaccountOfficer).text = nasabah.accountOfficer
 
@@ -206,15 +206,26 @@ class MonitoringAdapter(
             val tvPdfFileName = dialogView.findViewById<TextView>(R.id.tvPdfFileName)
             val btnDownloadPdf = dialogView.findViewById<Button>(R.id.btnDownloadPdf)
 
+//            suratPeringatan.bukti_gambar?.let { bukti_gambar ->
+//                loadGambar(bukti_gambar.replace("private/surat_peringatan/", ""), ivBuktiGambar)
+//            }
+//
+//            suratPeringatan.scan_pdf?.let { pdfUrl ->
+//                val pdfFileName = pdfUrl.substringAfterLast("/")
+//                tvPdfFileName.text = pdfFileName
+//                btnDownloadPdf.setOnClickListener {
+//                    downloadPdf(pdfUrl.replace("private/surat_peringatan/", ""))
+//                }
+//            }
             suratPeringatan.bukti_gambar?.let { bukti_gambar ->
-                loadGambar(bukti_gambar.replace("private/surat_peringatan/", ""), ivBuktiGambar)
+                loadGambar(bukti_gambar.replace("bukti_gambar/", ""), ivBuktiGambar)
             }
 
             suratPeringatan.scan_pdf?.let { pdfUrl ->
                 val pdfFileName = pdfUrl.substringAfterLast("/")
                 tvPdfFileName.text = pdfFileName
                 btnDownloadPdf.setOnClickListener {
-                    downloadPdf(pdfUrl.replace("private/surat_peringatan/", ""))
+                    downloadPdf(pdfUrl.replace("scan_pdf/", ""))
                 }
             }
 

@@ -88,18 +88,18 @@
                 android:paddingBottom="8dp"/>
 
             <TextView
-                android:id="@+id/Wilayah"
+                android:id="@+id/KantorKas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
-                android:text="Wilayah:"/>
+                android:text="Kantor Kas:"/>
             <TextView
-                android:id="@+id/tvWilayah"
+                android:id="@+id/tvKantorKas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
-                android:text="Wilayah"
+                android:text="Kantor Kas"
                 android:paddingBottom="8dp"/>
             <TextView
                 android:id="@+id/Direksi"
