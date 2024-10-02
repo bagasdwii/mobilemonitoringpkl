@@ -1,6 +1,7 @@
 package com.example.mobilemonitoringbankbpr.data
 
 data class AllDataResponse(
+    val user: List<User>,
     val jabatan: List<Jabatan>,
     val cabang: List<Cabang>,
     val kantorkas: List<KantorKas>,

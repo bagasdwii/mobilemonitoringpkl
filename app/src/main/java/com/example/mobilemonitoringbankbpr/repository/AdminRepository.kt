@@ -38,64 +38,7 @@ class AdminRepository(private val apiService: ApiService, private val context: C
             Result.failure(e)
         }
     }
-//    suspend fun updateUser(userId: Int, updateUser: UpdateUser): Result<UpdateUserResponse> {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                val apiService = RetrofitClient.getServiceWithAuth(context)
-//                val response: Response<UpdateUserResponse> = apiService.updateUser(userId, updateUser)
-//
-//                // Log raw response data
-//                val responseBodyString = response.raw().peekBody(Long.MAX_VALUE).string()
-//                Log.d("AdminRepository", "Response Code: ${response.code()}")
-//                Log.d("AdminRepository", "Response Body: $responseBodyString")
-//
-//                if (response.isSuccessful) {
-//                    Log.d("AdminRepository", "Successful response: $responseBodyString")
-//                    response.body()?.let {
-//                        Result.success(it)
-//                    } ?: run {
-//                        Log.e("AdminRepository", "Response body is null")
-//                        Result.failure(Exception("Response body is null"))
-//                    }
-//                } else {
-//                    val errorBodyString = response.errorBody()?.string()
-//                    Log.d("AdminRepository", "Error Response: $errorBodyString")
-//
-//                    val errorMessage = if (!errorBodyString.isNullOrEmpty()) {
-//                        try {
-//                            val jsonObject = JSONObject(errorBodyString)
-//                            val message = jsonObject.optString("message", "Unknown error")
-//                            val errors = jsonObject.optJSONObject("errors")
-//                            if (errors != null) {
-//                                val errorMessages = StringBuilder(message)
-//                                errors.keys().forEach { key ->
-//                                    val messagesArray = errors.optJSONArray(key)
-//                                    if (messagesArray != null) {
-//                                        for (i in 0 until messagesArray.length()) {
-//                                            errorMessages.append("\n").append(messagesArray.optString(i))
-//                                        }
-//                                    }
-//                                }
-//                                errorMessages.toString()
-//                            } else {
-//                                message
-//                            }
-//                        } catch (e: JSONException) {
-//                            Log.e("AdminRepository", "Failed to parse error JSON", e)
-//                            "Failed to parse server error response"
-//                        }
-//                    } else {
-//                        "Unknown error"
-//                    }
-//                    Log.d("AdminRepository", "Error Message: $errorMessage")
-//                    Result.failure(Exception(errorMessage))
-//                }
-//            } catch (e: Exception) {
-//                Log.e("AdminRepository", "updateUser exception", e)
-//                Result.failure(e)
-//            }
-//        }
-//    }
+
 
     fun updateUser(userId: Int, updateUser: UpdateUser, callback: (Result<UpdateUserResponse>) -> Unit) {
         val apiService = RetrofitClient.getServiceWithAuth(context)

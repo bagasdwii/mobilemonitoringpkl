@@ -172,6 +172,18 @@ class AdminAdapter(
                     Direksi.visibility = View.GONE
                     tvDireksi.visibility = View.GONE
                 }
+                "kepala bagian" -> {
+                    KantorKas.visibility = View.GONE
+                    tvKantorKas.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    tvKepalaCabang.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    tvSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    tvAdminKas.visibility = View.GONE
+                    Direksi.visibility = View.GONE
+                    tvDireksi.visibility = View.GONE
+                }
                 "supervisor" -> {
                     Direksi.visibility = View.GONE
                     tvDireksi.visibility = View.GONE
@@ -224,6 +236,7 @@ class AdminAdapter(
             val KantorKas = dialogView.findViewById<TextView>(R.id.KantorKas)
             val editKantorKas = dialogView.findViewById<TextView>(R.id.editKantorKas)
             val editJabatan = dialogView.findViewById<TextView>(R.id.editJabatan)
+            val editDigantikan = dialogView.findViewById<TextView>(R.id.editDigantikan)
             val Direksi = dialogView.findViewById<TextView>(R.id.Direksi)
             val editDireksi = dialogView.findViewById<TextView>(R.id.editDireksi)
             val KepalaCabang = dialogView.findViewById<TextView>(R.id.KepalaCabang)
@@ -241,6 +254,7 @@ class AdminAdapter(
             var selectedCabangId: Int? = user.cabang?.toIntOrNull()
             var selectedKantorKasId: Int? = user.kantorkas?.toIntOrNull()
             var selectedJabatanId: Int? = user.jabatan?.toIntOrNull()
+            var selectedDigantikanId: Int? = user.name?.toIntOrNull()
 //            var selectedDireksiId: Int? = user.id_direksi?.toIntOrNull()
 //            var selectedKepalaCabangId: Int? = user.id_kepala_cabang?.toIntOrNull()
 //            var selectedSupervisorId: Int? = user.id_supervisor?.toIntOrNull()
@@ -272,6 +286,18 @@ class AdminAdapter(
                     editAdminKas.visibility = View.GONE
                 }
                 "kepala cabang" -> {
+                    KantorKas.visibility = View.GONE
+                    editKantorKas.visibility = View.GONE
+                    KepalaCabang.visibility = View.GONE
+                    editKepalaCabang.visibility = View.GONE
+                    Supervisor.visibility = View.GONE
+                    editSupervisor.visibility = View.GONE
+                    AdminKas.visibility = View.GONE
+                    editAdminKas.visibility = View.GONE
+                    Direksi.visibility = View.GONE
+                    editDireksi.visibility = View.GONE
+                }
+                "kepala bagian" -> {
                     KantorKas.visibility = View.GONE
                     editKantorKas.visibility = View.GONE
                     KepalaCabang.visibility = View.GONE
@@ -337,6 +363,13 @@ class AdminAdapter(
                         selectedJabatanId = jabatanMap[selectedName]
                     }
                 }
+                editDigantikan.setOnClickListener {
+                    val userMap = allDataResponse.user.associate { it.name to it.id }
+                    showDialog(ArrayList(userMap.keys), editDigantikan) { selectedName ->
+                        editDigantikan.text = selectedName
+                        selectedDigantikanId = userMap[selectedName]
+                    }
+                }
 //                editDireksi.setOnClickListener {
 //                    val direksiMap = allDataResponse.direksi.associate { it.nama to it.id_direksi }
 //                    showDialog(ArrayList(direksiMap.keys), editDireksi) { selectedName ->
@@ -376,12 +409,17 @@ class AdminAdapter(
 
             dialogView.findViewById<Button>(R.id.saveButton).setOnClickListener {
                 // Ensure all required fields are set
+                val updatedUserId = if (selectedDigantikanId == null || selectedDigantikanId == 0) null else selectedDigantikanId ?: user.id
+                val updatedName = if (tvUserName.text.isNullOrBlank()) user.name else tvUserName.text.toString()
+                val updatedEmail = if (tvGmail.text.isNullOrBlank()) user.email else tvGmail.text.toString()
                 val updatedUser = UpdateUser(
-                    name = user.name,
-                    email = user.email,
+                    name = updatedName,
+                    email = updatedEmail,
                     jabatan = selectedJabatanId ?: user.id_jabatan,
                     cabang = selectedCabangId ?: user.id_cabang,
                     kantorkas = selectedKantorKasId ?: user.id_kantorkas,
+                    user = updatedUserId,
+
 //                    id_direksi = selectedDireksiId ?: user.direksi_id,
 //                    id_kepala_cabang = selectedKepalaCabangId ?: user.kepalacabang_id,
 //                    id_supervisor = selectedSupervisorId ?: user.supervisor_id,

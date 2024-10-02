@@ -77,6 +77,21 @@ class AccountFragment : Fragment() {
 //                    binding.tvDireksi.visibility = View.VISIBLE
 //                    binding.tvDireksi.text = user.id_direksi
                 }
+                user.jabatan == "Kepala Bagian" && user.cabang == null -> {
+                    binding.tvCabangLabel.visibility = View.VISIBLE
+//                    binding.tvDireksiLabel.visibility = View.VISIBLE
+                    binding.tvCabang.visibility = View.VISIBLE
+//                    binding.tvDireksi.visibility = View.VISIBLE
+                }
+                user.jabatan == "Kepala Bagian" && user.cabang != null -> {
+                    Log.d("AccountFragment", "User cabang: ${user.cabang}, ${user.jabatan}")
+                    binding.tvCabangLabel.visibility = View.VISIBLE
+                    binding.tvCabang.visibility = View.VISIBLE
+                    binding.tvCabang.text = user.cabang
+//                    binding.tvDireksiLabel.visibility = View.VISIBLE
+//                    binding.tvDireksi.visibility = View.VISIBLE
+//                    binding.tvDireksi.text = user.id_direksi
+                }
                 user.jabatan == "Supervisor" && user.cabang == null -> {
                     binding.tvCabangLabel.visibility = View.VISIBLE
                     binding.tvKantorKasLabel.visibility = View.VISIBLE

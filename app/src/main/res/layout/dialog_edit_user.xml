@@ -31,12 +31,13 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:textSize="18sp"
                />
-            <TextView
+            <EditText
                 android:id="@+id/tvUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Nama"
+                android:textColor="@color/gray"
                 android:paddingBottom="8dp"/>
 
 
@@ -48,12 +49,13 @@
                 android:fontFamily="@font/poppins_semibold"
 
                 android:text="Gmail:"/>
-            <TextView
+            <EditText
                 android:id="@+id/tvgmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Gmail"
+                android:textColor="@color/gray"
                 android:paddingBottom="8dp"/>
 
             <TextView
@@ -68,6 +70,24 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/editJabatan"
                 android:hint="Jabatan Yang Tersedia"
+                android:padding="12dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_dropdown"
+                android:background="@android:drawable/editbox_background"
+                />
+            <TextView
+                android:id="@+id/Digantikan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="18sp"
+                android:text="Digantikan Oleh: (opsional)"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editDigantikan"
+                android:hint="User Yang Tersedia"
                 android:padding="12dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center_vertical"

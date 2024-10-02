@@ -131,6 +131,7 @@
                 android:text="KepalaCabang"
                 android:paddingBottom="8dp"/>
 
+
             <TextView
                 android:id="@+id/Supervisor"
                 android:layout_width="match_parent"
