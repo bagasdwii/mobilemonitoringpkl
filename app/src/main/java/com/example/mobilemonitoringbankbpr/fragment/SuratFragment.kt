@@ -85,7 +85,7 @@ class SuratFragment : Fragment() {
         setupDatePicker()
         setupImagePicker()
 //        setupPdfPicker()
-        setupTingkatSPSpinner()
+//        setupTingkatSPSpinner()
         observeViewModel()
         binding.btnSubmit.setOnClickListener {
             showConfirmationDialog()
@@ -152,26 +152,38 @@ class SuratFragment : Fragment() {
             }
         })
     }
-    private fun setupTingkatSPSpinner() {
-        val adapter = ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.tingkat_sp_array,
-            R.layout.spinner_item_surat_tingkatsp // gunakan layout untuk item spinner
-        ).apply {
-            setDropDownViewResource(R.layout.spinner_dropdown_item__surat_tingkatsp) // gunakan layout untuk dropdown item
-        }
-        binding.spinnerTingkatSP.adapter = adapter
-    }
+//    private fun setupTingkatSPSpinner() {
+//        val adapter = ArrayAdapter.createFromResource(
+//            requireContext(),
+//            R.array.tingkat_sp_array,
+//            R.layout.spinner_item_surat_tingkatsp // gunakan layout untuk item spinner
+//        ).apply {
+//            setDropDownViewResource(R.layout.spinner_dropdown_item__surat_tingkatsp) // gunakan layout untuk dropdown item
+//        }
+//        binding.spinnerTingkatSP.adapter = adapter
+//    }
 
+//    private fun setupNasabahDropdown() {
+//        nasabahViewModel.nasabahList.observe(viewLifecycleOwner, { nasabahList ->
+//            val arrayList = ArrayList(nasabahList.map { it.nama })
+//            Log.d("SuratFragment", "Nasabah list updated: $nasabahList")
+//            binding.autoCompleteNasabah.setOnClickListener {
+//                showDialog(arrayList)
+//            }
+//        })
+//    }
     private fun setupNasabahDropdown() {
         nasabahViewModel.nasabahList.observe(viewLifecycleOwner, { nasabahList ->
-            val arrayList = ArrayList(nasabahList.map { it.nama })
+            // Gabungkan nama dan tingkat untuk setiap nasabah
+            val arrayList = ArrayList(nasabahList.map { "${it.nama} - ${it.tingkat} - ${it.kategori}"  })
             Log.d("SuratFragment", "Nasabah list updated: $nasabahList")
+
             binding.autoCompleteNasabah.setOnClickListener {
                 showDialog(arrayList)
             }
         })
     }
+
 
     private fun showDialog(arrayList: ArrayList<String>) {
         val dialogBinding = DialogSeacrhSpinnerBinding.inflate(layoutInflater)
@@ -375,18 +387,31 @@ class SuratFragment : Fragment() {
     }
 
     private fun submitSuratPeringatan() {
-        val namaNasabah = binding.autoCompleteNasabah.text.toString()
-        val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
+//        val namaNasabahFull = binding.autoCompleteNasabah.text.toString()
+//
+//        // Misal formatnya adalah "Nama - Tingkat - Kategori", kita ambil bagian nama saja
+//        val namaNasabah = namaNasabahFull.split(" - ").firstOrNull()
+//        val kategoriSP = binding.spinnerKategoriSP.selectedItem?.toString()
+//        val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
+        val namaNasabahFull = binding.autoCompleteNasabah.text.toString()
+
+        // Misal formatnya adalah "Nama - Tingkat - Kategori", kita pecah string berdasarkan " - "
+        val parts = namaNasabahFull.split(" - ")
+
+        // Ambil bagian nama, tingkat, dan kategori
+        val namaNasabah = parts.getOrNull(0) // Bagian nama
+        val tingkatSP = parts.getOrNull(1)?.toIntOrNull() // Bagian tingkat, diubah ke Int
+        val kategoriSP = parts.getOrNull(2) // Bagian kategori
         val diserahkan = binding.etDiserahkan.text.toString()
 
-        if (namaNasabah.isEmpty() || tingkatSP == null || diserahkan.isEmpty() || selectedImageUri==null){
+        if (namaNasabah.isNullOrEmpty() || kategoriSP == null || tingkatSP == null || diserahkan.isEmpty() || selectedImageUri==null){
 //            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
-            alertFail("Nasabah, Tingkat SP, Foto dan PDF wajib diisi.")
+            alertFail("Nasabah,Kategori SP, Tingkat SP dan Foto wajib diisi.")
             Log.w("SuratFragment", "Form submission failed: empty fields")
             return
         }
 
-        val nasabah = nasabahViewModel.nasabahList.value?.find { it.nama == namaNasabah }
+        val nasabah = nasabahViewModel.nasabahList.value?.find { it.nama == namaNasabah  }
 
         if (nasabah == null) {
             Toast.makeText(requireContext(), "Nasabah tidak valid", Toast.LENGTH_SHORT).show()
@@ -396,6 +421,7 @@ class SuratFragment : Fragment() {
 
         val suratPeringatan = SuratPeringatan(
             no = nasabah.no,
+            kategori = kategoriSP,
             tingkat = tingkatSP,
             diserahkan = diserahkan,
             bukti_gambar = selectedImageUri.toString(),
@@ -492,7 +518,7 @@ class SuratFragment : Fragment() {
 
     private fun resetForm() {
         binding.autoCompleteNasabah.setText("")
-        binding.spinnerTingkatSP.setSelection(0)
+//        binding.spinnerTingkatSP.setSelection(0)
         updateDateInView()
         binding.ivPreviewGambar.visibility = View.GONE
 //        binding.tvPdfName.visibility = View.GONE

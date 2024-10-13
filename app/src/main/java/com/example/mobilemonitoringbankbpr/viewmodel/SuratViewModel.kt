@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.repository.SuratRepository
-import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
 

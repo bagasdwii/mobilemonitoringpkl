@@ -2,6 +2,7 @@ package com.example.mobilemonitoringbankbpr.data
 
 data class SuratPeringatan(
     val no: Long,
+    val kategori: String? = null,
     val tingkat: Int,
     val dibuat: String? = null,
     val kembali: String? = null,

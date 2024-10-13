@@ -10,15 +10,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Detail Surat Peingatan"
+            android:text="Detail Surat Peringatan"
             android:textSize="20sp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:fontFamily="@font/poppins_bold"/>
+        <TextView
+            android:id="@+id/Kategori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kategori Surat"
+            android:textSize="16sp"
+            android:fontFamily="@font/poppins_semibold" />
+        <TextView
+            android:id="@+id/tvKategori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kategori Surat"
+            android:textSize="14sp"
+            android:paddingBottom="8dp"
+            android:fontFamily="@font/poppins_medium" />
         <TextView
             android:id="@+id/Tingkat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tingkat Surat SP"
+            android:text="Tingkat Surat"
             android:textSize="16sp"
             android:fontFamily="@font/poppins_semibold" />
         <TextView
@@ -92,7 +107,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_image_not_supported" />
-            />
 
         <TextView
             android:layout_width="wrap_content"

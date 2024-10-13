@@ -19,21 +19,36 @@
         android:background="@android:drawable/editbox_background"
         />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pilih Tingkat SP"
-        android:fontFamily="@font/poppins_semibold"
-        android:paddingStart="6sp"
-        android:paddingTop="8dp"
-        />
-    <Spinner
-        android:id="@+id/spinnerTingkatSP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:entries="@array/tingkat_sp_array"
-        />
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Pilih Kategori SP"-->
+<!--        android:fontFamily="@font/poppins_semibold"-->
+<!--        android:paddingStart="6sp"-->
+<!--        android:paddingTop="8dp"-->
+<!--        />-->
+<!--    <Spinner-->
+<!--        android:id="@+id/spinnerKategoriSP"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="8dp"-->
+<!--        android:entries="@array/kategori_sp_array"-->
+<!--        />-->
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Pilih Tingkat SP"-->
+<!--        android:fontFamily="@font/poppins_semibold"-->
+<!--        android:paddingStart="6sp"-->
+<!--        android:paddingTop="8dp"-->
+<!--        />-->
+<!--    <Spinner-->
+<!--        android:id="@+id/spinnerTingkatSP"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="8dp"-->
+<!--        android:entries="@array/tingkat_sp_array"-->
+<!--        />-->
 
     <EditText
         android:id="@+id/etDiserahkan"

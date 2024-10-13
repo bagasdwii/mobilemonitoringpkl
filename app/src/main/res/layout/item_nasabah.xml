@@ -37,53 +37,158 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp1"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp2"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp3"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP01"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp0"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP02"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp0"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+<!--        <ImageView-->
+<!--            android:id="@+id/btnSP03"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_sp0"-->
+<!--            android:padding="4dp"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
         <ImageView
             android:id="@+id/btnSP1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sp1"
             android:padding="4dp"
             android:visibility="gone"
             />
 
         <ImageView
             android:id="@+id/btnSP2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sp2"
             android:padding="4dp"
             android:visibility="gone"
             />
 
         <ImageView
             android:id="@+id/btnSP3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sp3"
             android:padding="4dp"
             android:visibility="gone"
+
+            />
+        <ImageView
+            android:id="@+id/btnSS1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ss1"
+            android:padding="4dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/btnSS2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ss2"
+            android:padding="4dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/btnSS3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ss3"
+            android:padding="4dp"
+            android:visibility="gone"
+
+            />
+        <ImageView
+            android:id="@+id/btnSPE1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/spe1"
+            android:padding="4dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/btnSPE2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/spe2"
+            android:padding="4dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/btnSPE3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/spe3"
+            android:padding="4dp"
+            android:visibility="gone"
+
             />
         <ImageView
             android:id="@+id/btnSP01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp0"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sp0"
             android:padding="4dp"
             android:visibility="gone"
             />
         <ImageView
-            android:id="@+id/btnSP02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp0"
+            android:id="@+id/btnSS02"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ss0"
             android:padding="4dp"
             android:visibility="gone"
             />
         <ImageView
-            android:id="@+id/btnSP03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sp0"
+            android:id="@+id/btnSPE03"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/spe0"
             android:padding="4dp"
             android:visibility="gone"
             />

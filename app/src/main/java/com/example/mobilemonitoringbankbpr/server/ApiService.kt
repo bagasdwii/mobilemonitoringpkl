@@ -19,6 +19,7 @@ import com.example.mobilemonitoringbankbpr.data.UpdateUser
 import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.KantorKas
+import com.example.mobilemonitoringbankbpr.data.Kunjungan
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -49,6 +50,7 @@ interface ApiService {
     fun updateSuratPeringatan(
         @Part("no") no: RequestBody,
         @Part("tingkat") tingkat: RequestBody,
+        @Part("kategori") kategori: RequestBody,
         @Part("diserahkan") tanggal: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?
     ): Call<ResponseSuratPeringatan>
@@ -57,7 +59,8 @@ interface ApiService {
     fun getUser(): Call<User>
     @GET("api/checkconnection")
     fun checkConnection(): Call<ConnectionResponse>
-
+    @GET("kunjungan/{no_nasabah}")
+    suspend fun getKunjunganList(@Path("no_nasabah") noNasabah: Long): List<Kunjungan>
 
 
     @GET("api/jabatan")

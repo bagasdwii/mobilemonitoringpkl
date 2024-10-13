@@ -28,7 +28,8 @@ class MonitoringViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _nasabahs = MutableLiveData<List<Nasabah>>()
     val nasabahs: LiveData<List<Nasabah>> get() = _nasabahs
-
+    private val _surats = MutableLiveData<List<SuratPeringatan>>()
+    val surats: LiveData<List<SuratPeringatan>> get() = _surats
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 

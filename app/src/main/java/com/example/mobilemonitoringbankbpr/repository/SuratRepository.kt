@@ -2,10 +2,7 @@ package com.example.mobilemonitoringbankbpr.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.mobilemonitoringbankbpr.Http
-import com.example.mobilemonitoringbankbpr.R
 import com.example.mobilemonitoringbankbpr.server.RetrofitClient
-import com.example.mobilemonitoringbankbpr.data.NasabahSp
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
@@ -14,9 +11,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
 import retrofit2.Call
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
@@ -33,7 +28,9 @@ class SuratRepository(private val context: Context) {
         val apiService = RetrofitClient.getServiceWithAuth(context)
 
         val no = suratPeringatan.no.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val kategori = suratPeringatan.kategori.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val tingkat = suratPeringatan.tingkat.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
         val diserahkan = suratPeringatan.diserahkan.toRequestBody("text/plain".toMediaTypeOrNull())
         val id_account_officer = suratPeringatan.id_account_officer.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -59,6 +56,7 @@ class SuratRepository(private val context: Context) {
         val call = apiService.updateSuratPeringatan(
             no,
             tingkat,
+            kategori,
             diserahkan,
 //            id_account_officer,
             bukti_gambar,

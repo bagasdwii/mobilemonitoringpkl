@@ -13,9 +13,10 @@ object RetrofitClient {
 
 //    private const val BASE_URL = "https://monitoringsp.69dev.id/"
 //    private const val BASE_URL = "http://192.168.82.76:8000/"
-    private const val BASE_URL = "https://appeka.my.id/"
-//    private const val BASE_URL = "http://192.168.200.240:8000/"
-//    private const val BASE_URL = "http://192.168.201.34:8000/"
+//    private const val BASE_URL = "https://appeka.my.id/"
+//    private const val BASE_URL = "http://192.168.200.122:8000/"
+    private const val BASE_URL = "http://192.168.1.16:8000/"
+
 
     private val gson: Gson = GsonBuilder()
         .setLenient()

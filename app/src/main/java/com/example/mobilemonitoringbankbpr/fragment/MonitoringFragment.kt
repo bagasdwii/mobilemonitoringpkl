@@ -24,6 +24,7 @@ import com.example.mobilemonitoringbankbpr.adapter.MonitoringAdapter
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
 import com.example.mobilemonitoringbankbpr.databinding.FragmentMonitoringBinding
+import com.example.mobilemonitoringbankbpr.viewmodel.KunjunganViewModel
 import com.example.mobilemonitoringbankbpr.viewmodel.MonitoringViewModel
 import java.util.ArrayList
 
@@ -32,6 +33,8 @@ class MonitoringFragment : Fragment() {
     private var _binding: FragmentMonitoringBinding? = null
     private val binding get() = _binding!!
     private lateinit var monitoringViewModel: MonitoringViewModel
+    private lateinit var kunjunganViewModel: KunjunganViewModel
+
     private var loadingDialog: AlertDialog? = null
 
     override fun onCreateView(
@@ -44,10 +47,9 @@ class MonitoringFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         monitoringViewModel = ViewModelProvider(this).get(MonitoringViewModel::class.java)
-
-        val adapter = MonitoringAdapter(monitoringViewModel, requireContext(), viewLifecycleOwner, viewLifecycleOwner.lifecycleScope)
+        kunjunganViewModel = ViewModelProvider(this).get(KunjunganViewModel::class.java)
+        val adapter = MonitoringAdapter(monitoringViewModel, requireContext(), viewLifecycleOwner, viewLifecycleOwner.lifecycleScope, kunjunganViewModel)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
