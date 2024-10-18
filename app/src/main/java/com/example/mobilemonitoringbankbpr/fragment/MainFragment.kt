@@ -85,6 +85,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 //        if (jabatan != 5 && jabatan!=99) {
         if (jabatan != 5 ) {
             menu.findItem(R.id.nav_surat).isVisible = false
+            menu.findItem(R.id.nav_kunjungan).isVisible = false
         }
         if (jabatan !=99){
             menu.findItem(R.id.nav_user).isVisible=false
@@ -181,6 +182,14 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 setToolbarTitle(getString(R.string.judul_surat))
 
                 Log.d("MainFragment", "Navigasi ke Surat")
+            }
+            R.id.nav_kunjungan -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, KunjunganFragment()).commit()
+//                binding.toolbar.title = getString(R.string.judul_surat)
+                setToolbarTitle(getString(R.string.judul_kunjungan))
+
+                Log.d("MainFragment", "Navigasi ke Kunjungan")
             }
             R.id.nav_logout -> {
                 logout()

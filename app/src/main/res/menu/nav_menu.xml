@@ -27,6 +27,12 @@
             android:title="Surat Peringatan">
 
         </item>
+        <item
+            android:id="@+id/nav_kunjungan"
+            android:icon="@drawable/ic_check"
+            android:title="Kunjungan">
+
+        </item>
 
     </group>
     <item

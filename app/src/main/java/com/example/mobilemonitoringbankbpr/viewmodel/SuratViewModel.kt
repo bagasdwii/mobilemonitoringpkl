@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.repository.SuratRepository
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
+import com.example.mobilemonitoringbankbpr.data.SuratPeringatanPost
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ class SuratViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun submitSuratPeringatan(
-        suratPeringatan: SuratPeringatan,
+        suratPeringatan: SuratPeringatanPost,
         imageFile: File?,
 //        pdfFile: File?
     ) {

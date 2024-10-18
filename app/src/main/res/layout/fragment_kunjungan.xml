@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".fragment.KunjunganFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoCompleteNasabah"
+        android:hint="Nasabah Yang Tersedia"
+        android:padding="12dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:gravity="center_vertical"
+        android:drawableEnd="@drawable/ic_dropdown"
+        android:background="@android:drawable/editbox_background"/>
+    <EditText
+        android:id="@+id/etKeterangan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Masukkan Keterangan"
+        android:padding="12dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@android:drawable/editbox_background"
+        android:layout_marginBottom="8dp"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:maxLines="6"
+        android:scrollbars="vertical"
+        android:gravity="top|start"
+        />
+
+    <EditText
+        android:id="@+id/etTanggal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:visibility="gone"/>
+    <EditText
+        android:id="@+id/etKoordinat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_marginTop="8dp"
+        android:id="@+id/btnPilihGambar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/selector_button_login"
+        android:textColor="@color/color4"
+        android:text="kamera"
+        android:layout_marginBottom="8dp"/>
+
+    <ImageView
+        android:id="@+id/ivPreviewGambar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kirim"
+        android:padding="16dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/selector_button_login"
+        android:textColor="@color/color4"
+        android:layout_marginBottom="8dp"/>
+</LinearLayout>

@@ -20,6 +20,7 @@ import com.example.mobilemonitoringbankbpr.data.UpdateUserResponse
 import com.example.mobilemonitoringbankbpr.data.User
 import com.example.mobilemonitoringbankbpr.data.KantorKas
 import com.example.mobilemonitoringbankbpr.data.Kunjungan
+import com.example.mobilemonitoringbankbpr.data.ResponseKunjungan
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -54,12 +55,23 @@ interface ApiService {
         @Part("diserahkan") tanggal: RequestBody,
         @Part bukti_gambar: MultipartBody.Part?
     ): Call<ResponseSuratPeringatan>
+    @Multipart
+    @POST("api/kunjungan/tambah")
+    fun tambahKunjungan(
+        @Part("no_nasabah") no: RequestBody,
+        @Part("koordinat") koordinat: RequestBody,
+
+        @Part("keterangan") keterangan: RequestBody,
+        @Part("tanggal") tanggal: RequestBody,
+
+        @Part bukti_gambar: MultipartBody.Part?
+    ): Call<ResponseKunjungan>
 
     @GET("api/usermobile")
     fun getUser(): Call<User>
     @GET("api/checkconnection")
     fun checkConnection(): Call<ConnectionResponse>
-    @GET("kunjungan/{no_nasabah}")
+    @GET("api/kunjungan/get/{no_nasabah}")
     suspend fun getKunjunganList(@Path("no_nasabah") noNasabah: Long): List<Kunjungan>
 
 
@@ -92,6 +104,8 @@ interface ApiService {
 
     @GET("api/nasabah")
     suspend fun getNasabahList(): List<SuratPeringatanListNasabahDropdown>
+    @GET("api/kunjungan/list")
+    suspend fun getKunjunganListNasabah(): List<Kunjungan>
     @GET("api/usermobileadmin")
     suspend fun getUser(
         @Query("search") search: String,

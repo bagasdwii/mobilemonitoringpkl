@@ -1,11 +1,12 @@
 package com.example.mobilemonitoringbankbpr.data
 
 data class Kunjungan(
-    val tanggal:  String? = null,
-    val no_nasabah: Long? = null,
-    val user_id: Int? = null,
+    val id: Int?=null,
+    val nama: String?=null,
+    val tanggal:  String,
+    val no: Long? = null,
     val keterangan: String? = null,
-    val koordinat: Int? = null,
+    val koordinat: String? = null,
     val bukti_gambar: String? = null
 )
 

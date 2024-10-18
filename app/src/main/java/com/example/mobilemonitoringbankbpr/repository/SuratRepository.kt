@@ -6,6 +6,7 @@ import com.example.mobilemonitoringbankbpr.server.RetrofitClient
 import com.example.mobilemonitoringbankbpr.data.ResponseSuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatanListNasabahDropdown
+import com.example.mobilemonitoringbankbpr.data.SuratPeringatanPost
 import retrofit2.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -19,7 +20,7 @@ import java.io.File
 class SuratRepository(private val context: Context) {
 
     fun submitSuratPeringatan(
-        suratPeringatan: SuratPeringatan,
+        suratPeringatan: SuratPeringatanPost,
         imageFile: File?,
 //        pdfFile: File?,
         onSuccess: () -> Unit,

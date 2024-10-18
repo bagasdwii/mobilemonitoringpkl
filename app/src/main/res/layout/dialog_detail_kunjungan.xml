@@ -21,21 +21,7 @@
                 android:textSize="20sp"
                 android:paddingBottom="10dp"
                 android:fontFamily="@font/poppins_bold"/>
-            <TextView
-                android:id="@+id/noNasabah"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No"
-                android:textSize="18sp"
-                android:fontFamily="@font/poppins_semibold"
-                />
-            <TextView
-                android:id="@+id/tvnoNasabah"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="noNasabah"
-                android:paddingBottom="8dp"/>
+
             <TextView
                 android:id="@+id/tanggal"
                 android:layout_width="match_parent"
@@ -58,15 +44,17 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:fontFamily="@font/poppins_semibold"
-
-                android:text="Link Gmap:"/>
+                android:text="Link Gmap:"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/tvgmap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
-                android:text="pokok"
-                android:paddingBottom="8dp"/>
+                android:textColor="@android:color/holo_blue_light"
+                android:text="map"
+                android:paddingBottom="8dp"
+                android:visibility="gone"/>
 
 
             <TextView
@@ -85,20 +73,6 @@
                 android:paddingBottom="8dp"/>
 
 
-            <TextView
-                android:id="@+id/accountOfficer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:textSize="18sp"
-                android:text="Account Officer:"/>
-            <TextView
-                android:id="@+id/tvaccountOfficer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="accountOfficer"
-                android:paddingBottom="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -5,10 +5,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.ProgressDialog.show
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -17,76 +17,87 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
-import android.provider.OpenableColumns
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
-import androidx.lifecycle.viewModelScope
 import com.example.mobilemonitoringbankbpr.FileUtilsNasabah
 import com.example.mobilemonitoringbankbpr.R
+import com.example.mobilemonitoringbankbpr.data.Kunjungan
 import com.example.mobilemonitoringbankbpr.data.SuratPeringatan
-import com.example.mobilemonitoringbankbpr.data.SuratPeringatanPost
 import com.example.mobilemonitoringbankbpr.databinding.DialogSeacrhSpinnerBinding
+import com.example.mobilemonitoringbankbpr.databinding.FragmentKunjunganBinding
 import com.example.mobilemonitoringbankbpr.databinding.FragmentSuratBinding
+import com.example.mobilemonitoringbankbpr.viewmodel.KunjunganViewModel
 import com.example.mobilemonitoringbankbpr.viewmodel.SuratViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONException
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-
-class SuratFragment : Fragment() {
-    private var _binding: FragmentSuratBinding? = null
+class KunjunganFragment : Fragment() {
+    private var _binding: FragmentKunjunganBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nasabahViewModel: SuratViewModel
+    private lateinit var nasabahViewModel: KunjunganViewModel
     private var loadingDialog: AlertDialog? = null
 
     private val calendar = Calendar.getInstance()
     private var selectedImageUri: Uri? = null
 //    private var selectedPdfUri: Uri? = null
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+
+    private var currentLatitude: Double? = null
+    private var currentLongitude: Double? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSuratBinding.inflate(inflater, container, false)
+        _binding = FragmentKunjunganBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        nasabahViewModel = ViewModelProvider(this).get(SuratViewModel::class.java)
+        nasabahViewModel = ViewModelProvider(this).get(KunjunganViewModel::class.java)
 
         setupNasabahDropdown()
         setupDatePicker()
         setupImagePicker()
-//        setupPdfPicker()
-//        setupTingkatSPSpinner()
         observeViewModel()
         binding.btnSubmit.setOnClickListener {
             showConfirmationDialog()
@@ -99,7 +110,7 @@ class SuratFragment : Fragment() {
             } else {
                 hideLoadingDialog()
             }
-            Log.d("SuratFragment", "isSubmitting: $isSubmitting")
+            Log.d("KunjunganFragment", "isSubmitting: $isSubmitting")
         })
 
 
@@ -111,11 +122,162 @@ class SuratFragment : Fragment() {
             } else {
                 hideLoadingDialog()
             }
-            Log.d("SuratFragment", "isLoading: $isLoading")
+            Log.d("KunjunganFragment", "isLoading: $isLoading")
         })
         updateDateInView()
 
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences("kunjungan_prefs", Context.MODE_PRIVATE)
+        // Inisialisasi FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        // Membuat LocationRequest untuk mengambil update secara real-time
+        locationRequest = LocationRequest.create().apply {
+            interval = 10000 // setiap 10 detik
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        // LocationCallback untuk menangani lokasi baru
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for (location in locationResult.locations) {
+                    updateCurrentLocation(location)
+                }
+            }
+        }
+    }
+
+    // Registrasi callback untuk meminta izin lokasi
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                // Izin diberikan, mulai update lokasi
+                startLocationUpdates()
+            } else {
+                // Izin ditolak, tampilkan pesan kesalahan
+                showPermissionDeniedDialog()
+            }
+        }
+    private fun showPermissionDeniedDialog() {
+        val alertDialog = AlertDialog.Builder(requireContext()).create()
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_alert_fail, null)
+
+        val title = dialogView.findViewById<TextView>(R.id.alertTitle)
+        val alertMessage = dialogView.findViewById<TextView>(R.id.alertMessage)
+
+        title.text = "Izin Diperlukan"
+        alertMessage.text = "Kunjungan memerlukan izin lokasi dan GPS. Aktifkan izin lokasi untuk menggunakan fitur ini."
+
+        alertDialog.setView(dialogView)
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
+            // Masuk ke pengaturan aplikasi untuk mengaktifkan izin
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
+                data = uri
+            }
+            startActivity(intent)
+            sharedPreferences.edit().remove("dialog_shown").apply()
+            requireActivity().finish()
+            dialog.dismiss()
+        }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Batal") { dialog, _ ->
+            dialog.dismiss()
+            // Tutup aplikasi jika user tidak ingin memberikan izin
+            sharedPreferences.edit().remove("dialog_shown").apply()
+            requireActivity().finish()
+        }
+
+        alertDialog.show()
+
+        // Simpan status bahwa dialog sudah pernah ditampilkan
+        sharedPreferences.edit().putBoolean("dialog_shown", true).apply()
+    }
+    override fun onResume() {
+        super.onResume()
+
+        // Cek apakah izin telah diberikan
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Jika izin diberikan, mulai update lokasi
+            startLocationUpdates()
+        } else {
+            // Cek apakah dialog sudah pernah ditampilkan
+            if (!sharedPreferences.getBoolean("dialog_shown", false)) {
+                // Jika belum, tampilkan dialog dan simpan statusnya
+                showPermissionDeniedDialog()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // Hentikan update lokasi saat fragment tidak aktif
+        stopLocationUpdates()
+    }
+
+    private fun requestLocationPermission() {
+        // Minta izin jika belum diberikan
+        requestPermissionLauncher.launch(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        )
+    }
+
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Jika izin tidak tersedia, minta izin lagi
+            requestLocationPermission()
+            return
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    // Fungsi untuk update lokasi yang diterima
+    private fun updateCurrentLocation(location: Location) {
+        currentLatitude = location.latitude
+        currentLongitude = location.longitude
+        Log.d("KunjunganFragment", "Lokasi diperbarui: $currentLatitude, $currentLongitude")
+    }
+
+    // Fungsi untuk mendapatkan lokasi terbaru atau menampilkan pesan error
+    private fun getCurrentLocation(onLocationReceived: (Double, Double) -> Unit) {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestLocationPermission()
+            return
+        }
+
+        // Cek apakah lokasi sudah diterima dari LocationCallback
+        if (currentLatitude != null && currentLongitude != null) {
+            onLocationReceived(currentLatitude!!, currentLongitude!!)
+        } else {
+            Toast.makeText(requireContext(), "Tidak dapat menemukan lokasi, pastikan GPS aktif.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showConfirmationDialog() {
         val alertDialog = AlertDialog.Builder(requireContext()).create()
         val inflater = layoutInflater
@@ -128,8 +290,8 @@ class SuratFragment : Fragment() {
         alertMessage.text = "Apakah Anda yakin ingin mengirimkan data nasabah ini ?"
 
         alertDialog.setView(dialogView)
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "iYA") { dialog, _ ->
-            submitSuratPeringatan()
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "IYA") { dialog, _ ->
+            submitKunjungan()
             dialog.dismiss()
         }
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"TIDAK"){ dialog, _ ->
@@ -142,42 +304,22 @@ class SuratFragment : Fragment() {
         nasabahViewModel.submissionError.observe(viewLifecycleOwner, { errorMessage ->
             errorMessage?.let {
                 alertFail(it)
-                Log.w("SuratFragment", "Form submission failed: $it")
+                Log.w("KunjunganFragment", "Form submission failed: $it")
             }
         })
 
         nasabahViewModel.isSubmissionSuccessful.observe(viewLifecycleOwner, { isSuccessful ->
             if (isSuccessful) {
                 resetForm()
-                alertSuccess("Surat peringatan berhasil dikirim.")
+                alertSuccess("Kunjungan berhasil dikirim.")
             }
         })
     }
-//    private fun setupTingkatSPSpinner() {
-//        val adapter = ArrayAdapter.createFromResource(
-//            requireContext(),
-//            R.array.tingkat_sp_array,
-//            R.layout.spinner_item_surat_tingkatsp // gunakan layout untuk item spinner
-//        ).apply {
-//            setDropDownViewResource(R.layout.spinner_dropdown_item__surat_tingkatsp) // gunakan layout untuk dropdown item
-//        }
-//        binding.spinnerTingkatSP.adapter = adapter
-//    }
-
-//    private fun setupNasabahDropdown() {
-//        nasabahViewModel.nasabahList.observe(viewLifecycleOwner, { nasabahList ->
-//            val arrayList = ArrayList(nasabahList.map { it.nama })
-//            Log.d("SuratFragment", "Nasabah list updated: $nasabahList")
-//            binding.autoCompleteNasabah.setOnClickListener {
-//                showDialog(arrayList)
-//            }
-//        })
-//    }
     private fun setupNasabahDropdown() {
         nasabahViewModel.nasabahList.observe(viewLifecycleOwner, { nasabahList ->
             // Gabungkan nama dan tingkat untuk setiap nasabah
-            val arrayList = ArrayList(nasabahList.map { "${it.nama} - ${it.tingkat} - ${it.kategori}"  })
-            Log.d("SuratFragment", "Nasabah list updated: $nasabahList")
+            val arrayList = ArrayList(nasabahList.map { "${it.nama}" })
+            Log.d("KunjunganFragment", "Nasabah list updated: $nasabahList")
 
             binding.autoCompleteNasabah.setOnClickListener {
                 showDialog(arrayList)
@@ -228,10 +370,10 @@ class SuratFragment : Fragment() {
             calendar.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND))
 
             updateDateInView()
-            Log.d("SuratFragment", "Date selected: ${calendar.time}")
+            Log.d("KunjunganFragment", "Date selected: ${calendar.time}")
         }
 
-        binding.etDiserahkan.setOnClickListener {
+        binding.etTanggal.setOnClickListener {
             DatePickerDialog(
                 requireContext(),
                 dateSetListener,
@@ -252,22 +394,12 @@ class SuratFragment : Fragment() {
         calendar.set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND))
 
         val currentTime = calendar.time
-        Log.d("SuratFragment", "Current calendar time: $currentTime")
+        Log.d("KunjunganFragment", "Current calendar time: $currentTime")
         val formattedDate = sdf.format(currentTime)
-        binding.etDiserahkan.setText(formattedDate)
-        Log.d("SuratFragment", "Date updated in view: $formattedDate")
+        binding.etTanggal.setText(formattedDate)
+        Log.d("KunjunganFragment", "Date updated in view: $formattedDate")
     }
 
-
-
-//    private fun setupPdfPicker() {
-//        binding.btnPilihPdf.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_GET_CONTENT)
-//            intent.type = "application/pdf"
-//            startActivityForResult(intent, PICK_PDF_REQUEST)
-//            Log.d("SuratFragment", "PDF picker intent launched")
-//        }
-//    }
 
     private fun setupImagePicker() {
         binding.btnPilihGambar.setOnClickListener {
@@ -282,7 +414,7 @@ class SuratFragment : Fragment() {
             } else {
                 openCamera()
             }
-            Log.d("SuratFragment", "Image picker intent launched")
+            Log.d("KunjunganFragment", "Image picker intent launched")
         }
     }
 
@@ -297,7 +429,7 @@ class SuratFragment : Fragment() {
                 file
             )
         }
-        Log.d("SuratFragment", "Image output URI: $outputFileUri")
+        Log.d("KunjunganFragment", "Image output URI: $outputFileUri")
         return outputFileUri
     }
 
@@ -307,69 +439,40 @@ class SuratFragment : Fragment() {
         if (intent.resolveActivity(requireActivity().packageManager) != null) {
             try {
                 startActivityForResult(intent, CAMERA_REQUEST)
-                Log.d("SuratFragment", "Camera intent launched")
+                Log.d("KunjunganFragment", "Camera intent launched")
             } catch (e: ActivityNotFoundException) {
-                Log.e("SuratFragment", "Camera intent could not be launched", e)
+                Log.e("KunjunganFragment", "Camera intent could not be launched", e)
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("SuratFragment", "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
+        Log.d("KunjunganFragment", "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 CAMERA_REQUEST -> {
                     val photoUri = getCaptureImageOutputUri()
-                    Log.d("SuratFragment", "Photo URI: $photoUri")
+                    Log.d("KunjunganFragment", "Photo URI: $photoUri")
                     try {
                         val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, photoUri)
-                        Log.d("SuratFragment", "Bitmap captured: $bitmap")
+                        Log.d("KunjunganFragment", "Bitmap captured: $bitmap")
                         bitmap?.let {
                             val watermarkedBitmap = addWatermark(it)
                             val file = saveBitmapToFile(watermarkedBitmap)
                             selectedImageUri = Uri.fromFile(file)
                             binding.ivPreviewGambar.setImageBitmap(watermarkedBitmap)
                             binding.ivPreviewGambar.visibility = View.VISIBLE
-                            Log.d("SuratFragment", "Image captured and saved: $selectedImageUri")
+                            Log.d("KunjunganFragment", "Image captured and saved: $selectedImageUri")
                         }
                     } catch (e: IOException) {
-                        Log.e("SuratFragment", "Error processing captured image", e)
+                        Log.e("KunjunganFragment", "Error processing captured image", e)
                     }
                 }
-
-//                PICK_PDF_REQUEST -> {
-//                    selectedPdfUri = data?.data
-//                    Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
-//                    val fileName = selectedPdfUri?.let { getFileNameFromUri(it) }
-//                    binding.tvPdfName.text = fileName
-//                    binding.tvPdfName.visibility = View.VISIBLE
-//                }
             }
         }
     }
-//    private fun getFileNameFromUri(uri: Uri): String? {
-//        var fileName: String? = null
-//        if (uri.scheme == "content") {
-//            val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-//            cursor.use {
-//                if (it != null && it.moveToFirst()) {
-//                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-//                    if (index >= 0) {
-//                        fileName = it.getString(index)
-//                    }
-//                }
-//            }
-//        }
-//        if (fileName == null) {
-//            fileName = uri.path
-//            val cut = fileName?.lastIndexOf('/')
-//            if (cut != null && cut != -1) {
-//                fileName = fileName?.substring(cut + 1)
-//            }
-//        }
-//        return fileName
-//    }
+
 
     private fun saveBitmapToFile(bitmap: Bitmap): File? {
         val fileName = "captured_image_${System.currentTimeMillis()}.jpg"
@@ -379,66 +482,71 @@ class SuratFragment : Fragment() {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
             out.flush()
             out.close()
-            Log.d("SuratFragment", "Bitmap saved to file: $file")
+            Log.d("KunjunganFragment", "Bitmap saved to file: $file")
             file
         } catch (e: IOException) {
-            Log.e("SuratFragment", "Error saving bitmap to file", e)
+            Log.e("KunjunganFragment", "Error saving bitmap to file", e)
             null
         }
     }
-
-    private fun submitSuratPeringatan() {
-//        val namaNasabahFull = binding.autoCompleteNasabah.text.toString()
+//    private fun getCurrentLocation(onLocationReceived: (Double, Double) -> Unit) {
+//        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+//            return
+//        }
 //
-//        // Misal formatnya adalah "Nama - Tingkat - Kategori", kita ambil bagian nama saja
-//        val namaNasabah = namaNasabahFull.split(" - ").firstOrNull()
-//        val kategoriSP = binding.spinnerKategoriSP.selectedItem?.toString()
-//        val tingkatSP = binding.spinnerTingkatSP.selectedItem?.toString()?.toIntOrNull()
-        val namaNasabahFull = binding.autoCompleteNasabah.text.toString()
+//        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+//            if (location != null) {
+//                val latitude = location.latitude
+//                val longitude = location.longitude
+//                onLocationReceived(latitude, longitude)
+//            } else {
+//                alertFail("Tidak dapat menemukan lokasi, pastikan GPS aktif.")
+//            }
+//        }.addOnFailureListener {
+//            alertFail("Gagal mengambil lokasi: ${it.message}")
+//        }
+//    }
 
-        // Misal formatnya adalah "Nama - Tingkat - Kategori", kita pecah string berdasarkan " - "
-        val parts = namaNasabahFull.split(" - ")
+    private fun submitKunjungan() {
+        // Cek dan ambil koordinat sebelum melanjutkan
+        getCurrentLocation { latitude, longitude ->
+            val namaNasabah = binding.autoCompleteNasabah.text.toString()
+            val keterangan = binding.etKeterangan.text.toString()
+            val tanggal = binding.etTanggal.text.toString()
+            val koordinat = "$latitude, $longitude"
 
-        // Ambil bagian nama, tingkat, dan kategori
-        val namaNasabah = parts.getOrNull(0) // Bagian nama
-        val tingkatSP = parts.getOrNull(1)?.toIntOrNull() // Bagian tingkat, diubah ke Int
-        val kategoriSP = parts.getOrNull(2) // Bagian kategori
-        val diserahkan = binding.etDiserahkan.text.toString()
+            if (namaNasabah.isNullOrEmpty() || keterangan.isEmpty() || tanggal.isEmpty() || selectedImageUri == null) {
+                alertFail("Gagal mengirim pastikan semua field diisi")
+                Log.w("KunjunganFragment", "Form submission failed: empty fields")
+                return@getCurrentLocation
+            }
 
-        if (namaNasabah.isNullOrEmpty() || kategoriSP == null || tingkatSP == null || diserahkan.isEmpty() || selectedImageUri==null){
-//            Toast.makeText(requireContext(), "Semua field harus diisi", Toast.LENGTH_SHORT).show()
-            alertFail("Nasabah,Kategori SP, Tingkat SP dan Foto wajib diisi.")
-            Log.w("SuratFragment", "Form submission failed: empty fields")
-            return
+            val nasabah = nasabahViewModel.nasabahList.value?.find { it.nama == namaNasabah }
+
+            if (nasabah == null) {
+                Toast.makeText(requireContext(), "Nasabah tidak valid", Toast.LENGTH_SHORT).show()
+                Log.w("KunjunganFragment", "Form submission failed: invalid nasabah")
+                return@getCurrentLocation
+            }
+
+            val kunjungan = Kunjungan(
+                no = nasabah.no,
+                keterangan = keterangan,
+                tanggal = tanggal,
+                koordinat = koordinat,
+                bukti_gambar = selectedImageUri.toString(),
+            )
+
+            val imageFile = selectedImageUri?.let { getFileFromUri(it) }
+            nasabahViewModel.submitKunjungan(kunjungan, imageFile)
+            Log.d("KunjunganFragment", "Kunjungan submitted: $kunjungan")
+            Log.d("KunjunganFragment", "Gambar URI: $selectedImageUri")
+            Log.d("KunjunganFragment", "Gambar File Path: ${imageFile?.absolutePath}")
         }
-
-        val nasabah = nasabahViewModel.nasabahList.value?.find { it.nama == namaNasabah  }
-
-        if (nasabah == null) {
-            Toast.makeText(requireContext(), "Nasabah tidak valid", Toast.LENGTH_SHORT).show()
-            Log.w("SuratFragment", "Form submission failed: invalid nasabah")
-            return
-        }
-
-        val suratPeringatan = SuratPeringatanPost(
-            no = nasabah.no,
-            kategori = kategoriSP,
-            tingkat = tingkatSP,
-            diserahkan = diserahkan,
-            bukti_gambar = selectedImageUri.toString(),
-//            scan_pdf = selectedPdfUri.toString(),
-            id_account_officer = nasabah.id_account_officer
-        )
-
-        val imageFile = selectedImageUri?.let { getFileFromUri(it) }
-//        val pdfFile = selectedPdfUri?.let { getFileFromUri(it) }
-//        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile, pdfFile)
-        nasabahViewModel.submitSuratPeringatan(suratPeringatan, imageFile)
-        Log.d("SuratFragment", "Surat peringatan submitted: $suratPeringatan")
-        Log.d("SuratFragment", "Gambar URI: $selectedImageUri")
-        Log.d("SuratFragment", "Gambar File Path: ${imageFile?.absolutePath}")
-//        Log.d("SuratFragment", "PDF URI: $selectedPdfUri")
     }
+
     private fun alertSuccess(message: String) {
         val alertDialog = AlertDialog.Builder(requireContext()).create()
         val inflater = layoutInflater
@@ -519,13 +627,13 @@ class SuratFragment : Fragment() {
 
     private fun resetForm() {
         binding.autoCompleteNasabah.setText("")
-//        binding.spinnerTingkatSP.setSelection(0)
+        binding.etKeterangan.setText("")
+        binding.etKoordinat.setText("")
         updateDateInView()
         binding.ivPreviewGambar.visibility = View.GONE
-//        binding.tvPdfName.visibility = View.GONE
         selectedImageUri = null
 //        selectedPdfUri = null
-        Log.d("SuratFragment", "Form reset completed")
+        Log.d("KunjunganFragment", "Form reset completed")
     }
 
     override fun onDestroyView() {
@@ -550,14 +658,12 @@ class SuratFragment : Fragment() {
 
     companion object {
         private const val CAMERA_REQUEST = 1001
-//        private const val PICK_PDF_REQUEST = 1002
+        //        private const val PICK_PDF_REQUEST = 1002
         private const val REQUEST_CAMERA_PERMISSION = 1003
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        // Hapus status SharedPreferences ketika aplikasi ditutup
+        sharedPreferences.edit().remove("dialog_shown").apply()
+    }
 }
-
-
-
-
-
-
-

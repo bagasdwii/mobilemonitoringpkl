@@ -68,4 +68,6 @@ dependencies {
     implementation ("com.github.bumptech.glide:okhttp3-integration:4.12.0")
 
     implementation ("androidx.paging:paging-runtime:3.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
 }

@@ -5,7 +5,6 @@ import java.text.NumberFormat
 import java.util.Locale
 import android.app.DownloadManager
 import android.app.Activity
-
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -16,6 +15,8 @@ import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.os.ParcelFileDescriptor
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,6 +35,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,6 +72,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.ArrayList
 
 class MonitoringAdapter(
@@ -77,7 +80,10 @@ class MonitoringAdapter(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val coroutineScope: CoroutineScope,
-    private val viewModelKunjungan: KunjunganViewModel
+    private val viewModelKunjungan: KunjunganViewModel,
+    private var loadingDialog: android.app.AlertDialog? = null
+
+
 
 ) : ListAdapter<Nasabah, MonitoringAdapter.NasabahViewHolder>(NasabahDiffCallback()) {
 
@@ -102,14 +108,22 @@ class MonitoringAdapter(
         var isSS02Shown = false
         var isSPE03Shown = false
         fun bind(nasabah: Nasabah) {
-            isSS02Shown = false
-            isSPE03Shown = false
-            // Set nama dan cabang nasabah
+            // Reset visibility semua tombol di awal
+            resetButtonVisibility()
 
+            // Set nama dan cabang nasabah
             binding.NamaNasabah.text = nasabah.nama
             binding.CabangNasabah.text = nasabah.cabang
             binding.detailNasabah.setOnClickListener {
+                // Tampilkan dialog detail nasabah terlebih dahulu
                 showDetailNasabahDialog(nasabah)
+//                showLoadingDialog()
+
+                // Gunakan Handler untuk memberikan jeda sebelum menampilkan loading dialog
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    // Setelah delay, tampilkan dialog loading
+//                    showLoadingDialog()
+//                }, 500) // Delay 500ms (0.5 detik), bisa disesuaikan sesuai kebutuhan
             }
 
             // Handling Peringatan
@@ -123,23 +137,37 @@ class MonitoringAdapter(
             val highestSomasiTingkat = somasiList.maxByOrNull { it.tingkat }?.tingkat ?: 0
             val highestPendampinganTingkat = pendampinganList.maxByOrNull { it.tingkat }?.tingkat ?: 0
 
-            // Log data untuk debugging
-            Log.d("MonitoringAdapter", "Peringatan: $peringatanList, Somasi: $somasiList, Pendampingan: $pendampinganList")
-
-
             // Tampilkan tombol sesuai kategori dan tingkat tertinggi
-            // 1. Untuk kategori Peringatan
             showPeringatanButtons(highestPeringatanTingkat)
-
-            // 2. Untuk kategori Somasi
             showSomasiButtons(highestSomasiTingkat)
-
-            // 3. Untuk kategori Pendampingan
             showPendampinganButtons(highestPendampinganTingkat)
 
             setupPeringatanButtonListeners(peringatanList)
             setupSomasiButtonListeners(somasiList)
             setupPendampinganButtonListeners(pendampinganList)
+        }
+
+        // Fungsi untuk reset visibility tombol
+        private fun resetButtonVisibility() {
+            // Reset semua tombol ke GONE
+            binding.btnSP1.visibility = View.GONE
+            binding.btnSP2.visibility = View.GONE
+            binding.btnSP3.visibility = View.GONE
+            binding.btnSP01.visibility = View.GONE
+
+            binding.btnSS1.visibility = View.GONE
+            binding.btnSS2.visibility = View.GONE
+            binding.btnSS3.visibility = View.GONE
+            binding.btnSS02.visibility = View.GONE
+
+            binding.btnSPE1.visibility = View.GONE
+            binding.btnSPE2.visibility = View.GONE
+            binding.btnSPE3.visibility = View.GONE
+            binding.btnSPE03.visibility = View.GONE
+
+            // Reset flag isSS02Shown dan isSPE03Shown
+            isSS02Shown = false
+            isSPE03Shown = false
         }
         // Fungsi untuk menampilkan tombol berdasarkan tingkat peringatan tertinggi
         private fun showPeringatanButtons(highestTingkat: Int) {
@@ -272,34 +300,113 @@ class MonitoringAdapter(
             }
         }
         fun showDetailKunjunganDialog(kunjungan: Kunjungan) {
+            val context = itemView.context
+            val sharedPreferences = context.getSharedPreferences("STORAGE_LOGIN_API", Context.MODE_PRIVATE)
+            val jabatanId = sharedPreferences.getInt("jabatan", -1)
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_kunjungan, null)
-
-            val tanggalTextView = dialogView.findViewById<TextView>(R.id.tvtanggal)
-            val noNasabahTextView = dialogView.findViewById<TextView>(R.id.tvnoNasabah)
-            val userIdTextView = dialogView.findViewById<TextView>(R.id.tvaccountOfficer)
+//            dialogView.findViewById<TextView>(R.id.tvtanggal)
+//            val tanggalTextView = dialogView.findViewById<TextView>(R.id.tvtanggal)
             val keteranganTextView = dialogView.findViewById<TextView>(R.id.tvketerangan)
+            val judulMapTextView = dialogView.findViewById<TextView>(R.id.linkGmap)
             val gmapLinkTextView = dialogView.findViewById<TextView>(R.id.tvgmap)
             val buktiGambarImageView = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
 
             // Set the values
-            tanggalTextView.text = kunjungan.tanggal
-            noNasabahTextView.text = kunjungan.no_nasabah.toString()
-            userIdTextView.text = kunjungan.user_id.toString()
+            val tanggalKujungan = kunjungan.tanggal
+            if (tanggalKujungan != null) {
+                dialogView.findViewById<TextView>(R.id.tvtanggal).text =
+                    formatTanggal(tanggalKujungan)
+            }
             keteranganTextView.text = kunjungan.keterangan
-            gmapLinkTextView.text = kunjungan.bukti_gambar
+            gmapLinkTextView.text = kunjungan.koordinat.toString()
+            kunjungan.bukti_gambar?.let { bukti_gambar ->
+                loadGambarKunjungan(bukti_gambar.replace("kunjungan/", ""), buktiGambarImageView)
+            }
+            if (jabatanId == 99 || jabatanId == 1 || jabatanId == 2 || jabatanId == 3 || jabatanId == 6) {
+                judulMapTextView.visibility = View.VISIBLE
+                gmapLinkTextView.visibility = View.VISIBLE
+            }
 
-            // Load image using Glide
-            Glide.with(context)
-                .load(kunjungan.bukti_gambar)
-                .into(buktiGambarImageView)
+            // Tambahkan listener untuk membuka Google Maps
+            gmapLinkTextView.setOnClickListener {
+                // Memisahkan latitude dan longitude
+                val coordinates = kunjungan.koordinat.toString()
+                val latLng = coordinates.split(",") // Memisahkan latitude dan longitude
 
+                if (latLng.size == 2) { // Pastikan ada dua elemen setelah pemisahan
+                    val latitude = latLng[0].trim() // Mengambil latitude
+                    val longitude = latLng[1].trim() // Mengambil longitude
+
+                    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    mapIntent.setPackage("com.google.android.apps.maps")
+
+                    try {
+                        context.startActivity(mapIntent)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(context, "Google Maps tidak ditemukan di perangkat ini", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Koordinat tidak valid", Toast.LENGTH_SHORT).show()
+                }
+            }
             val dialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
 
             dialog.show()
+            dialogView.findViewById<Button>(R.id.closeButton).setOnClickListener {
+                dialog.dismiss()
+            }
         }
+
+//        private fun showDetailNasabahDialog(nasabah: Nasabah) {
+//            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_nasabah, null)
+//            val recyclerView = dialogView.findViewById<RecyclerView>(R.id.recyclerView)
+//
+//            // Set RecyclerView Adapter
+//            val kunjunganAdapter = KunjunganAdapter(emptyList()) { kunjungan ->
+//                showDetailKunjunganDialog(kunjungan)
+//            }
+//            recyclerView.adapter = kunjunganAdapter
+//            recyclerView.layoutManager = LinearLayoutManager(context)
+//
+//            // Observe data
+//            kunjunganViewModel.kunjunganList.observe(lifecycleOwner, { kunjunganList ->
+//                kunjunganAdapter.updateData(kunjunganList)
+//
+//                // Hide loading dialog after data has been updated
+//                dismissLoadingDialog()
+//            })
+//
+//            // Fetch kunjungan data
+//            kunjunganViewModel.fetchKunjungan(nasabah.no)
+//
+//            val alertDialog = AlertDialog.Builder(context)
+//                .setView(dialogView)
+//                .setCancelable(true)
+//                .create()
+//
+//            // Isi data nasabah di dialog
+//            dialogView.findViewById<TextView>(R.id.tvnoNasabah).text = nasabah.no.toString()
+//            dialogView.findViewById<TextView>(R.id.tvnasabahName).text = nasabah.nama
+//            dialogView.findViewById<TextView>(R.id.tvpokok).text = numberFormat.format(nasabah.pokok.toDouble())
+//            dialogView.findViewById<TextView>(R.id.tvbunga).text = numberFormat.format(nasabah.bunga.toDouble())
+//            dialogView.findViewById<TextView>(R.id.tvdenda).text = numberFormat.format(nasabah.denda.toDouble())
+//            dialogView.findViewById<TextView>(R.id.tvtotal).text = numberFormat.format(nasabah.total.toDouble())
+//            dialogView.findViewById<TextView>(R.id.tvketerangan).text = nasabah.keterangan
+//            dialogView.findViewById<TextView>(R.id.tvtanggal_jtp).text = nasabah.tanggal_jtp
+//            dialogView.findViewById<TextView>(R.id.tvaccountOfficer).text = nasabah.accountOfficer
+//
+//            dialogView.findViewById<Button>(R.id.closeButton).setOnClickListener {
+//                alertDialog.dismiss()
+//            }
+//
+//            alertDialog.show()
+//        }
+
+
 
         private fun showDetailNasabahDialog(nasabah: Nasabah) {
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_nasabah, null)
@@ -313,8 +420,11 @@ class MonitoringAdapter(
             recyclerView.layoutManager = LinearLayoutManager(context)
 
             // Observe data
-            viewModelKunjungan.kunjunganList.observe(lifecycleOwner, { kunjunganList ->
+            kunjunganViewModel.kunjunganList.observe(lifecycleOwner, { kunjunganList ->
                 kunjunganAdapter.updateData(kunjunganList)
+
+                // Hide loading dialog after data has been updated
+                dismissLoadingDialog()
             })
 
             viewModelKunjungan.fetchKunjungan(nasabah.no) // Ambil data kunjungan menggunakan no nasabah
@@ -334,7 +444,12 @@ class MonitoringAdapter(
             dialogView.findViewById<TextView>(R.id.tvtotal).text =
                 numberFormat.format(nasabah.total.toDouble())
             dialogView.findViewById<TextView>(R.id.tvketerangan).text = nasabah.keterangan
-            dialogView.findViewById<TextView>(R.id.tvtanggal_jtp).text = nasabah.tanggal_jtp
+//            dialogView.findViewById<TextView>(R.id.tvtanggal_jtp).text = nasabah.tanggal_jtp
+            val tanggalJTP = nasabah.tanggal_jtp
+            if (tanggalJTP != null) {
+                dialogView.findViewById<TextView>(R.id.tvtanggal_jtp).text =
+                    formatTanggal(tanggalJTP)
+            }
             dialogView.findViewById<TextView>(R.id.tvaccountOfficer).text = nasabah.accountOfficer
 
             dialogView.findViewById<Button>(R.id.closeButton).setOnClickListener {
@@ -380,28 +495,61 @@ class MonitoringAdapter(
             // Aksi saat item di klik
             dialogBinding.listView.setOnItemClickListener { _, _, position, _ ->
                 val selectedSurat = peringatanList[position]
-                showDetailNasabahDialog(selectedSurat)
+                showDetailSuratDialog(selectedSurat)
                 dialog.dismiss()
             }
         }
+        fun formatTanggal(tanggalServer: String): String {
+            // Format tanggal dari server (contoh: "2024-10-17 14:59:00")
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            // Format yang diinginkan (contoh: "17-10-2024 14:59:00")
+            val outputFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
 
-        private fun showDetailNasabahDialog(suratPeringatan: SuratPeringatan) {
+            return try {
+                // Mengonversi tanggal dari format server ke format yang diinginkan
+                val date = inputFormat.parse(tanggalServer)
+                date?.let { outputFormat.format(it) } ?: "Tanggal Tidak Valid"
+            } catch (e: Exception) {
+                // Log kesalahan jika terjadi masalah parsing
+                Log.e("FormatTanggal", "Error parsing tanggal: ${e.message}")
+                "Tanggal Tidak Valid"
+            }
+        }
+        private fun showDetailSuratDialog(suratPeringatan: SuratPeringatan) {
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_surat_peringatan, null)
             val alertDialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create()
-            dialogView.findViewById<TextView>(R.id.tvKategori).text =
-                "Kategori Surat : ${suratPeringatan.kategori}"
-            dialogView.findViewById<TextView>(R.id.tvTingkat).text =
-                "Tingkat Ke : ${suratPeringatan.tingkat}"
-            dialogView.findViewById<TextView>(R.id.tvDibuat).text =
-                "Tanggal: ${suratPeringatan.dibuat}"
-            dialogView.findViewById<TextView>(R.id.tvKembali).text =
-                "Tanggal: ${suratPeringatan.kembali}"
-            dialogView.findViewById<TextView>(R.id.tvDiserahkan).text =
-                "Tanggal: ${suratPeringatan.diserahkan}"
 
+            dialogView.findViewById<TextView>(R.id.tvKategori).text =
+                "Kategori Surat : ${suratPeringatan.kategori} ${suratPeringatan.tingkat}"
+//            dialogView.findViewById<TextView>(R.id.tvDibuat).text =
+//                "Tanggal: ${suratPeringatan.dibuat}"
+//            dialogView.findViewById<TextView>(R.id.tvKembali).text =
+//                "Tanggal: ${suratPeringatan.kembali}"
+//            dialogView.findViewById<TextView>(R.id.tvDiserahkan).text =
+//                "Tanggal: ${suratPeringatan.diserahkan}"
+            // Simpan data tanggal asli dari server
+            val tanggalDibuatAsli = suratPeringatan.dibuat
+            val tanggalKembaliAsli = suratPeringatan.kembali
+            val tanggalDiserahkanAsli = suratPeringatan.diserahkan
+
+            // Cek dan format hanya tanggal yang tidak nul
+            if (tanggalDibuatAsli != null) {
+                dialogView.findViewById<TextView>(R.id.tvDibuat).text =
+                    "Tanggal: ${formatTanggal(tanggalDibuatAsli)}"
+            }
+
+            if (tanggalKembaliAsli != null) {
+                dialogView.findViewById<TextView>(R.id.tvKembali).text =
+                    "Tanggal: ${formatTanggal(tanggalKembaliAsli)}"
+            }
+
+            if (tanggalDiserahkanAsli != null) {
+                dialogView.findViewById<TextView>(R.id.tvDiserahkan).text =
+                    "Tanggal: ${formatTanggal(tanggalDiserahkanAsli)}"
+            }
 
             val ivBuktiGambar = dialogView.findViewById<ImageView>(R.id.ivBuktiGambar)
             val tvPdfFileName = dialogView.findViewById<TextView>(R.id.tvPdfFileName)
@@ -422,6 +570,42 @@ class MonitoringAdapter(
             alertDialog.show()
         }
 
+        private fun loadGambarKunjungan(filename: String, imageView: ImageView) {
+            val imageUrl = "${RetrofitClient.getBaseUrl()}api/kunjungan/gambar/$filename"
+            Log.d("Kunjungan", "Memuat gambar dari URL: $imageUrl")
+
+            val localStorage = LocalStorage(context)
+            val token = localStorage.token
+
+            val glideUrl = GlideUrl(imageUrl, LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer $token")
+                .build())
+
+            Glide.with(imageView.context)
+                .load(glideUrl)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.e("Kunjungan", "Gagal memuat gambar", e)
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                })
+                .into(imageView)
+        }
         private fun loadGambar(filename: String, imageView: ImageView) {
             val imageUrl = "${RetrofitClient.getBaseUrl()}api/surat-peringatan/gambar/$filename"
             Log.d("NasabahAdapter", "Memuat gambar dari URL: $imageUrl")
@@ -477,6 +661,21 @@ class MonitoringAdapter(
             downloadManager.enqueue(request)
         }
 
+
+
+    }
+    private fun showLoadingDialog() {
+        if (loadingDialog == null && context != null) {
+            loadingDialog = android.app.AlertDialog.Builder(context)
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .create()
+        }
+        loadingDialog?.show()
+    }
+
+    private fun dismissLoadingDialog() {
+        loadingDialog?.dismiss()
     }
     class NasabahDiffCallback : DiffUtil.ItemCallback<Nasabah>() {
         override fun areItemsTheSame(oldItem: Nasabah, newItem: Nasabah): Boolean {

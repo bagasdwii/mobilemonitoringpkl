@@ -60,6 +60,13 @@ class MonitoringFragment : Fragment() {
                 dismissLoadingDialog()
             }
         })
+//        kunjunganViewModel.isLoading.observe(viewLifecycleOwner, {
+//            if (it) {
+//                showLoadingDialog()
+//            } else {
+//                dismissLoadingDialog()
+//            }
+//        })
 
         monitoringViewModel.nasabahs.observe(viewLifecycleOwner, {
             adapter.submitList(it)
@@ -119,6 +126,7 @@ class MonitoringFragment : Fragment() {
                     showDialog(arrayList)
                 }
             })
+
         } else {
             // Optionally, handle the case where the user does not have the required jabatan_id
             Log.d("MonitoringFragment", "User does not have the required permissions to view the dropdown.")

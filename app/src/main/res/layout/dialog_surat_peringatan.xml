@@ -29,21 +29,21 @@
             android:textSize="14sp"
             android:paddingBottom="8dp"
             android:fontFamily="@font/poppins_medium" />
-        <TextView
-            android:id="@+id/Tingkat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tingkat Surat"
-            android:textSize="16sp"
-            android:fontFamily="@font/poppins_semibold" />
-        <TextView
-            android:id="@+id/tvTingkat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tingkat Surat SP"
-            android:textSize="14sp"
-            android:paddingBottom="8dp"
-            android:fontFamily="@font/poppins_medium" />
+<!--        <TextView-->
+<!--            android:id="@+id/Tingkat"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Tingkat Surat"-->
+<!--            android:textSize="16sp"-->
+<!--            android:fontFamily="@font/poppins_semibold" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvTingkat"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Tingkat Surat SP"-->
+<!--            android:textSize="14sp"-->
+<!--            android:paddingBottom="8dp"-->
+<!--            android:fontFamily="@font/poppins_medium" />-->
         <TextView
             android:id="@+id/Dibuat"
             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             android:id="@+id/tvDiserahkan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal"
+            android:text="Belum ada"
             android:fontFamily="@font/poppins_medium"
             android:paddingBottom="8dp"
             android:textSize="14sp" />
